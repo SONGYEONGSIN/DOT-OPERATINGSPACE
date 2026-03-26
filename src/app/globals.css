@@ -1,0 +1,253 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap");
+@import "tailwindcss";
+
+/* ── Design Tokens: Tailwind CSS 4 @theme ── */
+@theme inline {
+  /* Surface hierarchy */
+  --color-surface: #0c0e10;
+  --color-surface-dim: #0c0e10;
+  --color-surface-bright: #292c30;
+  --color-surface-container-lowest: #000000;
+  --color-surface-container-low: #111416;
+  --color-surface-container: #171a1c;
+  --color-surface-container-high: #1d2023;
+  --color-surface-container-highest: #232629;
+  --color-surface-tint: #d9fd53;
+  --color-surface-variant: #232629;
+
+  /* Primary */
+  --color-primary: #d9fd53;
+  --color-primary-dim: #cbee45;
+  --color-primary-container: #9fc00f;
+  --color-primary-fixed: #d6fa50;
+  --color-primary-fixed-dim: #c8eb42;
+  --color-on-primary: #4e5f00;
+  --color-on-primary-container: #2c3700;
+  --color-on-primary-fixed: #3c4a00;
+  --color-on-primary-fixed-variant: #556800;
+  --color-inverse-primary: #536600;
+
+  /* Secondary */
+  --color-secondary: #e1e3e5;
+  --color-secondary-dim: #d3d4d7;
+  --color-secondary-container: #444749;
+  --color-secondary-fixed: #e1e3e5;
+  --color-secondary-fixed-dim: #d3d4d7;
+  --color-on-secondary: #4f5254;
+  --color-on-secondary-container: #cfd0d3;
+  --color-on-secondary-fixed: #3d4042;
+  --color-on-secondary-fixed-variant: #595c5e;
+
+  /* Tertiary */
+  --color-tertiary: #ffeead;
+  --color-tertiary-dim: #f0d038;
+  --color-tertiary-container: #ffdf46;
+  --color-tertiary-fixed: #ffdf46;
+  --color-tertiary-fixed-dim: #f0d038;
+  --color-on-tertiary: #675800;
+  --color-on-tertiary-container: #5e4f00;
+  --color-on-tertiary-fixed: #493d00;
+  --color-on-tertiary-fixed-variant: #695900;
+
+  /* Error */
+  --color-error: #ff7351;
+  --color-error-dim: #d53d18;
+  --color-error-container: #b92902;
+  --color-on-error: #450900;
+  --color-on-error-container: #ffd2c8;
+
+  /* On Surface */
+  --color-on-surface: #eeeef0;
+  --color-on-surface-variant: #aaabad;
+  --color-on-background: #eeeef0;
+  --color-background: #0c0e10;
+
+  /* Outline */
+  --color-outline: #747578;
+  --color-outline-variant: #46484a;
+
+  /* Inverse */
+  --color-inverse-surface: #f9f9fc;
+  --color-inverse-on-surface: #545557;
+
+  /* Font families */
+  --font-sans:
+    "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", monospace;
+
+  /* Shadows */
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-elevated: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-glow: 0 0 20px -5px rgba(217, 253, 83, 0.2);
+  --shadow-glow-strong: 0 0 40px rgba(217, 253, 83, 0.06);
+  --shadow-ambient: 0 0 40px rgba(0, 0, 0, 0.06);
+
+  /* Animations */
+  --animate-scan: scan 4s linear infinite;
+  --animate-bar-pulse: bar-pulse 2s ease-in-out infinite;
+  --animate-counter-flicker: counter-flicker 0.15s ease-in-out infinite;
+  --animate-fade-in: fade-in 0.5s ease-out;
+  --animate-slide-up: slide-up 0.5s ease-out;
+  --animate-slide-in-left: slide-in-left 0.3s ease-out;
+}
+
+/* ── Global Styles ── */
+html {
+  color-scheme: dark;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--color-surface);
+  color: var(--color-on-surface);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+/* ── Custom Scrollbar ── */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-outline-variant);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
+}
+
+/* ── Material Symbols ── */
+.material-symbols-outlined {
+  font-variation-settings:
+    "FILL" 0,
+    "wght" 400,
+    "GRAD" 0,
+    "opsz" 24;
+  vertical-align: middle;
+}
+
+/* ── Kinetic Grid Background ── */
+.kinetic-grid {
+  background-image:
+    linear-gradient(
+      to right,
+      var(--color-outline-variant) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      var(--color-outline-variant) 1px,
+      transparent 1px
+    );
+  background-size: 40px 40px;
+  opacity: 0.05;
+}
+
+/* ── Scan Line Effect ── */
+.scan-line {
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--color-primary),
+    transparent
+  );
+  height: 100px;
+  width: 100%;
+  position: absolute;
+  top: -100px;
+  left: 0;
+  opacity: 0.1;
+  animation: var(--animate-scan);
+  pointer-events: none;
+}
+
+/* ── Keyframes ── */
+@keyframes scan {
+  0% {
+    top: -100px;
+  }
+  100% {
+    top: 100%;
+  }
+}
+
+@keyframes bar-pulse {
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(1.1);
+  }
+}
+
+@keyframes counter-flicker {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.002);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ── Ghost Border Utility ── */
+.ghost-border {
+  border: 1px solid rgba(70, 72, 74, 0.15);
+}
+
+/* ── Glow Utilities ── */
+.glow-primary {
+  box-shadow: 0 0 20px -5px rgba(217, 253, 83, 0.2);
+}
+
+.glow-primary-strong {
+  box-shadow: 0 0 40px rgba(217, 253, 83, 0.06);
+}
