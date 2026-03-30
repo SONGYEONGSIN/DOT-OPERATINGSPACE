@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/cn";
+import { ThemeToggle } from "@/components/common";
 
 export default function Header() {
   return (
@@ -33,26 +34,13 @@ export default function Header() {
 
         {/* Actions */}
         <div className="flex items-center gap-2 ml-4">
+          <ThemeToggle />
           <button className="relative p-2 text-on-surface-variant hover:bg-surface-bright hover:text-primary transition-all duration-200 rounded-lg active:scale-95">
             <span className="material-symbols-outlined text-xl">
               notifications
             </span>
             <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-error animate-pulse" />
           </button>
-          <button className="p-2 text-on-surface-variant hover:bg-surface-bright hover:text-primary transition-all duration-200 rounded-lg active:scale-95">
-            <span className="material-symbols-outlined text-xl">settings</span>
-          </button>
-          <div className="ml-2 flex items-center gap-3 px-3 py-1.5 rounded-lg hover:bg-surface-bright transition-all cursor-pointer">
-            <div className="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center">
-              <span className="text-xs font-black text-on-primary-container">
-                A
-              </span>
-            </div>
-            <div className="hidden md:block">
-              <p className="text-xs font-bold text-on-surface">Admin User</p>
-              <p className="text-[10px] text-on-surface-variant">Supervisor</p>
-            </div>
-          </div>
         </div>
       </div>
     </header>

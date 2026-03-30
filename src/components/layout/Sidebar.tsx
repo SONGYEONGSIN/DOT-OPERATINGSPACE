@@ -4,46 +4,65 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/cn";
+import { BrandLogo } from "@/components/common";
+
+interface NavChild {
+  label: string;
+  icon?: string;
+  href: string;
+}
 
 interface NavItem {
   label: string;
   icon: string;
   href: string;
-  children?: { label: string; href: string }[];
+  collapsible?: boolean;
+  children?: NavChild[];
 }
 
 const navigation: NavItem[] = [
-  { label: "대시보드", icon: "dashboard", href: "/dashboard" },
+  {
+    label: "메인",
+    icon: "space_dashboard",
+    href: "/dashboard",
+    children: [
+      { label: "대시보드", icon: "dashboard", href: "/dashboard" },
+      { label: "브리핑", icon: "campaign", href: "/dashboard/briefing" },
+      { label: "전체일정", icon: "calendar_month", href: "/dashboard/schedule" },
+    ],
+  },
   {
     label: "운영",
     icon: "business_center",
     href: "/operations",
+    collapsible: true,
     children: [
-      { label: "계약서", href: "/operations/contracts" },
-      { label: "서비스", href: "/operations/services" },
-      { label: "인수인계", href: "/operations/handover" },
-      { label: "미수채권", href: "/operations/receivables" },
-      { label: "대학연락처", href: "/operations/contacts" },
+      { label: "계약서", icon: "description", href: "/operations/contracts" },
+      { label: "서비스", icon: "lan", href: "/operations/services" },
+      { label: "인수인계", icon: "swap_horiz", href: "/operations/handover" },
+      { label: "미수채권", icon: "account_balance", href: "/operations/receivables" },
+      { label: "대학연락처", icon: "contacts", href: "/operations/contacts" },
     ],
   },
   {
     label: "프로젝트",
     icon: "folder_special",
     href: "/projects",
+    collapsible: true,
     children: [
-      { label: "PIMS", href: "/projects/pims" },
-      { label: "접수관리자", href: "/projects/reception" },
-      { label: "내부관리자", href: "/projects/internal" },
-      { label: "경쟁률", href: "/projects/competition" },
-      { label: "생성툴", href: "/projects/generator" },
-      { label: "매출/분석", href: "/projects/revenue" },
-      { label: "정산/진학캐쉬", href: "/projects/settlement" },
-      { label: "초중고", href: "/projects/k12" },
-      { label: "한국대학교육협의회", href: "/projects/kcue" },
-      { label: "추천인검증", href: "/projects/referral" },
-      { label: "보증보험", href: "/projects/insurance" },
-      { label: "실적증명", href: "/projects/performance" },
-      { label: "유의사항", href: "/projects/notices" },
+      { label: "PIMS", icon: "hub", href: "/projects/pims" },
+      { label: "접수관리자", icon: "assignment", href: "/projects/reception" },
+      { label: "내부관리자", icon: "admin_panel_settings", href: "/projects/internal" },
+      { label: "경쟁률", icon: "leaderboard", href: "/projects/competition" },
+      { label: "생성툴", icon: "construction", href: "/projects/generator" },
+      { label: "매출/분석", icon: "analytics", href: "/projects/revenue" },
+      { label: "정산/진학캐쉬", icon: "payments", href: "/projects/settlement" },
+      { label: "초중고", icon: "school", href: "/projects/k12" },
+      { label: "대학교육협의회", icon: "account_balance", href: "/projects/kcue" },
+      { label: "추천인검증", icon: "verified_user", href: "/projects/referral" },
+      { label: "보증보험", icon: "shield", href: "/projects/insurance" },
+      { label: "실적증명", icon: "workspace_premium", href: "/projects/performance" },
+      { label: "유의사항", icon: "warning", href: "/projects/notices" },
     ],
   },
   {
@@ -51,9 +70,9 @@ const navigation: NavItem[] = [
     icon: "monitoring",
     href: "/analytics",
     children: [
-      { label: "보고서", href: "/analytics/reports" },
-      { label: "성과", href: "/analytics/performance" },
-      { label: "업무로그", href: "/analytics/work-logs" },
+      { label: "보고서", icon: "summarize", href: "/analytics/reports" },
+      { label: "성과", icon: "trending_up", href: "/analytics/performance" },
+      { label: "업무로그", icon: "history", href: "/analytics/work-logs" },
     ],
   },
   {
@@ -61,8 +80,8 @@ const navigation: NavItem[] = [
     icon: "smart_toy",
     href: "/ai",
     children: [
-      { label: "AI 인사이트", href: "/ai/insights" },
-      { label: "AI 어시스턴트", href: "/ai/assistant" },
+      { label: "AI 인사이트", icon: "psychology", href: "/ai/insights" },
+      { label: "AI 어시스턴트", icon: "assistant", href: "/ai/assistant" },
     ],
   },
   {
@@ -70,8 +89,8 @@ const navigation: NavItem[] = [
     icon: "support_agent",
     href: "/support",
     children: [
-      { label: "온보딩", href: "/support/onboarding" },
-      { label: "시스템 개선요청", href: "/support/requests" },
+      { label: "온보딩", icon: "rocket_launch", href: "/support/onboarding" },
+      { label: "시스템 개선요청", icon: "build", href: "/support/requests" },
     ],
   },
   {
@@ -79,113 +98,102 @@ const navigation: NavItem[] = [
     icon: "admin_panel_settings",
     href: "/admin",
     children: [
-      { label: "사용자", href: "/admin/users" },
-      { label: "시스템", href: "/admin/system" },
+      { label: "사용자", icon: "group", href: "/admin/users" },
+      { label: "시스템", icon: "settings", href: "/admin/system" },
     ],
   },
 ];
 
 export default function Sidebar() {
   const pathname = usePathname();
-  const [expandedItems, setExpandedItems] = useState<string[]>([]);
-
-  function toggleExpand(href: string) {
-    setExpandedItems((prev) =>
-      prev.includes(href) ? prev.filter((h) => h !== href) : [...prev, href],
-    );
-  }
+  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
 
   function isActive(href: string) {
     return pathname === href || pathname.startsWith(href + "/");
   }
 
+  function toggleCollapse(href: string) {
+    setCollapsed((prev) => ({ ...prev, [href]: !prev[href] }));
+  }
+
   return (
     <aside className="fixed top-0 left-0 z-40 h-full w-64 bg-surface-container-low flex flex-col">
       {/* Logo */}
-      <div className="h-16 flex items-center gap-2 px-6 shrink-0">
-        <span className="material-symbols-outlined text-primary text-3xl">
-          hexagons
-        </span>
-        <span className="text-xl font-black tracking-tighter text-on-surface uppercase">
-          SentinelHub
-        </span>
+      <div className="h-16 flex items-center px-6 shrink-0">
+        <BrandLogo />
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
-        {navigation.map((item) => {
-          const active = isActive(item.href);
-          const expanded = expandedItems.includes(item.href);
-          const hasChildren = item.children && item.children.length > 0;
+      <nav className="flex-1 overflow-y-auto px-3 py-2">
+        {navigation.map((item, index) => {
+          const isCollapsed = collapsed[item.href] ?? false;
+          const isCollapsible = item.collapsible;
 
           return (
-            <div key={item.href}>
-              {hasChildren ? (
-                <button
-                  onClick={() => toggleExpand(item.href)}
-                  className={cn(
-                    "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200",
-                    active
-                      ? "bg-surface-container-high text-primary"
-                      : "text-on-surface-variant hover:bg-surface-container hover:text-on-surface",
-                  )}
-                >
-                  <span className="material-symbols-outlined text-xl">
+            <div
+              key={item.href}
+              className={cn(index > 0 && "mt-4 pt-3 border-t border-outline-variant/10")}
+            >
+              {/* 대메뉴 카테고리 라벨 */}
+              <div className="flex items-center justify-between px-3 mb-1.5">
+                <div className="flex items-center gap-2">
+                  <span className="material-symbols-outlined text-outline-variant text-[14px]">
                     {item.icon}
                   </span>
-                  <span className="flex-1 text-left">{item.label}</span>
-                  <span
-                    className={cn(
-                      "material-symbols-outlined text-base transition-transform duration-200",
-                      expanded && "rotate-180",
-                    )}
+                  <span className="text-[10px] font-bold text-outline-variant uppercase tracking-[0.15em]">
+                    {item.label}
+                  </span>
+                </div>
+                {isCollapsible && (
+                  <button
+                    onClick={() => toggleCollapse(item.href)}
+                    className="p-0.5 text-outline-variant hover:text-on-surface-variant transition-colors rounded"
                   >
-                    expand_more
-                  </span>
-                </button>
-              ) : (
-                <Link
-                  href={item.href}
-                  className={cn(
-                    "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200",
-                    active
-                      ? "bg-surface-container-high text-primary border-l-2 border-primary"
-                      : "text-on-surface-variant hover:bg-surface-container hover:text-on-surface",
-                  )}
-                >
-                  <span className="material-symbols-outlined text-xl">
-                    {item.icon}
-                  </span>
-                  <span>{item.label}</span>
-                </Link>
-              )}
+                    <span
+                      className={cn(
+                        "material-symbols-outlined text-[14px] transition-transform duration-200",
+                        isCollapsed && "-rotate-90",
+                      )}
+                    >
+                      expand_more
+                    </span>
+                  </button>
+                )}
+              </div>
 
-              {/* Sub Navigation */}
-              {hasChildren && (
-                <div
-                  className={cn(
-                    "overflow-hidden transition-all duration-200",
-                    expanded ? "max-h-96 opacity-100" : "max-h-0 opacity-0",
-                  )}
-                >
-                  <div className="ml-8 mt-1 space-y-0.5 border-l border-outline-variant/20 pl-3">
-                    {item.children?.map((child) => (
-                      <Link
-                        key={child.href}
-                        href={child.href}
+              {/* 소메뉴 */}
+              <div
+                className={cn(
+                  "space-y-0.5 overflow-hidden transition-all duration-200",
+                  isCollapsible && isCollapsed ? "max-h-0 opacity-0" : "max-h-[800px] opacity-100",
+                )}
+              >
+                {item.children?.map((child) => {
+                  const active = isActive(child.href);
+                  return (
+                    <Link
+                      key={child.href}
+                      href={child.href}
+                      className={cn(
+                        "flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200",
+                        active
+                          ? "bg-primary/10 text-primary border-l-2 border-primary pl-[10px]"
+                          : "text-on-surface-variant hover:bg-surface-container hover:text-on-surface",
+                      )}
+                    >
+                      <span
                         className={cn(
-                          "block px-3 py-2 rounded-md text-xs font-medium transition-all duration-200",
-                          isActive(child.href)
-                            ? "text-primary bg-surface-container-high"
-                            : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container",
+                          "material-symbols-outlined text-base",
+                          active ? "text-primary" : "text-outline",
                         )}
                       >
-                        {child.label}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
+                        {child.icon}
+                      </span>
+                      <span>{child.label}</span>
+                    </Link>
+                  );
+                })}
+              </div>
             </div>
           );
         })}

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "SentinelHub | 통합 운영 관리",
+  title: "DOT. | 통합 운영 관리",
   description:
     "서비스 관리, 계약, 인수인계, AI 분석까지 — 차세대 통합 운영 관리 플랫폼",
 };

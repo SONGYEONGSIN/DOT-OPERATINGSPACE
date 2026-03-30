@@ -3,7 +3,7 @@
 @import "tailwindcss";
 
 /* ── Design Tokens: Tailwind CSS 4 @theme ── */
-@theme inline {
+@theme {
   /* Surface hierarchy */
   --color-surface: #0c0e10;
   --color-surface-dim: #0c0e10;
@@ -93,9 +93,90 @@
   --animate-slide-in-left: slide-in-left 0.3s ease-out;
 }
 
+/* ── Light Mode Overrides ── */
+html.light {
+  color-scheme: light;
+
+  /* Surface — 계층 간 대비 강화 */
+  --color-surface: #f8f9fa;
+  --color-surface-dim: #e2e3e5;
+  --color-surface-bright: #ffffff;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f1f2f4;
+  --color-surface-container: #e6e7e9;
+  --color-surface-container-high: #d8dade;
+  --color-surface-container-highest: #cbced2;
+  --color-surface-tint: #3d7a00;
+  --color-surface-variant: #dce1e6;
+  --color-on-surface: #111315;
+  --color-on-surface-variant: #32363a;
+  --color-background: #f8f9fa;
+  --color-on-background: #141618;
+
+  /* Primary — 선명한 그린 */
+  --color-primary: #3d7a00;
+  --color-primary-dim: #326600;
+  --color-primary-container: #b8e86a;
+  --color-primary-fixed: #c4f44e;
+  --color-primary-fixed-dim: #a6d63a;
+  --color-on-primary: #ffffff;
+  --color-on-primary-container: #0f2000;
+  --color-on-primary-fixed: #0f2000;
+  --color-on-primary-fixed-variant: #2c5200;
+  --color-inverse-primary: #b8e040;
+
+  /* Secondary */
+  --color-secondary: #4a4e51;
+  --color-secondary-dim: #3d4143;
+  --color-secondary-container: #cdd1d4;
+  --color-secondary-fixed: #dde0e3;
+  --color-secondary-fixed-dim: #c1c4c7;
+  --color-on-secondary: #ffffff;
+  --color-on-secondary-container: #2a2e30;
+  --color-on-secondary-fixed: #171b1d;
+  --color-on-secondary-fixed-variant: #393d40;
+
+  /* Tertiary */
+  --color-tertiary: #7a6400;
+  --color-tertiary-dim: #635200;
+  --color-tertiary-container: #ffe070;
+  --color-tertiary-fixed: #ffe680;
+  --color-tertiary-fixed-dim: #dcc200;
+  --color-on-tertiary: #ffffff;
+  --color-on-tertiary-container: #261e00;
+  --color-on-tertiary-fixed: #261e00;
+  --color-on-tertiary-fixed-variant: #594a00;
+
+  /* Error */
+  --color-error: #c41e1e;
+  --color-error-dim: #a81212;
+  --color-error-container: #ffd6d6;
+  --color-on-error: #ffffff;
+  --color-on-error-container: #520002;
+
+  /* Outline */
+  --color-outline: #5c5f63;
+  --color-outline-variant: #8e9296;
+
+  /* Inverse */
+  --color-inverse-surface: #2c2f31;
+  --color-inverse-on-surface: #eff0f3;
+
+  /* Shadows — 실제 그림자감 */
+  --shadow-card: 0 1px 4px rgba(0, 0, 0, 0.1);
+  --shadow-elevated: 0 4px 16px rgba(0, 0, 0, 0.12);
+  --shadow-glow: 0 2px 12px rgba(61, 122, 0, 0.15);
+  --shadow-glow-strong: 0 4px 24px rgba(61, 122, 0, 0.08);
+  --shadow-ambient: 0 2px 20px rgba(0, 0, 0, 0.06);
+}
+
 /* ── Global Styles ── */
 html {
   color-scheme: dark;
+}
+
+html.light {
+  color-scheme: light;
 }
 
 body {
@@ -238,6 +319,43 @@ body {
   }
 }
 
+/* ── Brand Logo ── */
+.cyber-logo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2px;
+}
+
+.cyber-logo-part {
+  background: var(--color-primary);
+  border-radius: 1px;
+}
+
+.cyber-logo-part:nth-child(1) {
+  border-top-left-radius: 8px;
+}
+
+.cyber-logo-part:nth-child(2) {
+  opacity: 0.4;
+}
+
+.cyber-logo-part:nth-child(3) {
+  border-bottom-left-radius: 8px;
+}
+
+.cyber-logo-part:nth-child(4) {
+  border-bottom-right-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+.brand-logo-glow {
+  filter: drop-shadow(0 0 8px rgba(217, 253, 83, 0.6));
+}
+
+html.light .brand-logo-glow {
+  filter: drop-shadow(0 0 6px rgba(61, 122, 0, 0.4));
+}
+
 /* ── Ghost Border Utility ── */
 .ghost-border {
   border: 1px solid rgba(70, 72, 74, 0.15);
@@ -245,9 +363,9 @@ body {
 
 /* ── Glow Utilities ── */
 .glow-primary {
-  box-shadow: 0 0 20px -5px rgba(217, 253, 83, 0.2);
+  box-shadow: var(--shadow-glow);
 }
 
 .glow-primary-strong {
-  box-shadow: 0 0 40px rgba(217, 253, 83, 0.06);
+  box-shadow: var(--shadow-glow-strong);
 }

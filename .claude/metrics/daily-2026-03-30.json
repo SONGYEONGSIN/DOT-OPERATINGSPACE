@@ -1,0 +1,148 @@
+{
+  "date": "2026-03-30",
+  "events": [
+    {
+      "timestamp": "2026-03-30T10:54:00",
+      "tool": "Write",
+      "file": "/Users/yss/개발/SentinelHub/src/app/(auth)/callback/route.ts",
+      "results": {
+        "prettier": "fail",
+        "eslint": "pass",
+        "typecheck": "pass",
+        "test": "pass"
+      }
+    },
+    {
+      "timestamp": "2026-03-30T10:54:07",
+      "tool": "Edit",
+      "file": "/Users/yss/개발/SentinelHub/src/lib/supabase/middleware.ts",
+      "results": {
+        "prettier": "pass",
+        "eslint": "pass",
+        "typecheck": "pass",
+        "test": "pass"
+      }
+    },
+    {
+      "timestamp": "2026-03-30T10:54:25",
+      "tool": "Edit",
+      "file": "/Users/yss/개발/SentinelHub/src/features/auth/LoginForm.tsx",
+      "results": {
+        "prettier": "fail",
+        "eslint": "pass",
+        "typecheck": "pass",
+        "test": "pass"
+      }
+    },
+    {
+      "timestamp": "2026-03-30T20:38:31",
+      "tool": "Write",
+      "file": "/Users/yss/개발/SentinelHub/src/lib/theme.ts",
+      "results": {
+        "prettier": "pass",
+        "eslint": "pass",
+        "typecheck": "pass",
+        "test": "pass"
+      }
+    },
+    {
+      "timestamp": "2026-03-30T20:38:34",
+      "tool": "Write",
+      "file": "/Users/yss/개발/SentinelHub/src/components/common/ThemeToggle.tsx",
+      "results": {
+        "prettier": "pass",
+        "eslint": "pass",
+        "typecheck": "pass",
+        "test": "pass"
+      }
+    },
+    {
+      "timestamp": "2026-03-30T20:38:45",
+      "tool": "Edit",
+      "file": "/Users/yss/개발/SentinelHub/src/components/common/index.ts",
+      "results": {
+        "prettier": "pass",
+        "eslint": "pass",
+        "typecheck": "pass",
+        "test": "pass"
+      }
+    },
+    {
+      "timestamp": "2026-03-30T20:39:11",
+      "tool": "Edit",
+      "file": "/Users/yss/개발/SentinelHub/src/app/(auth)/login/page.tsx",
+      "results": {
+        "prettier": "fail",
+        "eslint": "pass",
+        "typecheck": "pass",
+        "test": "pass"
+      }
+    },
+    {
+      "timestamp": "2026-03-30T20:39:22",
+      "tool": "Edit",
+      "file": "/Users/yss/개발/SentinelHub/src/app/(auth)/login/page.tsx",
+      "results": {
+        "prettier": "fail",
+        "eslint": "fail",
+        "typecheck": "pass",
+        "test": "pass"
+      }
+    },
+    {
+      "timestamp": "2026-03-30T20:39:28",
+      "tool": "Edit",
+      "file": "/Users/yss/개발/SentinelHub/src/app/(auth)/login/page.tsx",
+      "results": {
+        "prettier": "fail",
+        "eslint": "pass",
+        "typecheck": "pass",
+        "test": "pass"
+      }
+    },
+    {
+      "timestamp": "2026-03-30T22:12:38",
+      "tool": "Edit",
+      "file": "/Users/yss/개발/SentinelHub/src/app/(auth)/forgot-password/page.tsx",
+      "results": {
+        "prettier": "fail",
+        "eslint": "pass",
+        "typecheck": "pass",
+        "test": "pass"
+      }
+    },
+    {
+      "timestamp": "2026-03-30T22:12:47",
+      "tool": "Edit",
+      "file": "/Users/yss/개발/SentinelHub/src/app/(auth)/forgot-password/page.tsx",
+      "results": {
+        "prettier": "fail",
+        "eslint": "fail",
+        "typecheck": "pass",
+        "test": "pass"
+      }
+    },
+    {
+      "timestamp": "2026-03-30T22:12:57",
+      "tool": "Edit",
+      "file": "/Users/yss/개발/SentinelHub/src/app/(auth)/reset-password/page.tsx",
+      "results": {
+        "prettier": "fail",
+        "eslint": "pass",
+        "typecheck": "pass",
+        "test": "pass"
+      }
+    },
+    {
+      "timestamp": "2026-03-30T22:13:07",
+      "tool": "Edit",
+      "file": "/Users/yss/개발/SentinelHub/src/app/(auth)/reset-password/page.tsx",
+      "results": {
+        "prettier": "fail",
+        "eslint": "fail",
+        "typecheck": "pass",
+        "test": "pass"
+      }
+    }
+  ]
+}

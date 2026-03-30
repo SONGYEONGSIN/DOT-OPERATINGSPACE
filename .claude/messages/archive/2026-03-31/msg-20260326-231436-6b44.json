@@ -1,6 +1,6 @@
 {
-  "id": "msg-20260326-231336-571b",
-  "timestamp": "2026-03-26T23:13:36+0900",
+  "id": "msg-20260326-231436-6b44",
+  "timestamp": "2026-03-26T23:14:36+0900",
   "from": "session-review",
   "to": "feedback",
   "type": "request",
@@ -10,5 +10,5 @@
   "context": null,
   "debate_id": null,
   "reply_to": null,
-  "status": "unread"
+  "status": "archived"
 }

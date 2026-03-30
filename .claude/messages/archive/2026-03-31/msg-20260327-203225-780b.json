@@ -1,0 +1,14 @@
+{
+  "id": "msg-20260327-203225-780b",
+  "timestamp": "2026-03-27T20:32:25+0900",
+  "from": "session-review",
+  "to": "feedback",
+  "type": "request",
+  "priority": "medium",
+  "subject": "세션 종료 — 미커밋 변경 15개",
+  "body": "커밋되지 않은 변경이 15개 파일에 있습니다. 다음 세션에서 코드 리뷰를 권장합니다.",
+  "context": null,
+  "debate_id": null,
+  "reply_to": null,
+  "status": "archived"
+}

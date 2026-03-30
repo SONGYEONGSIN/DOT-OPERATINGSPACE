@@ -1,0 +1,19 @@
+{
+  "id": "msg-20260327-202410-f32d",
+  "timestamp": "2026-03-27T20:24:10+0900",
+  "from": "debate-trigger",
+  "to": "moderator",
+  "type": "request",
+  "priority": "high",
+  "subject": "토론 요청: 인증 관련 TypeScript 에러 해결 방향",
+  "body": "파일: /Users/yss/개발/SentinelHub/src/app/(auth)/login/page.tsx — 인증 관련 파일에서 타입 에러 발생.",
+  "context": {
+    "topic": "인증 관련 TypeScript 에러 해결 방향",
+    "suggested_agents": "security,developer",
+    "detail": "파일: /Users/yss/개발/SentinelHub/src/app/(auth)/login/page.tsx — 인증 관련 파일에서 타입 에러 발생.",
+    "trigger_file": "/Users/yss/개발/SentinelHub/src/app/(auth)/login/page.tsx"
+  },
+  "debate_id": null,
+  "reply_to": null,
+  "status": "archived"
+}

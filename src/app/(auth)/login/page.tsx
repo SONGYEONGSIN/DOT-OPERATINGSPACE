@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { cn } from "@/lib/cn";
+import { AuthCard } from "@/features/auth";
+import { ThemeToggle, BrandLogo } from "@/components/common";
 
 /* ── Intersection Observer Hook for scroll animations ── */
 function useInView(threshold = 0.1) {
@@ -184,32 +186,20 @@ function AnimatedSection({
    Main Login Page
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 export default function LoginPage() {
-  const [activeTab, setActiveTab] = useState<"login" | "register">("login");
-
   return (
     <div className="bg-surface text-on-surface min-h-screen">
       {/* ━━━ Top NavBar ━━━ */}
       <nav className="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/15 shadow-glow-strong">
         <div className="flex justify-between items-center h-16 px-6 w-full max-w-[1920px] mx-auto">
-          <div className="flex items-center gap-2 text-xl font-black text-on-surface tracking-tighter uppercase">
-            <span className="material-symbols-outlined text-primary text-3xl">
-              hexagons
-            </span>
-            <span>SentinelHub</span>
-          </div>
-          <div className="flex items-center gap-4">
-            <button className="p-2 text-on-surface-variant hover:bg-surface-bright hover:text-primary transition-all duration-200 rounded-lg active:scale-95">
-              <span className="material-symbols-outlined">light_mode</span>
-            </button>
-            <button className="p-2 text-on-surface-variant hover:bg-surface-bright hover:text-primary transition-all duration-200 rounded-lg active:scale-95">
-              <span className="material-symbols-outlined">notifications</span>
-            </button>
-            <button className="p-2 text-on-surface-variant hover:bg-surface-bright hover:text-primary transition-all duration-200 rounded-lg active:scale-95">
-              <span className="material-symbols-outlined">settings</span>
-            </button>
-            <button className="ml-2 bg-primary text-on-primary px-4 py-2 font-bold rounded-lg active:scale-95 transition-transform text-sm">
+          <BrandLogo />
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <a
+              href="#auth"
+              className="ml-2 bg-primary text-on-primary px-4 py-2 font-bold rounded-lg active:scale-95 transition-transform text-sm"
+            >
               관리자 로그인
-            </button>
+            </a>
           </div>
         </div>
       </nav>
@@ -236,7 +226,7 @@ export default function LoginPage() {
             </h1>
 
             <p className="text-on-surface-variant text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
-              서비스 관리, 계약, 인수인계, AI 분석까지 SentinelHub에서 모든 운영
+              서비스 관리, 계약, 인수인계, AI 분석까지 DOT.에서 모든 운영
               업무를 처리하세요.
             </p>
           </div>
@@ -373,138 +363,13 @@ export default function LoginPage() {
         </section>
 
         {/* ━━━ Auth Section ━━━ */}
-        <section className="py-24 px-6 relative bg-surface overflow-hidden">
+        <section
+          id="auth"
+          className="py-24 px-6 relative bg-surface overflow-hidden scroll-mt-20"
+        >
           <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-outline-variant/30 to-transparent" />
-
-          <AnimatedSection className="max-w-md mx-auto relative z-10">
-            {/* Header */}
-            <div className="text-center mb-10">
-              <h2 className="text-3xl font-black tracking-tighter mb-2">
-                시작할 준비가 되셨나요?
-              </h2>
-              <p className="text-on-surface-variant text-sm">
-                지금 SentinelHub의 파트너가 되어 보안 수준을 높이세요.
-              </p>
-            </div>
-
-            {/* Login Card */}
-            <div className="bg-surface-container rounded-xl border border-outline-variant/15 overflow-hidden shadow-2xl">
-              {/* Tabs */}
-              <div className="flex border-b border-outline-variant/15">
-                <button
-                  onClick={() => setActiveTab("login")}
-                  className={cn(
-                    "flex-1 py-4 text-sm font-bold border-b-2 transition-colors",
-                    activeTab === "login"
-                      ? "border-primary text-on-surface bg-surface-container-high"
-                      : "border-transparent text-on-surface-variant hover:text-on-surface",
-                  )}
-                >
-                  로그인
-                </button>
-                <button
-                  onClick={() => setActiveTab("register")}
-                  className={cn(
-                    "flex-1 py-4 text-sm font-bold border-b-2 transition-colors",
-                    activeTab === "register"
-                      ? "border-primary text-on-surface bg-surface-container-high"
-                      : "border-transparent text-on-surface-variant hover:text-on-surface",
-                  )}
-                >
-                  계정 생성
-                </button>
-              </div>
-
-              {/* Form Body */}
-              <div className="p-8">
-                {/* Microsoft OAuth */}
-                <button className="w-full mb-8 py-3.5 bg-white text-black font-bold rounded-lg active:scale-95 transition-transform flex items-center justify-center gap-3 hover:bg-gray-100">
-                  <svg
-                    className="w-5 h-5"
-                    viewBox="0 0 23 23"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path d="M11.4 24H0V12.6h11.4V24z" fill="#80bb03" />
-                    <path d="M24 24H12.6V12.6H24V24z" fill="#ffba08" />
-                    <path d="M11.4 11.4H0V0h11.4v11.4z" fill="#f35325" />
-                    <path d="M24 11.4H12.6V0H24v11.4z" fill="#05a6f0" />
-                  </svg>
-                  Microsoft로 계속하기
-                </button>
-
-                {/* Divider */}
-                <div className="relative flex items-center justify-center mb-8">
-                  <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-outline-variant/20" />
-                  </div>
-                  <span className="relative px-4 bg-surface-container text-[10px] font-bold text-on-surface-variant tracking-widest uppercase">
-                    또는 이메일로 로그인
-                  </span>
-                </div>
-
-                {/* Email/Password Form */}
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-2">
-                      워크스페이스 이메일
-                    </label>
-                    <input
-                      type="email"
-                      placeholder="name@company.com"
-                      className={cn(
-                        "w-full bg-surface-container-highest border-none rounded-lg",
-                        "px-4 py-3 text-on-surface placeholder:text-outline",
-                        "focus:ring-1 focus:ring-primary/50 focus:outline-none",
-                        "transition-all",
-                      )}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-2">
-                      비밀번호
-                    </label>
-                    <input
-                      type="password"
-                      placeholder="••••••••"
-                      className={cn(
-                        "w-full bg-surface-container-highest border-none rounded-lg",
-                        "px-4 py-3 text-on-surface placeholder:text-outline",
-                        "focus:ring-1 focus:ring-primary/50 focus:outline-none",
-                        "transition-all",
-                      )}
-                    />
-                  </div>
-                  <div className="flex items-center justify-between pt-2">
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        className="rounded-sm border-none bg-surface-container-highest text-primary focus:ring-primary focus:ring-offset-0"
-                      />
-                      <span className="text-xs text-on-surface-variant">
-                        로그인 유지
-                      </span>
-                    </label>
-                    <a
-                      href="#"
-                      className="text-xs text-primary font-bold hover:underline"
-                    >
-                      비밀번호 찾기
-                    </a>
-                  </div>
-                  <button className="w-full py-4 bg-primary text-on-primary font-black rounded-lg active:scale-95 transition-transform mt-4 glow-primary hover:brightness-110">
-                    시스템 접속
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <p className="mt-8 text-center text-xs text-on-surface-variant">
-              도움이 필요하신가요?{" "}
-              <a href="#" className="text-primary hover:underline">
-                기술 지원 센터
-              </a>
-              에 문의하세요.
-            </p>
+          <AnimatedSection>
+            <AuthCard />
           </AnimatedSection>
         </section>
       </main>
@@ -513,11 +378,8 @@ export default function LoginPage() {
       <footer className="bg-surface-container-lowest py-16 px-6 border-t border-outline-variant/15">
         <div className="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
           <div className="col-span-1">
-            <div className="flex items-center gap-2 text-xl font-black tracking-tighter text-on-surface uppercase mb-6">
-              <span className="material-symbols-outlined text-primary">
-                hexagons
-              </span>
-              <span>SentinelHub</span>
+            <div className="mb-6">
+              <BrandLogo size="small" />
             </div>
             <p className="text-on-surface-variant text-sm leading-relaxed">
               차세대 통합 운영 관리의 표준.
@@ -604,7 +466,7 @@ export default function LoginPage() {
         </div>
         <div className="max-w-[1400px] mx-auto mt-16 pt-8 border-t border-outline-variant/10 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-xs text-on-surface-variant">
-            © 2024 SentinelHub Global. All rights reserved.
+            © 2024 DOT. Global. All rights reserved.
           </p>
           <div className="flex gap-6">
             <a
