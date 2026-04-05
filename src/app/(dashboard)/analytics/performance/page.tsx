@@ -4,6 +4,8 @@ import KpiCard from "@/components/common/KpiCard";
 import Card from "@/components/common/Card";
 import DataTable from "@/components/common/DataTable";
 import ProgressBar from "@/components/common/ProgressBar";
+import TableSection from "@/components/common/TableSection";
+import { IconTarget, IconGauge, IconTrendingUp, IconChartBar } from "@tabler/icons-react";
 
 const monthlyData = [
   { month: "10월", score: 72, target: 80 },
@@ -98,7 +100,7 @@ export default function PerformancePage() {
 
       <KpiGrid>
         <KpiCard
-          icon="target"
+          icon={<IconTarget size={18} className="text-on-surface-variant" />}
           label="목표달성률"
           value="87.4"
           suffix="%"
@@ -106,7 +108,7 @@ export default function PerformancePage() {
           trend="up"
         />
         <KpiCard
-          icon="speed"
+          icon={<IconGauge size={18} className="text-on-surface-variant" />}
           label="KPI 점수"
           value="92"
           suffix="점"
@@ -114,7 +116,7 @@ export default function PerformancePage() {
           trend="up"
         />
         <KpiCard
-          icon="trending_up"
+          icon={<IconTrendingUp size={18} className="text-on-surface-variant" />}
           label="전월대비"
           value="+12.8"
           suffix="%"
@@ -122,7 +124,7 @@ export default function PerformancePage() {
           trend="up"
         />
         <KpiCard
-          icon="leaderboard"
+          icon={<IconChartBar size={18} className="text-on-surface-variant" />}
           label="팀 순위"
           value="2"
           suffix="위"
@@ -131,9 +133,9 @@ export default function PerformancePage() {
         />
       </KpiGrid>
 
-      <div className="grid grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
         {/* Monthly Performance Bar Chart */}
-        <Card className="col-span-3 p-6">
+        <Card className="lg:col-span-3 p-6">
           <div className="flex items-center justify-between mb-6">
             <div>
               <h2 className="text-base font-bold text-on-surface">월별 성과 추이</h2>
@@ -186,15 +188,17 @@ export default function PerformancePage() {
         </Card>
 
         {/* Team Ranking */}
-        <Card className="col-span-2 p-0 overflow-hidden">
-          <div className="px-5 py-4 border-b border-outline-variant/10">
-            <h2 className="text-base font-bold text-on-surface">팀 순위</h2>
-            <p className="text-xs text-on-surface-variant mt-0.5">
-              이번 분기 팀별 성과 순위
-            </p>
-          </div>
-          <DataTable columns={rankColumns} data={rankData} />
-        </Card>
+        <div className="lg:col-span-2">
+          <TableSection totalCount={teamRanking.length}>
+            <div className="px-5 py-4 border-b border-outline-variant/10">
+              <h2 className="text-base font-bold text-on-surface">팀 순위</h2>
+              <p className="text-xs text-on-surface-variant mt-0.5">
+                이번 분기 팀별 성과 순위
+              </p>
+            </div>
+            <DataTable columns={rankColumns} data={rankData} />
+          </TableSection>
+        </div>
       </div>
     </div>
   );

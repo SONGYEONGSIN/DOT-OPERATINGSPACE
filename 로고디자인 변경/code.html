@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dot. v2 - Stacked Layout</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link as="style" crossorigin="" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-primary-fixed": "#3c4a00",
+              "tertiary-fixed": "#ffdf46",
+              "on-error": "#450900",
+              "surface-container-highest": "#232629",
+              "on-tertiary": "#675800",
+              "tertiary-container": "#ffdf46",
+              "on-primary-container": "#2c3700",
+              "on-surface": "#eeeef0",
+              "secondary-fixed": "#e1e3e5",
+              "surface-variant": "#232629",
+              "surface-container-low": "#111416",
+              "primary": "#d9fd53",
+              "surface-bright": "#292c30",
+              "error-container": "#b92902",
+              "error-dim": "#d53d18",
+              "primary-dim": "#cbee45",
+              "surface": "#0c0e10",
+              "outline-variant": "#46484a",
+              "primary-fixed": "#d6fa50",
+              "inverse-surface": "#f9f9fc",
+              "on-secondary-container": "#cfd0d3",
+              "on-tertiary-container": "#5e4f00",
+              "surface-container-high": "#1d2023",
+              "on-primary": "#4e5f00",
+              "tertiary-dim": "#f0d038",
+              "surface-dim": "#0c0e10",
+              "on-primary-fixed-variant": "#556800",
+              "on-background": "#eeeef0",
+              "surface-container": "#171a1c",
+              "on-tertiary-fixed": "#493d00",
+              "on-secondary": "#4f5254",
+              "on-secondary-fixed-variant": "#595c5e",
+              "secondary-container": "#444749",
+              "primary-container": "#9fc00f",
+              "secondary-dim": "#d3d4d7",
+              "outline": "#747578",
+              "on-surface-variant": "#aaabad",
+              "on-secondary-fixed": "#3d4042",
+              "secondary": "#e1e3e5",
+              "surface-container-lowest": "#000000",
+              "background": "#0c0e10",
+              "primary-fixed-dim": "#c8eb42",
+              "tertiary-fixed-dim": "#f0d038",
+              "inverse-primary": "#536600",
+              "tertiary": "#ffeead",
+              "error": "#ff7351",
+              "secondary-fixed-dim": "#d3d4d7",
+              "inverse-on-surface": "#545557",
+              "on-error-container": "#ffd2c8",
+              "surface-tint": "#d9fd53",
+              "on-tertiary-fixed-variant": "#695900"
+            },
+            fontFamily: {
+              "headline": ["Pretendard"],
+              "body": ["Pretendard"],
+              "label": ["Pretendard"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Pretendard', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .kinetic-grid {
+            background-image: linear-gradient(to right, #46484a 1px, transparent 1px),
+                              linear-gradient(to bottom, #46484a 1px, transparent 1px);
+            background-size: 40px 40px;
+            opacity: 0.05;
+        }
+        .scan-line {
+            background: linear-gradient(to bottom, transparent, #d9fd53, transparent);
+            height: 100px;
+            width: 100%;
+            position: absolute;
+            top: -100px;
+            left: 0;
+            opacity: 0.1;
+            animation: scan 4s linear infinite;
+        }
+        @keyframes scan {
+            0% { top: -100px; }
+            100% { top: 100%; }
+        }
+    
+        @keyframes bar-pulse {
+            0%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(1.1); }
+        }
+        .animate-bar-pulse {
+            animation: bar-pulse 2s ease-in-out infinite;
+            transform-origin: bottom;
+        }
+        @keyframes counter-flicker {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.002); }
+        }
+        .animate-counter-flicker {
+            animation: counter-flicker 0.15s ease-in-out infinite;
+        }
+        .brand-logo-glow {
+            filter: drop-shadow(0 0 8px rgba(217, 253, 83, 0.6));
+        }
+        .cyber-logo-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2px;
+            width: 28px;
+            height: 28px;
+        }
+        .cyber-logo-part {
+            background: #d9fd53;
+            border-radius: 1px;
+        }
+        .cyber-logo-part:nth-child(1) { border-top-left-radius: 8px; }
+        .cyber-logo-part:nth-child(2) { opacity: 0.4; }
+        .cyber-logo-part:nth-child(3) { border-bottom-left-radius: 8px; }
+        .cyber-logo-part:nth-child(4) { border-bottom-right-radius: 12px; border-top-right-radius: 12px; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface selection:bg-primary selection:text-on-primary">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-[#0c0e10]/80 backdrop-blur-xl border-b border-[#46484a]/15 shadow-[0_0_40px_rgba(219,255,85,0.06)] font-['Pretendard'] tracking-tight antialiased">
+<div class="flex justify-between items-center h-16 px-6 w-full max-w-[1920px] mx-auto">
+<div class="flex items-center gap-3 group cursor-pointer font-['Pretendard']">
+<div class="relative flex items-center justify-center">
+<div class="cyber-logo-grid brand-logo-glow">
+<div class="cyber-logo-part"></div>
+<div class="cyber-logo-part"></div>
+<div class="cyber-logo-part"></div>
+<div class="cyber-logo-part"></div>
+</div>
+<span class="absolute -inset-1 bg-primary/20 rounded blur-sm opacity-0 group-hover:opacity-100 transition-opacity"></span>
+</div>
+<div class="flex flex-col leading-[0.8] ml-1">
+<span class="tracking-tighter text-2xl font-black text-[#eeeef0]">Dot<span class="text-primary">.</span></span>
+<span class="text-[8px] font-bold text-on-secondary-fixed uppercase tracking-[0.25em]">OperatingSpace</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-[#aaabad] hover:bg-[#292c30] hover:text-[#DBFF55] transition-all duration-200 rounded-md active:scale-95">
+<span class="material-symbols-outlined">light_mode</span>
+</button>
+<button class="p-2 text-[#aaabad] hover:bg-[#292c30] hover:text-[#DBFF55] transition-all duration-200 rounded-md active:scale-95">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-[#aaabad] hover:bg-[#292c30] hover:text-[#DBFF55] transition-all duration-200 rounded-md active:scale-95">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<button class="ml-2 bg-[#d9fd53] text-[#4e5f00] px-4 py-2 font-bold rounded-md active:scale-95 transition-transform text-sm">
+                    관리자 로그인
+                </button>
+</div>
+</div>
+</nav>
+<main class="pt-16">
+<!-- Hero Section -->
+<section class="relative min-h-[700px] flex flex-col items-center justify-center overflow-hidden px-6">
+<div class="absolute inset-0 kinetic-grid pointer-events-none"></div>
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[120px] pointer-events-none"></div>
+<div class="relative z-10 text-center max-w-4xl mx-auto mb-16">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container-high border border-outline-variant/20 mb-8">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="text-xs font-bold text-primary tracking-widest uppercase">Aegis Grid v2 Enabled</span>
+</div>
+<h1 class="text-5xl md:text-7xl font-black tracking-tighter mb-6 leading-[1.1]">
+                    운영의 모든 것을<br/>
+<span class="text-primary">하나의 플랫폼에서.</span>
+</h1>
+<p class="text-on-surface-variant text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">서비스 관리, 계약, 인수인계, AI 분석까지 Dot.에서 모든 운영 업무를 처리하세요.</p>
+</div>
+</section>
+<!-- Operational Intelligence Section -->
+<section class="py-24 px-6 bg-surface-container-low relative overflow-hidden">
+<div class="max-w-[1400px] mx-auto">
+<div class="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<h2 class="text-sm font-bold text-primary tracking-[0.3em] uppercase mb-4">Tactical Intelligence</h2>
+<p class="text-4xl font-black tracking-tight">지능형 운영의 중심</p>
+</div>
+<div class="flex gap-4">
+<div class="flex items-center gap-2 px-3 py-1.5 bg-surface-container rounded-lg border border-outline-variant/10">
+<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Active Nodes</span>
+<span class="text-primary font-black">128</span>
+</div>
+<div class="flex items-center gap-2 px-3 py-1.5 bg-surface-container rounded-lg border border-outline-variant/10">
+<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Global Status</span>
+<span class="text-[#4ade80] font-black">STABLE</span>
+</div>
+</div>
+</div>
+<!-- Dynamic Dashboard Element -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<!-- Main Dashboard Window -->
+<div class="lg:col-span-8 bg-surface-container-high border border-outline-variant/15 rounded-xl overflow-hidden relative shadow-2xl">
+<div class="scan-line"></div>
+<div class="p-6 border-b border-outline-variant/10 flex justify-between items-center bg-surface-bright/30">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">analytics</span>
+<h3 class="font-bold text-lg">실시간 성능 모니터링</h3>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="text-[10px] font-bold uppercase tracking-tighter text-on-surface-variant">Live Feed</span>
+</div>
+</div>
+<div class="p-8">
+<!-- Interactive Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+<!-- Card 1: 통합 운영 관리 -->
+<div class="bg-surface/40 p-6 rounded-lg border border-outline-variant/10 flex flex-col gap-4 hover:border-primary/40 transition-all cursor-pointer group">
+<div class="flex items-center gap-3 mb-2">
+<span class="material-symbols-outlined text-primary text-2xl">dashboard_customize</span>
+<h4 class="font-bold text-lg tracking-tight">통합 운영 관리</h4>
+</div>
+<p class="text-sm text-on-surface-variant leading-relaxed">
+      서비스 관리, 계약, 인수인계 등 파편화된 모든 운영 업무를 단일 대시보드에서 효율적으로 통제하세요.
+    </p>
+</div>
+<!-- Card 2: AI & 자동화 -->
+<div class="bg-surface/40 p-6 rounded-lg border border-outline-variant/10 flex flex-col gap-4 hover:border-primary/40 transition-all cursor-pointer group">
+<div class="flex items-center gap-3 mb-2">
+<span class="material-symbols-outlined text-primary text-2xl">smart_toy</span>
+<h4 class="font-bold text-lg tracking-tight">AI &amp; 자동화</h4>
+</div>
+<p class="text-sm text-on-surface-variant leading-relaxed">
+      반복적인 태스크는 스마트 자동화로, 복잡한 판단은 전용 AI 어시스턴트의 도움을 받아 최상의 효율성을 유지합니다.
+    </p>
+</div>
+<!-- Card 3: 분석 & 보고 -->
+<div class="bg-surface/40 p-6 rounded-lg border border-outline-variant/10 flex flex-col gap-4 hover:border-primary/40 transition-all cursor-pointer group">
+<div class="flex items-center gap-3 mb-2">
+<span class="material-symbols-outlined text-primary text-2xl">monitoring</span>
+<h4 class="font-bold text-lg tracking-tight">분석 &amp; 보고</h4>
+</div>
+<p class="text-sm text-on-surface-variant leading-relaxed">
+      실시간 리포팅 시스템을 통해 데이터 기반의 신속하고 정확한 의사결정 인사이트를 확보할 수 있습니다.
+    </p>
+</div>
+</div>
+<!-- Smaller Line Charts Placeholder -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div>
+<div class="flex justify-between items-center mb-4">
+<span class="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest">Network Traffic</span>
+<span class="text-primary font-bold text-sm">4.2 Gbps</span>
+</div>
+<div class="h-24 flex items-end gap-1 px-2 border-l border-b border-outline-variant/20">
+<div class="w-full bg-primary/20 h-[30%] rounded-t-sm animate-bar-pulse"></div>
+<div class="w-full bg-primary/30 h-[45%] rounded-t-sm animate-bar-pulse" style="animation-delay: 0.2s;"></div>
+<div class="w-full bg-primary/25 h-[60%] rounded-t-sm animate-bar-pulse" style="animation-delay: 0.5s;"></div>
+<div class="w-full bg-primary/40 h-[40%] rounded-t-sm animate-bar-pulse" style="animation-delay: 0.2s;"></div>
+<div class="w-full bg-primary/50 h-[70%] rounded-t-sm animate-bar-pulse"></div>
+<div class="w-full bg-primary/30 h-[55%] rounded-t-sm animate-bar-pulse" style="animation-delay: 0.5s;"></div>
+<div class="w-full bg-primary h-[85%] rounded-t-sm animate-bar-pulse"></div>
+<div class="w-full bg-primary/40 h-[65%] rounded-t-sm animate-bar-pulse" style="animation-delay: 0.2s;"></div>
+<div class="w-full bg-primary/60 h-[45%] rounded-t-sm animate-bar-pulse" style="animation-delay: 0.5s;"></div>
+<div class="w-full bg-primary/20 h-[50%] rounded-t-sm animate-bar-pulse" style="animation-delay: 0.2s;"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-center mb-4">
+<span class="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest">CPU Utilization</span>
+<span class="text-primary font-bold text-sm">24.8%</span>
+</div>
+<div class="h-24 flex items-end gap-1 px-2 border-l border-b border-outline-variant/20">
+<div class="w-full bg-primary/10 h-[20%] rounded-t-sm animate-bar-pulse"></div>
+<div class="w-full bg-primary/20 h-[30%] rounded-t-sm animate-bar-pulse" style="animation-delay: 0.2s;"></div>
+<div class="w-full bg-primary/15 h-[25%] rounded-t-sm animate-bar-pulse" style="animation-delay: 0.5s;"></div>
+<div class="w-full bg-primary/25 h-[40%] rounded-t-sm animate-bar-pulse" style="animation-delay: 0.2s;"></div>
+<div class="w-full bg-primary/30 h-[35%] rounded-t-sm animate-bar-pulse"></div>
+<div class="w-full bg-primary/20 h-[50%] rounded-t-sm animate-bar-pulse" style="animation-delay: 0.5s;"></div>
+<div class="w-full bg-primary/40 h-[45%] rounded-t-sm animate-bar-pulse"></div>
+<div class="w-full bg-primary/30 h-[30%] rounded-t-sm animate-bar-pulse" style="animation-delay: 0.2s;"></div>
+<div class="w-full bg-primary/50 h-[40%] rounded-t-sm animate-bar-pulse" style="animation-delay: 0.5s;"></div>
+<div class="w-full bg-primary/20 h-[25%] rounded-t-sm animate-bar-pulse" style="animation-delay: 0.2s;"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Metrics Sidebar -->
+<div class="lg:col-span-4 flex flex-col gap-6">
+<div class="flex-1 bg-surface-container-high border border-outline-variant/15 rounded-xl p-8 flex flex-col justify-center">
+<span class="text-[12px] text-on-surface-variant uppercase font-bold tracking-[0.2em] mb-2">System Latency</span>
+<div class="flex items-baseline gap-2">
+<span class="text-5xl font-black text-primary animate-counter-flicker">12.4</span>
+<span class="text-xl font-bold text-primary/60">ms</span>
+</div>
+<div class="mt-4 flex items-center gap-2 text-xs text-[#4ade80]">
+<span class="material-symbols-outlined text-sm">trending_down</span>
+<span>8% improvement from last hour</span>
+</div>
+</div>
+<div class="flex-1 bg-surface-container-high border border-outline-variant/15 rounded-xl p-8 flex flex-col justify-center">
+<span class="text-[12px] text-on-surface-variant uppercase font-bold tracking-[0.2em] mb-2">Data Throughput</span>
+<div class="flex items-baseline gap-2">
+<span class="text-5xl font-black text-primary animate-counter-flicker">4.8</span>
+<span class="text-xl font-bold text-primary/60">GB/s</span>
+</div>
+<div class="mt-4 flex items-center gap-2 text-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">speed</span>
+<span>Peak load handled successfully</span>
+</div>
+</div>
+<div class="flex-1 bg-surface-container-high border border-outline-variant/15 rounded-xl p-8 flex flex-col justify-center">
+<span class="text-[12px] text-on-surface-variant uppercase font-bold tracking-[0.2em] mb-2">Error Rate</span>
+<div class="flex items-baseline gap-2">
+<span class="text-5xl font-black text-error animate-counter-flicker">0.002</span>
+<span class="text-xl font-bold text-error/60">%</span>
+</div>
+<div class="mt-4 flex items-center gap-2 text-xs text-error/80">
+<span class="material-symbols-outlined text-sm">report_problem</span>
+<span>2 isolated incidents flagged</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Auth Section -->
+<section class="py-24 px-6 relative bg-surface overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-outline-variant/30 to-transparent"></div>
+<div class="max-w-md mx-auto relative z-10">
+<div class="text-center mb-10">
+<h2 class="text-3xl font-black tracking-tighter mb-2">시작할 준비가 되셨나요?</h2>
+<p class="text-on-surface-variant text-sm">지금 Dot.의 파트너가 되어 보안 수준을 높이세요.</p>
+</div>
+<div class="bg-surface-container rounded-xl border border-outline-variant/15 overflow-hidden shadow-2xl">
+<!-- Tabs -->
+<div class="flex border-b border-outline-variant/15">
+<button class="flex-1 py-4 text-sm font-bold border-b-2 border-primary text-on-surface bg-surface-container-high">로그인</button>
+<button class="flex-1 py-4 text-sm font-bold border-b-2 border-transparent text-on-surface-variant hover:text-on-surface transition-colors">계정 생성</button>
+</div>
+<!-- Login Form Body -->
+<div class="p-8">
+<!-- Microsoft Primary Login -->
+<button class="w-full mb-8 py-3.5 bg-white text-black font-bold rounded-md active:scale-95 transition-transform flex items-center justify-center gap-3">
+<svg class="w-5 h-5" viewbox="0 0 23 23" xmlns="http://www.w3.org/2000/svg"><path d="M11.4 24H0V12.6h11.4V24zM24 24H12.6V12.6H24V24zM11.4 11.4H0V0h11.4v11.4zm12.6 0H12.6V0H24v11.4z" fill="#f35325"></path><path d="M11.4 24H0V12.6h11.4V24z" fill="#80bb03"></path><path d="M24 24H12.6V12.6H24V24z" fill="#ffba08"></path><path d="M24 11.4H12.6V0H24v11.4z" fill="#05a6f0"></path></svg>
+                            Microsoft로 계속하기
+                        </button>
+<div class="relative flex items-center justify-center mb-8">
+<div class="absolute inset-0 flex items-center"><div class="w-full border-t border-outline-variant/20"></div></div>
+<span class="relative px-4 bg-surface-container text-[10px] font-bold text-on-surface-variant tracking-widest uppercase">또는 이메일로 로그인</span>
+</div>
+<div class="space-y-4">
+<div>
+<label class="block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-2">워크스페이스 이메일</label>
+<input class="w-full bg-surface-container-highest border-none rounded-md px-4 py-3 text-on-surface placeholder:text-outline focus:ring-1 focus:ring-primary/50 transition-all" placeholder="name@company.com" type="email"/>
+</div>
+<div>
+<label class="block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-2">비밀번호</label>
+<input class="w-full bg-surface-container-highest border-none rounded-md px-4 py-3 text-on-surface placeholder:text-outline focus:ring-1 focus:ring-primary/50 transition-all" placeholder="••••••••" type="password"/>
+</div>
+<div class="flex items-center justify-between pt-2">
+<label class="flex items-center gap-2 cursor-pointer">
+<input class="rounded-sm border-none bg-surface-container-highest text-primary focus:ring-primary focus:ring-offset-0" type="checkbox"/>
+<span class="text-xs text-on-surface-variant">로그인 유지</span>
+</label>
+<a class="text-xs text-primary font-bold hover:underline" href="#">비밀번호 찾기</a>
+</div>
+<button class="w-full py-4 bg-primary text-on-primary font-black rounded-md active:scale-95 transition-transform mt-4 shadow-[0_0_20px_rgba(217,253,83,0.2)]">
+                                시스템 접속
+                            </button>
+</div>
+</div>
+</div>
+<p class="mt-8 text-center text-xs text-on-surface-variant">지금 Dot.의 파트너가 되어 보안 수준을 높이세요.</p>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest py-16 px-6 border-t border-outline-variant/15">
+<div class="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+<div class="col-span-1 md:col-span-1">
+<div class="flex items-center gap-3 mb-6 group cursor-pointer font-['Pretendard']">
+<div class="relative flex items-center justify-center">
+<div class="cyber-logo-grid brand-logo-glow scale-90">
+<div class="cyber-logo-part"></div>
+<div class="cyber-logo-part"></div>
+<div class="cyber-logo-part"></div>
+<div class="cyber-logo-part"></div>
+</div>
+</div>
+<div class="flex flex-col leading-[0.8] ml-1">
+<span class="tracking-tighter text-2xl font-black text-[#eeeef0]">Dot<span class="text-primary">.</span></span>
+<span class="text-[8px] font-bold text-on-secondary-fixed uppercase tracking-[0.25em]">OperatingSpace</span>
+</div>
+</div>
+<p class="text-on-surface-variant text-sm leading-relaxed">차세대 통합 운영 관리의 표준.<br/>
+데이터와 지능으로 비즈니스를 보호합니다.</p>
+</div>
+<div>
+<h4 class="text-[10px] font-bold text-primary tracking-widest uppercase mb-6">Product</h4>
+<ul class="space-y-4 text-sm text-on-surface-variant">
+<li><a class="hover:text-primary transition-colors" href="#">기능 소개</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">보안 정책</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">API 가이드</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">릴리즈 노트</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-[10px] font-bold text-primary tracking-widest uppercase mb-6">Company</h4>
+<ul class="space-y-4 text-sm text-on-surface-variant">
+<li><a class="hover:text-primary transition-colors" href="#">팀 소개</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">채용 정보</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">블로그</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">문의하기</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-[10px] font-bold text-primary tracking-widest uppercase mb-6">Legal</h4>
+<ul class="space-y-4 text-sm text-on-surface-variant">
+<li><a class="hover:text-primary transition-colors" href="#">이용 약관</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">개인정보 처리방침</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">쿠키 정책</a></li>
+</ul>
+</div>
+</div>
+<div class="max-w-[1400px] mx-auto mt-16 pt-8 border-t border-outline-variant/10 flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="text-xs text-on-surface-variant">© 2024 Dot. Global. All rights reserved.</p>
+<div class="flex gap-6">
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-sm">public</span>
+</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-sm">code</span>
+</a>
+</div>
+</div>
+</footer>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+    const metrics = [
+      {
+        selector: '.lg\\:col-span-4 > div:nth-child(1) .animate-counter-flicker',
+        base: 12.4,
+        range: 0.5,
+        decimals: 1
+      },
+      {
+        selector: '.lg\\:col-span-4 > div:nth-child(2) .animate-counter-flicker',
+        base: 4.8,
+        range: 0.2,
+        decimals: 1
+      },
+      {
+        selector: '.lg\\:col-span-4 > div:nth-child(3) .animate-counter-flicker',
+        base: 0.002,
+        range: 0.001,
+        decimals: 3
+      }
+    ];
+
+    function updateMetrics() {
+      metrics.forEach(metric => {
+        const element = document.querySelector(metric.selector);
+        if (element) {
+          const fluctuation = (Math.random() - 0.5) * 2 * metric.range;
+          const newValue = (metric.base + fluctuation).toFixed(metric.decimals);
+          element.textContent = newValue;
+        }
+      });
+
+      // High frequency update for live feed feel (50-150ms)
+      setTimeout(updateMetrics, 50 + Math.random() * 100);
+    }
+
+    updateMetrics();
+  });
+</script>
+</body></html>

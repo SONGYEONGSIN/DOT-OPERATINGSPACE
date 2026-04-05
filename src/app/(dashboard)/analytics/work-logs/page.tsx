@@ -1,204 +1,174 @@
-import PageHeader from "@/components/common/PageHeader";
-import StatusBadge from "@/components/common/StatusBadge";
-import Card from "@/components/common/Card";
+import { createClient } from "@/lib/supabase/server";
+import {
+  PageHeader,
+  KpiGrid,
+  KpiCard,
+  StatusBadge,
+  Card,
+  UserAvatar,
+} from "@/components/common";
+import { IconHistory, IconCircleCheck, IconListCheck, IconUsers } from "@tabler/icons-react";
+import { PROJECT_NAMES } from "../../projects/_components/types";
 
-const logs = [
-  {
-    id: 1,
-    user: "김도연",
-    avatar: "DY",
-    action: "프로젝트 '스마트 오피스 구축' 마일스톤 완료 처리",
-    timestamp: "2026-03-26 14:32",
-    category: "프로젝트",
-    type: "완료" as const,
-    detail: "마일스톤 3/5 -- 인프라 설계 완료",
-  },
-  {
-    id: 2,
-    user: "박서연",
-    avatar: "SY",
-    action: "주간 운영 보고서(3월 3주차) 작성 및 제출",
-    timestamp: "2026-03-26 13:15",
-    category: "보고서",
-    type: "생성" as const,
-    detail: "12페이지 분량, PDF 생성 완료",
-  },
-  {
-    id: 3,
-    user: "이정민",
-    avatar: "JM",
-    action: "시스템 모니터링 알림 설정 변경",
-    timestamp: "2026-03-26 11:48",
-    category: "시스템",
-    type: "수정" as const,
-    detail: "CPU 임계치 85% -> 90%로 조정",
-  },
-  {
-    id: 4,
-    user: "최현우",
-    avatar: "HW",
-    action: "신규 팀원 '한소희' 온보딩 프로세스 시작",
-    timestamp: "2026-03-26 10:22",
-    category: "인사",
-    type: "생성" as const,
-    detail: "디자인팀 배정, 온보딩 5단계 진행 예정",
-  },
-  {
-    id: 5,
-    user: "김도연",
-    avatar: "DY",
-    action: "운영 대시보드 KPI 목표치 업데이트",
-    timestamp: "2026-03-26 09:55",
-    category: "설정",
-    type: "수정" as const,
-    detail: "Q1 목표 달성률 85% -> 90% 상향",
-  },
-  {
-    id: 6,
-    user: "박서연",
-    avatar: "SY",
-    action: "시스템 개선 요청 #REQ-047 검토 완료",
-    timestamp: "2026-03-25 17:40",
-    category: "요청",
-    type: "완료" as const,
-    detail: "우선순위 '높음' -> 개발팀 전달",
-  },
-  {
-    id: 7,
-    user: "이정민",
-    avatar: "JM",
-    action: "자동 백업 스케줄 야간 배치 작업 설정",
-    timestamp: "2026-03-25 16:12",
-    category: "시스템",
-    type: "생성" as const,
-    detail: "매일 02:00 전체 DB 백업 자동화",
-  },
-  {
-    id: 8,
-    user: "최현우",
-    avatar: "HW",
-    action: "월간 성과 분석 보고서 초안 반려",
-    timestamp: "2026-03-25 14:30",
-    category: "보고서",
-    type: "반려" as const,
-    detail: "데이터 기준일 오류 -- 수정 요청",
-  },
-];
+interface ProjectLog {
+  id: number;
+  project: string;
+  task_id: number | null;
+  action: string;
+  actor: string;
+  detail: string | null;
+  created_at: string;
+}
 
-const typeBadgeVariant = {
-  완료: "success",
-  생성: "warning",
-  수정: "info",
-  반려: "error",
-} as const;
+const actionConfig: Record<string, { label: string; variant: "success" | "warning" | "info" | "error" | "neutral" }> = {
+  created: { label: "생성", variant: "success" },
+  requested: { label: "요청", variant: "warning" },
+  status_changed: { label: "상태변경", variant: "info" },
+  assigned: { label: "담당변경", variant: "info" },
+  deleted: { label: "삭제", variant: "error" },
+  edited: { label: "수정", variant: "neutral" },
+};
 
-const avatarStyles = [
-  "bg-primary/20 text-primary",
-  "bg-tertiary/20 text-tertiary",
-  "bg-secondary-container text-on-secondary-container",
-  "bg-error/15 text-error",
-];
+export default async function WorkLogsPage() {
+  const supabase = createClient();
 
-export default function WorkLogsPage() {
-  const todayCount = logs.filter((l) =>
-    l.timestamp.startsWith("2026-03-26"),
-  ).length;
+  const [{ data: logs }, { count: workLogCount }] = await Promise.all([
+    supabase
+      .from("project_logs")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(200),
+    supabase
+      .from("service_work_logs")
+      .select("service_id", { count: "exact", head: true }),
+  ]);
+
+  const allLogs = (logs ?? []) as ProjectLog[];
+
+  const totalLogs = allLogs.length;
+  const uniqueActors = new Set(allLogs.map((l) => l.actor)).size;
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const todayLogs = allLogs.filter((l) => l.created_at.startsWith(todayStr)).length;
+
+  // 프로젝트별 활동 수
+  const projectCounts = new Map<string, number>();
+  for (const log of allLogs) {
+    projectCounts.set(log.project, (projectCounts.get(log.project) ?? 0) + 1);
+  }
+  const topProjects = Array.from(projectCounts.entries())
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5);
+
+  // 날짜별 그룹핑
+  const dateGroups = new Map<string, ProjectLog[]>();
+  for (const log of allLogs) {
+    const date = log.created_at.slice(0, 10);
+    if (!dateGroups.has(date)) dateGroups.set(date, []);
+    dateGroups.get(date)!.push(log);
+  }
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-8">
       <PageHeader
         title="업무 로그"
-        description="팀원들의 활동 기록을 타임라인으로 확인하세요."
-        breadcrumb={["분석 & 보고", "업무 로그"]}
-        actions={
-          <div className="flex items-center gap-2">
-            <Card className="px-3 py-2 flex items-center gap-2">
-              <span className="material-symbols-outlined text-primary text-[18px]">
-                today
-              </span>
-              <span className="text-xs font-semibold text-on-surface">
-                오늘 {todayCount}건
-              </span>
-            </Card>
-            <button className="flex items-center gap-2 bg-surface-container-high border border-outline-variant/15 px-4 py-2 rounded-xl text-on-surface-variant text-sm hover:text-on-surface transition-colors">
-              <span className="material-symbols-outlined text-[18px]">
-                filter_list
-              </span>
-              필터
-            </button>
-          </div>
-        }
+        description="프로젝트 활동 및 서비스 작업이력을 통합 조회합니다."
+        breadcrumb={["분석 & 보고", "업무로그"]}
       />
 
-      {/* Timeline */}
+      <KpiGrid>
+        <KpiCard
+          icon={<IconHistory size={18} className="text-on-surface-variant" />}
+          label="프로젝트 활동"
+          value={totalLogs.toString()}
+          suffix="건"
+          change={`오늘 ${todayLogs}건`}
+        />
+        <KpiCard
+          icon={<IconCircleCheck size={18} className="text-on-surface-variant" />}
+          label="서비스 작업이력"
+          value={(workLogCount ?? 0).toString()}
+          suffix="건"
+        />
+        <KpiCard
+          icon={<IconUsers size={18} className="text-on-surface-variant" />}
+          label="활동 인원"
+          value={uniqueActors.toString()}
+          suffix="명"
+        />
+        <KpiCard
+          icon={<IconListCheck size={18} className="text-on-surface-variant" />}
+          label="활성 프로젝트"
+          value={projectCounts.size.toString()}
+          suffix="개"
+        />
+      </KpiGrid>
+
+      {topProjects.length > 0 && (
+        <Card className="p-5">
+          <h3 className="text-sm font-bold text-primary tracking-[0.2em] uppercase mb-4">프로젝트별 활동</h3>
+          <div className="flex items-center gap-4 flex-wrap">
+            {topProjects.map(([proj, count]) => (
+              <div key={proj} className="flex items-center gap-2">
+                <span className="text-xs font-bold text-on-surface">{PROJECT_NAMES[proj] ?? proj}</span>
+                <span className="text-xs text-on-surface-variant tabular-nums">{count}건</span>
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
+
+      {/* 타임라인 */}
       <div className="relative">
         <div className="absolute left-[23px] top-0 bottom-0 w-px bg-outline-variant/20" />
-
         <div className="space-y-1">
-          {logs.map((log, index) => {
-            const isNewDay =
-              index === 0 ||
-              log.timestamp.slice(0, 10) !== logs[index - 1].timestamp.slice(0, 10);
-
-            return (
-              <div key={log.id}>
-                {/* Date separator */}
-                {isNewDay && (
-                  <div className="flex items-center gap-3 py-3 ml-[14px]">
-                    <div className="w-[18px] h-[18px] rounded-full bg-primary flex items-center justify-center z-10">
-                      <span className="material-symbols-outlined text-on-primary text-[12px]">
-                        calendar_today
-                      </span>
-                    </div>
-                    <span className="text-xs font-bold text-primary tracking-wider uppercase">
-                      {log.timestamp.slice(0, 10)}
-                    </span>
-                  </div>
-                )}
-
-                {/* Log entry */}
-                <div className="flex gap-4 group">
-                  {/* Avatar */}
-                  <div className="relative z-10 flex-shrink-0">
-                    <div
-                      className={`w-[47px] h-[47px] rounded-full flex items-center justify-center text-xs font-black ${avatarStyles[index % avatarStyles.length]}`}
-                    >
-                      {log.avatar}
-                    </div>
-                  </div>
-
-                  {/* Content */}
-                  <Card className="flex-1 p-4 group-hover:border-primary/20 transition-colors mb-2">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="text-sm font-bold text-on-surface">
-                            {log.user}
-                          </span>
-                          <StatusBadge variant={typeBadgeVariant[log.type]}>
-                            {log.type}
-                          </StatusBadge>
-                        </div>
-                        <p className="text-sm text-on-surface/90">{log.action}</p>
-                        <p className="text-xs text-on-surface-variant mt-1.5">
-                          {log.detail}
-                        </p>
-                      </div>
-                      <StatusBadge variant="neutral">{log.category}</StatusBadge>
-                    </div>
-                    <div className="flex items-center gap-1 mt-3 text-on-surface-variant">
-                      <span className="material-symbols-outlined text-[13px]">
-                        schedule
-                      </span>
-                      <span className="text-[11px]">
-                        {log.timestamp.slice(11)}
-                      </span>
-                    </div>
-                  </Card>
+          {Array.from(dateGroups.entries()).map(([date, dateLogs]) => (
+            <div key={date}>
+              <div className="flex items-center gap-3 py-3 ml-[14px]">
+                <div className="w-[18px] h-[18px] rounded-full bg-primary flex items-center justify-center z-10">
+                  <IconHistory size={10} className="text-on-primary" />
                 </div>
+                <span className="text-xs font-bold text-primary tracking-wider uppercase">{date}</span>
+                <span className="text-[10px] text-on-surface-variant">{dateLogs.length}건</span>
               </div>
-            );
-          })}
+
+              {dateLogs.map((log) => {
+                const config = actionConfig[log.action] ?? actionConfig.edited;
+                return (
+                  <div key={log.id} className="flex gap-4 group">
+                    <div className="relative z-10 flex-shrink-0">
+                      <UserAvatar name={log.actor} size="sm" className="!w-[47px] !h-[47px]" />
+                    </div>
+                    <Card className="flex-1 p-4 group-hover:border-primary/20 transition-colors mb-2">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="text-sm font-bold text-on-surface">{log.actor}</span>
+                            <StatusBadge variant={config.variant}>{config.label}</StatusBadge>
+                          </div>
+                          <p className="text-sm text-on-surface/90">{log.detail ?? "-"}</p>
+                        </div>
+                        <StatusBadge variant="neutral">{PROJECT_NAMES[log.project] ?? log.project}</StatusBadge>
+                      </div>
+                      <div className="flex items-center gap-1 mt-3 text-on-surface-variant">
+                        <IconHistory size={11} />
+                        <span className="text-[11px]">
+                          {new Date(log.created_at).toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" })}
+                        </span>
+                      </div>
+                    </Card>
+                  </div>
+                );
+              })}
+            </div>
+          ))}
+
+          {allLogs.length === 0 && (
+            <div className="flex flex-col items-center justify-center py-16 text-on-surface-variant">
+              <IconHistory size={40} className="opacity-30 mb-2" />
+              <p className="text-sm font-medium">활동 기록이 없습니다.</p>
+              <p className="text-xs mt-1">프로젝트에서 작업을 수행하면 자동으로 기록됩니다.</p>
+            </div>
+          )}
         </div>
       </div>
     </div>

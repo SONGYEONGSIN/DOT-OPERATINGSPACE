@@ -131,7 +131,7 @@ export default function InsightsPage() {
       </Card>
 
       {/* Insight Cards */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {insights.map((insight) => (
           <Card
             key={insight.id}
@@ -192,7 +192,7 @@ export default function InsightsPage() {
         <h2 className="text-sm font-bold text-primary tracking-[0.2em] uppercase mb-3">
           AI Recommendations
         </h2>
-        <div className="grid grid-cols-4 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {recommendations.map((rec) => (
             <Card key={rec.title} hover className="p-4 cursor-pointer group">
               <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-3 group-hover:bg-primary/20 transition-colors">

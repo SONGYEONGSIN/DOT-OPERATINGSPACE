@@ -1,6 +1,7 @@
 "use client";
 
 import { useFormStatus } from "react-dom";
+import { IconLoader2 } from "@tabler/icons-react";
 import { cn } from "@/lib/cn";
 
 interface SubmitButtonProps {
@@ -29,9 +30,7 @@ export function SubmitButton({
     >
       {pending ? (
         <span className="flex items-center justify-center gap-2">
-          <span className="material-symbols-outlined animate-spin text-lg">
-            progress_activity
-          </span>
+          <IconLoader2 size={16} className="animate-spin" />
           {loadingText}
         </span>
       ) : (

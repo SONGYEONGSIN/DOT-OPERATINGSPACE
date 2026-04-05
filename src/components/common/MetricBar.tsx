@@ -1,5 +1,5 @@
 interface MetricItem {
-  icon: string;
+  icon: React.ReactNode;
   label: string;
   value: string;
   suffix?: string;
@@ -15,9 +15,7 @@ export default function MetricBar({ items }: MetricBarProps) {
       <div className="flex justify-around items-center px-4 py-3">
         {items.map((item, index) => (
           <div key={index} className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-on-surface-variant text-lg">
-              {item.icon}
-            </span>
+            {item.icon}
             <div className="flex flex-col">
               <span className="text-[10px] font-medium text-on-surface-variant uppercase tracking-wider">
                 {item.label}

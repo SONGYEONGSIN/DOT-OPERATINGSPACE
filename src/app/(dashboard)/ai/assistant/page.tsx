@@ -49,9 +49,9 @@ export default function AssistantPage() {
         breadcrumb={["AI & 자동화", "어시스턴트"]}
       />
 
-      <div className="grid grid-cols-3 gap-4" style={{ height: "calc(100vh - 220px)" }}>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4" style={{ height: "calc(100vh - 220px)" }}>
         {/* Chat Area */}
-        <Card className="col-span-2 flex flex-col overflow-hidden p-0">
+        <Card className="lg:col-span-2 flex flex-col overflow-hidden p-0">
           {/* Chat Header */}
           <div className="flex items-center gap-3 px-5 py-3.5 border-b border-outline-variant/15">
             <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">

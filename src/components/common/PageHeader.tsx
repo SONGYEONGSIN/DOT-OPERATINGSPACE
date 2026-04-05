@@ -1,4 +1,5 @@
 import { cn } from "@/lib/cn";
+import { IconChevronRight } from "@tabler/icons-react";
 
 interface PageHeaderProps {
   title: string;
@@ -21,9 +22,7 @@ export default function PageHeader({
             {breadcrumb.map((item, index) => (
               <li key={index} className="flex items-center gap-1.5">
                 {index > 0 && (
-                  <span className="material-symbols-outlined text-[10px] opacity-50">
-                    chevron_right
-                  </span>
+                  <IconChevronRight size={12} className="opacity-50" />
                 )}
                 <span
                   className={cn(

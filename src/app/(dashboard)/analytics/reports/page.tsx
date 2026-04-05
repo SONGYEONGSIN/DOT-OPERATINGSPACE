@@ -2,9 +2,10 @@ import PageHeader from "@/components/common/PageHeader";
 import KpiGrid from "@/components/common/KpiGrid";
 import KpiCard from "@/components/common/KpiCard";
 import StatusBadge from "@/components/common/StatusBadge";
-import Card from "@/components/common/Card";
 import DataTable from "@/components/common/DataTable";
 import FilterBar from "@/components/common/FilterBar";
+import TableSection from "@/components/common/TableSection";
+import { IconAlertTriangle, IconClock, IconBolt, IconShieldCheck } from "@tabler/icons-react";
 
 const reports = [
   {
@@ -142,14 +143,14 @@ export default function ReportsPage() {
 
       <KpiGrid>
         <KpiCard
-          icon="error"
+          icon={<IconAlertTriangle size={18} className="text-on-surface-variant" />}
           label="총 인시던트"
           value="1,284"
           change="+12%"
           trend="up"
         />
         <KpiCard
-          icon="timer"
+          icon={<IconClock size={18} className="text-on-surface-variant" />}
           label="평균 응답시간"
           value="42"
           suffix="ms"
@@ -157,7 +158,7 @@ export default function ReportsPage() {
           trend="down"
         />
         <KpiCard
-          icon="bolt"
+          icon={<IconBolt size={18} className="text-on-surface-variant" />}
           label="리소스 효율"
           value="94.2"
           suffix="%"
@@ -165,7 +166,7 @@ export default function ReportsPage() {
           trend="neutral"
         />
         <KpiCard
-          icon="verified_user"
+          icon={<IconShieldCheck size={18} className="text-on-surface-variant" />}
           label="보안 점수"
           value="98"
           suffix="/100"
@@ -184,7 +185,7 @@ export default function ReportsPage() {
         ]}
       />
 
-      <Card>
+      <TableSection totalCount={reports.length}>
         <div className="px-5 py-3.5 border-b border-outline-variant/10 flex items-center justify-between">
           <h2 className="text-sm font-bold text-on-surface">
             최근 생성된 보고서
@@ -194,7 +195,7 @@ export default function ReportsPage() {
           </span>
         </div>
         <DataTable columns={columns} data={tableData} />
-      </Card>
+      </TableSection>
     </div>
   );
 }

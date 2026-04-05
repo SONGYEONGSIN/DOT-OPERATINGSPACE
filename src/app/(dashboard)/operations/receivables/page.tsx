@@ -1,114 +1,140 @@
+import { Suspense } from "react";
 import {
   PageHeader,
   KpiGrid,
   KpiCard,
-  StatusBadge,
   Card,
   DataTable,
+  TableSection,
+  FilterBar,
 } from "@/components/common";
+import { IconWallet, IconCash, IconAlertTriangle, IconClock } from "@tabler/icons-react";
+import { fetchReceivables } from "@/lib/sharepoint";
+import ReceivableActionMenu from "./ReceivableActionMenu";
 
-interface Receivable {
-  university: string;
-  amount: string;
-  amountRaw: number;
-  issueDate: string;
-  daysOverdue: number;
-  status: "정상" | "주의" | "경고" | "연체";
-  manager: string;
-  invoiceNo: string;
+function stripNumbers(text: string): string {
+  return text.replace(/^\d+\s*/, "").replace(/\s+/g, " ").trim();
 }
 
-const receivables: Receivable[] = [
-  { university: "한국외국어대학교", amount: "45,000,000", amountRaw: 45000000, issueDate: "2026.02.15", daysOverdue: 39, status: "주의", manager: "김민수", invoiceNo: "INV-2026-0042" },
-  { university: "동국대학교", amount: "128,000,000", amountRaw: 128000000, issueDate: "2025.12.01", daysOverdue: 115, status: "연체", manager: "박준혁", invoiceNo: "INV-2025-0318" },
-  { university: "숙명여자대학교", amount: "32,000,000", amountRaw: 32000000, issueDate: "2026.03.01", daysOverdue: 25, status: "정상", manager: "이서연", invoiceNo: "INV-2026-0067" },
-  { university: "세종대학교", amount: "67,500,000", amountRaw: 67500000, issueDate: "2026.01.10", daysOverdue: 75, status: "경고", manager: "최영진", invoiceNo: "INV-2026-0015" },
-  { university: "건국대학교", amount: "89,000,000", amountRaw: 89000000, issueDate: "2025.11.20", daysOverdue: 126, status: "연체", manager: "한소희", invoiceNo: "INV-2025-0295" },
-  { university: "인하대학교", amount: "21,000,000", amountRaw: 21000000, issueDate: "2026.03.10", daysOverdue: 16, status: "정상", manager: "오태현", invoiceNo: "INV-2026-0081" },
-  { university: "아주대학교", amount: "54,200,000", amountRaw: 54200000, issueDate: "2026.01.25", daysOverdue: 60, status: "경고", manager: "신예진", invoiceNo: "INV-2026-0028" },
-  { university: "광운대학교", amount: "15,800,000", amountRaw: 15800000, issueDate: "2026.03.15", daysOverdue: 11, status: "정상", manager: "윤재호", invoiceNo: "INV-2026-0089" },
-];
-
-const statusVariantMap = {
-  정상: "success",
-  주의: "warning",
-  경고: "error",
-  연체: "error",
-} as const;
-
-function getDaysColor(days: number): string {
-  if (days > 90) return "text-error";
-  if (days > 60) return "text-error-dim";
-  if (days > 30) return "text-tertiary";
-  return "text-on-surface";
+interface PageProps {
+  searchParams: Promise<{ search?: string; tab?: string }>;
 }
 
-export default function ReceivablesPage() {
-  const totalAmount = receivables.reduce((sum, r) => sum + r.amountRaw, 0);
-  const within30 = receivables.filter((r) => r.daysOverdue <= 30);
-  const within60 = receivables.filter(
-    (r) => r.daysOverdue > 30 && r.daysOverdue <= 60,
-  );
-  const over90 = receivables.filter((r) => r.daysOverdue > 90);
+export default async function ReceivablesPage({ searchParams }: PageProps) {
+  const params = await searchParams;
+  const searchFilter = params.search ?? "";
+  const tabFilter = params.tab ?? "all";
+  const result = await fetchReceivables();
+  const items = result?.items ?? [];
+  const totalAmount = result?.totalAmount ?? 0;
+  const sheetName = result?.sheetName ?? "-";
 
-  const within30Amount = within30.reduce((sum, r) => sum + r.amountRaw, 0);
-  const within60Amount = within60.reduce((sum, r) => sum + r.amountRaw, 0);
-  const over90Amount = over90.reduce((sum, r) => sum + r.amountRaw, 0);
+  // 입금 여부 판단
+  const paidItems = items.filter((r) => r.memo && String(r.memo).trim() !== "" && String(r.memo).trim() !== "-");
+  const unpaidItems = items.filter((r) => !r.memo || String(r.memo).trim() === "" || String(r.memo).trim() === "-");
+  const paidAmount = paidItems.reduce((sum, r) => sum + r.amount, 0);
+  const unpaidAmount = unpaidItems.reduce((sum, r) => sum + r.amount, 0);
+
+  // 30일 경과 미수
+  const over30Unpaid = unpaidItems.filter((r) => r.daysElapsed > 30);
+
+  // 회수율
+  const collectionRate = totalAmount > 0 ? Math.round((paidAmount / totalAmount) * 100) : 0;
+
+  // 필터 적용
+  let filteredItems = items;
+
+  if (tabFilter === "unpaid") {
+    filteredItems = unpaidItems;
+  } else if (tabFilter === "paid") {
+    filteredItems = paidItems;
+  } else if (tabFilter === "over30") {
+    filteredItems = over30Unpaid;
+  }
+
+  if (searchFilter) {
+    const q = searchFilter.toLowerCase();
+    filteredItems = filteredItems.filter(
+      (r) =>
+        (r.university ?? "").toLowerCase().includes(q) ||
+        (r.operator ?? "").toLowerCase().includes(q) ||
+        (r.detail ?? "").toLowerCase().includes(q),
+    );
+  }
 
   const columns = [
-    { key: "university", label: "대학명" },
-    { key: "amount", label: "미수금액", className: "text-right" },
-    { key: "issueDate", label: "발생일" },
-    { key: "daysOverdue", label: "경과일", className: "text-center" },
-    { key: "status", label: "상태", className: "text-center" },
-    { key: "manager", label: "담당자" },
+    { key: "invoiceDate", label: "청구일자", className: "w-[8%]" },
+    { key: "university", label: "거래처명", className: "w-[13%]" },
+    { key: "detail", label: "거래내역", className: "w-[16%]" },
+    { key: "operator", label: "운영자", className: "w-[6%]" },
+    { key: "amount", label: "청구금액", className: "w-[10%] text-right" },
+    { key: "schoolContact", label: "학교담당자", className: "w-[12%]" },
+    { key: "mailSentDate", label: "메일발송일자", className: "w-[9%]" },
+    { key: "expectedPayDate", label: "입금예정일", className: "w-[8%]" },
+    { key: "daysElapsed", label: "경과", className: "w-[6%] text-center" },
+    { key: "payStatus", label: "입금여부", className: "w-[10%]" },
+    { key: "actions", label: "", className: "!px-1 w-10" },
   ];
 
-  const tableData = receivables.map((item) => ({
-    university: (
-      <div>
-        <p className="text-sm font-semibold text-on-surface">
-          {item.university}
-        </p>
-        <p className="text-[10px] text-on-surface-variant font-mono">
-          {item.invoiceNo}
-        </p>
-      </div>
-    ),
-    amount: (
-      <div className="text-right">
-        <span className="font-bold tabular-nums">{item.amount}</span>
-        <span className="text-xs text-on-surface-variant ml-1">원</span>
-      </div>
-    ),
-    issueDate: (
-      <span className="text-on-surface-variant">{item.issueDate}</span>
-    ),
-    daysOverdue: (
-      <span
-        className={`font-bold tabular-nums ${getDaysColor(item.daysOverdue)}`}
-      >
-        {item.daysOverdue}일
-      </span>
-    ),
-    status: (
-      <div className="text-center">
-        <StatusBadge variant={statusVariantMap[item.status]}>
-          {item.status}
-        </StatusBadge>
-      </div>
-    ),
-    manager: (
-      <div className="flex items-center gap-2">
-        <div className="w-6 h-6 rounded-full bg-surface-container-high flex items-center justify-center">
-          <span className="text-[9px] font-bold text-on-surface-variant">
-            {item.manager.charAt(0)}
-          </span>
+  const tableData = filteredItems.map((item) => {
+    const hasMemo = item.memo && String(item.memo).trim() !== "" && String(item.memo).trim() !== "-";
+
+    return {
+      invoiceDate: (
+        <span className="text-xs text-on-surface tabular-nums">{item.invoiceDate ?? "-"}</span>
+      ),
+      university: (
+        <span className="text-sm font-medium text-on-surface">{item.university ?? "-"}</span>
+      ),
+      detail: (
+        <span className="text-xs text-on-surface-variant truncate block max-w-[200px]">
+          {item.detail ? stripNumbers(item.detail) : "-"}
+        </span>
+      ),
+      operator: (
+        <span className="text-xs text-on-surface">{item.operator ?? "-"}</span>
+      ),
+      amount: (
+        <div className="text-right">
+          <span className="font-bold tabular-nums text-sm">{item.amount.toLocaleString()}</span>
         </div>
-        <span className="text-on-surface">{item.manager}</span>
-      </div>
-    ),
-  }));
+      ),
+      schoolContact: (
+        <span className="text-xs text-on-surface-variant">{item.schoolContact ?? "-"}</span>
+      ),
+      mailSentDate: (
+        <span className="text-xs text-on-surface-variant tabular-nums">{item.mailSentDate ?? "-"}</span>
+      ),
+      expectedPayDate: (
+        <span className="text-xs text-on-surface-variant tabular-nums">{item.expectedPayDate ?? "-"}</span>
+      ),
+      daysElapsed: (
+        <span className={`text-xs font-bold tabular-nums ${item.daysElapsed > 60 ? "text-error" : item.daysElapsed > 30 ? "text-tertiary" : "text-on-surface"}`}>
+          {item.daysElapsed}일
+        </span>
+      ),
+      payStatus: hasMemo ? (
+        <span className="text-xs text-primary font-medium">{String(item.memo)}</span>
+      ) : (
+        <span className="text-xs text-error font-medium">미입금</span>
+      ),
+      actions: (
+        <ReceivableActionMenu
+          university={item.university ?? "-"}
+          salesType={item.salesType ?? "-"}
+          detail={item.detail ? stripNumbers(item.detail) : "-"}
+          operator={item.operator ?? "-"}
+          amount={item.amount}
+          memo={item.memo}
+          schoolContact={item.schoolContact}
+          invoiceDate={item.invoiceDate}
+          mailSentDate={item.mailSentDate}
+          expectedPayDate={item.expectedPayDate}
+          daysElapsed={item.daysElapsed}
+        />
+      ),
+    };
+  });
 
   return (
     <div className="space-y-8">
@@ -116,167 +142,84 @@ export default function ReceivablesPage() {
         title="미수채권"
         description="미수금 현황을 관리하고 회수 진행 상태를 추적합니다."
         breadcrumb={["운영", "미수채권"]}
-        actions={
-          <>
-            <button className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-surface-container-high text-on-surface-variant text-sm font-semibold hover:bg-surface-bright transition-colors">
-              <span className="material-symbols-outlined text-lg">
-                download
-              </span>
-              보고서 다운로드
-            </button>
-            <button className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-primary text-on-primary text-sm font-black hover:brightness-110 transition-all active:scale-95">
-              <span className="material-symbols-outlined text-lg">send</span>
-              일괄 청구
-            </button>
-          </>
-        }
       />
+
+      <div className="text-xs text-on-surface-variant">
+        기준일: <span className="font-bold text-on-surface">{sheetName}</span> (SharePoint 연동)
+      </div>
 
       <KpiGrid>
         <KpiCard
-          icon="account_balance_wallet"
-          label="총 미수금"
-          value={(totalAmount / 100000000).toFixed(1)}
-          suffix="억원"
+          icon={<IconWallet size={18} className="text-on-surface-variant" />}
+          label="청구금액"
+          value={totalAmount.toLocaleString()}
+          suffix="원"
         />
         <KpiCard
-          icon="schedule"
-          label="30일 이내"
-          value={within30.length.toString()}
-          suffix="건"
-          change={`${(within30Amount / 10000).toFixed(0)}만원`}
-          trend="neutral"
+          icon={<IconCash size={18} className="text-on-surface-variant" />}
+          label="입금금액"
+          value={paidAmount.toLocaleString()}
+          suffix="원"
         />
         <KpiCard
-          icon="warning"
-          label="60일 이내"
-          value={within60.length.toString()}
-          suffix="건"
-          alert={within60.length > 0}
+          icon={<IconAlertTriangle size={18} className="text-on-surface-variant" />}
+          label="미수금"
+          value={unpaidAmount.toLocaleString()}
+          suffix="원"
+          change={`${unpaidItems.length}건`}
+          trend={unpaidItems.length > 0 ? "down" : undefined}
+          alert={unpaidItems.length > 0}
         />
         <KpiCard
-          icon="error"
-          label="90일 초과"
-          value={over90.length.toString()}
+          icon={<IconClock size={18} className="text-on-surface-variant" />}
+          label="30일 경과 미수"
+          value={over30Unpaid.length.toString()}
           suffix="건"
-          alert={over90.length > 0}
+          change={over30Unpaid.length > 0 ? `${over30Unpaid.reduce((s, r) => s + r.amount, 0).toLocaleString()}원` : undefined}
+          trend={over30Unpaid.length > 0 ? "down" : undefined}
+          alert={over30Unpaid.length > 0}
         />
       </KpiGrid>
 
-      {/* Aging Distribution Stacked Bar */}
+      {/* 회수율 바 */}
       <Card className="p-5">
-        <h2 className="text-sm font-bold text-primary tracking-[0.2em] uppercase mb-4">
-          연체 분포
-        </h2>
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-sm font-bold text-on-surface">회수율</h2>
+          <span className="text-2xl font-black text-primary tabular-nums">{collectionRate}%</span>
+        </div>
         <div className="flex h-3 rounded-full overflow-hidden bg-surface-container-high">
-          {within30Amount > 0 && (
-            <div
-              className="bg-primary transition-all"
-              style={{
-                width: `${(within30Amount / totalAmount) * 100}%`,
-              }}
-              title={`30일 이내: ${within30.length}건`}
-            />
-          )}
-          {within60Amount > 0 && (
-            <div
-              className="bg-tertiary transition-all"
-              style={{
-                width: `${(within60Amount / totalAmount) * 100}%`,
-              }}
-              title={`31~60일: ${within60.length}건`}
-            />
-          )}
-          {over90Amount > 0 && (
-            <div
-              className="bg-error transition-all"
-              style={{
-                width: `${(over90Amount / totalAmount) * 100}%`,
-              }}
-              title={`90일 초과: ${over90.length}건`}
-            />
-          )}
+          <div
+            className="bg-primary transition-all rounded-full"
+            style={{ width: `${collectionRate}%` }}
+          />
         </div>
-        <div className="flex items-center gap-6 mt-3">
-          <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-primary" />
-            <span className="text-[10px] text-on-surface-variant font-medium">
-              30일 이내 ({within30.length}건)
-            </span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-tertiary" />
-            <span className="text-[10px] text-on-surface-variant font-medium">
-              31~60일 ({within60.length}건)
-            </span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-error" />
-            <span className="text-[10px] text-on-surface-variant font-medium">
-              90일 초과 ({over90.length}건)
-            </span>
-          </div>
+        <div className="flex items-center justify-between mt-3 text-xs text-on-surface-variant">
+          <span>입금 <span className="font-bold text-on-surface">{paidAmount.toLocaleString()}원</span> ({paidItems.length}건)</span>
+          <span>미수 <span className="font-bold text-error">{unpaidAmount.toLocaleString()}원</span> ({unpaidItems.length}건)</span>
         </div>
       </Card>
 
-      {/* Receivables Table */}
-      <Card>
-        <div className="flex items-center justify-between px-6 py-4 border-b border-outline-variant/10">
-          <h2 className="text-sm font-bold text-primary tracking-[0.2em] uppercase">
-            미수금 상세
-          </h2>
-          <div className="flex items-center gap-2">
-            <div className="relative">
-              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-base">
-                search
-              </span>
-              <input
-                type="text"
-                placeholder="대학명 검색..."
-                className="bg-surface-container-high border-none rounded-lg pl-9 pr-4 py-2 text-xs text-on-surface placeholder:text-outline focus:ring-1 focus:ring-primary/50 focus:outline-none w-56"
-              />
-            </div>
-            <select className="bg-surface-container-high border-none rounded-lg px-3 py-2 text-xs text-on-surface-variant focus:ring-1 focus:ring-primary/50 focus:outline-none appearance-none cursor-pointer">
-              <option>전체 상태</option>
-              <option>정상</option>
-              <option>주의</option>
-              <option>경고</option>
-              <option>연체</option>
-            </select>
-          </div>
-        </div>
-
-        <DataTable
-          columns={columns}
-          data={tableData}
-          footer={
-            <div className="flex items-center justify-between">
-              <p className="text-xs text-on-surface-variant">
-                총{" "}
-                <span className="font-bold text-on-surface">
-                  {receivables.length}
-                </span>
-                건 &middot; 미수금 합계{" "}
-                <span className="font-bold text-on-surface">
-                  {(totalAmount / 100000000).toFixed(1)}억
-                </span>
-                원
-              </p>
-              <div className="flex items-center gap-1">
-                <button className="px-3 py-1.5 rounded-lg text-xs text-on-surface-variant hover:bg-surface-container-high transition-colors">
-                  이전
-                </button>
-                <button className="px-3 py-1.5 rounded-lg text-xs font-bold bg-primary/10 text-primary">
-                  1
-                </button>
-                <button className="px-3 py-1.5 rounded-lg text-xs text-on-surface-variant hover:bg-surface-container-high transition-colors">
-                  다음
-                </button>
-              </div>
-            </div>
-          }
+      <Suspense>
+        <FilterBar
+          searchPlaceholder="거래처명, 운영자, 거래내역 검색..."
+          tabs={[
+            { label: "전체", value: "all" },
+            { label: "미입금", value: "unpaid" },
+            { label: "입금완료", value: "paid" },
+            { label: "30일 경과", value: "over30" },
+          ]}
         />
-      </Card>
+      </Suspense>
+
+      <TableSection totalCount={filteredItems.length}>
+        <DataTable columns={columns} data={tableData} />
+        {items.length === 0 && (
+          <div className="flex flex-col items-center justify-center py-16 text-on-surface-variant">
+            <IconWallet size={40} className="opacity-30 mb-2" />
+            <p className="text-sm font-medium">미수채권이 없습니다.</p>
+          </div>
+        )}
+      </TableSection>
     </div>
   );
 }

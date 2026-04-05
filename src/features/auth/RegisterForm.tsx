@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useFormState } from "react-dom";
+import { IconCircleCheck, IconCircle } from "@tabler/icons-react";
 import { cn } from "@/lib/cn";
 import { SubmitButton } from "@/components/common";
 import { register, type AuthState } from "./actions";
@@ -50,14 +51,11 @@ function PasswordStrength({ password }: { password: string }) {
           const ok = rule.test(password);
           return (
             <div key={rule.label} className="flex items-center gap-1.5">
-              <span
-                className={cn(
-                  "material-symbols-outlined text-xs transition-colors duration-200",
-                  ok ? "text-primary" : "text-outline-variant",
-                )}
-              >
-                {ok ? "check_circle" : "circle"}
-              </span>
+              {ok ? (
+                <IconCircleCheck size={14} className={cn("transition-colors duration-200", "text-primary")} />
+              ) : (
+                <IconCircle size={14} className={cn("transition-colors duration-200", "text-outline-variant")} />
+              )}
               <span
                 className={cn(
                   "text-[10px] font-medium transition-colors duration-200",

@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useThemeStore, applyTheme } from "@/lib/theme";
 import { cn } from "@/lib/cn";
+import { IconSun, IconMoon } from "@tabler/icons-react";
 
 export default function ThemeToggle({ className }: { className?: string }) {
   const { theme, toggle } = useThemeStore();
@@ -20,9 +21,7 @@ export default function ThemeToggle({ className }: { className?: string }) {
       )}
       aria-label={theme === "dark" ? "라이트 모드로 전환" : "다크 모드로 전환"}
     >
-      <span className="material-symbols-outlined">
-        {theme === "dark" ? "light_mode" : "dark_mode"}
-      </span>
+      {theme === "dark" ? <IconSun size={20} /> : <IconMoon size={20} />}
     </button>
   );
 }

@@ -1,4 +1,5 @@
 import { cn } from "@/lib/cn";
+import { IconCheck } from "@tabler/icons-react";
 
 interface Step {
   label: string;
@@ -35,9 +36,7 @@ export default function StepTimeline({ steps }: StepTimelineProps) {
                 )}
               >
                 {step.status === "completed" ? (
-                  <span className="material-symbols-outlined text-sm">
-                    check
-                  </span>
+                  <IconCheck size={14} />
                 ) : (
                   index + 1
                 )}

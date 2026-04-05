@@ -1,133 +1,152 @@
-import PageHeader from "@/components/common/PageHeader";
-import KpiGrid from "@/components/common/KpiGrid";
-import KpiCard from "@/components/common/KpiCard";
-import StatusBadge from "@/components/common/StatusBadge";
-import Card from "@/components/common/Card";
-import DataTable from "@/components/common/DataTable";
-import FilterBar from "@/components/common/FilterBar";
+import { Suspense } from "react";
+import { cn } from "@/lib/cn";
+import { createClient } from "@/lib/supabase/server";
+import {
+  PageHeader,
+  KpiGrid,
+  KpiCard,
+  StatusBadge,
+  DataTable,
+  TableSection,
+  UserAvatar,
+  FilterBar,
+} from "@/components/common";
+import { IconUsers, IconShieldCog, IconUsersGroup } from "@tabler/icons-react";
+import UserActionMenu from "./UserActionMenu";
+import InviteButton from "./InviteButton";
 
-const users = [
-  {
-    id: 1, name: "김도연", email: "doyeon.kim@dot.co.kr",
-    role: "관리자" as const, department: "운영팀",
-    lastAccess: "2026-03-26 14:32", status: "활성" as const, avatar: "DY",
-  },
-  {
-    id: 2, name: "박서연", email: "seoyeon.park@dot.co.kr",
-    role: "운영자" as const, department: "마케팅팀",
-    lastAccess: "2026-03-26 13:15", status: "활성" as const, avatar: "SY",
-  },
-  {
-    id: 3, name: "이정민", email: "jungmin.lee@dot.co.kr",
-    role: "관리자" as const, department: "개발팀",
-    lastAccess: "2026-03-26 11:48", status: "활성" as const, avatar: "JM",
-  },
-  {
-    id: 4, name: "최현우", email: "hyunwoo.choi@dot.co.kr",
-    role: "운영자" as const, department: "기획팀",
-    lastAccess: "2026-03-25 17:40", status: "활성" as const, avatar: "HW",
-  },
-  {
-    id: 5, name: "한소희", email: "sohee.han@dot.co.kr",
-    role: "뷰어" as const, department: "디자인팀",
-    lastAccess: "2026-03-26 10:22", status: "활성" as const, avatar: "SH",
-  },
-  {
-    id: 6, name: "장우진", email: "woojin.jang@dot.co.kr",
-    role: "운영자" as const, department: "영업팀",
-    lastAccess: "2026-03-24 09:10", status: "비활성" as const, avatar: "WJ",
-  },
-  {
-    id: 7, name: "윤서아", email: "seoa.yoon@dot.co.kr",
-    role: "뷰어" as const, department: "개발팀",
-    lastAccess: "2026-03-23 16:55", status: "활성" as const, avatar: "SA",
-  },
-  {
-    id: 8, name: "강민재", email: "minjae.kang@dot.co.kr",
-    role: "뷰어" as const, department: "운영팀",
-    lastAccess: "2026-03-20 11:30", status: "초대됨" as const, avatar: "MJ",
-  },
-];
+type TeamFilter = "all" | "운영1팀" | "운영2팀";
 
-const roleBadgeVariant = {
-  관리자: "error",
-  운영자: "success",
-  뷰어: "info",
-} as const;
+interface Profile {
+  id: number;
+  email: string;
+  name: string;
+  role: "admin" | "operator";
+  team: "운영1팀" | "운영2팀";
+  avatar_url: string | null;
+  status: "active" | "inactive";
+  last_sign_in: string | null;
+  created_at: string;
+  updated_at: string;
+}
 
-const statusDotClass = {
-  활성: "bg-primary",
-  비활성: "bg-outline-variant",
-  초대됨: "bg-tertiary",
-} as const;
+interface UsersPageProps {
+  searchParams: Promise<{ tab?: string; search?: string }>;
+}
 
-const statusTextClass = {
-  활성: "text-primary",
-  비활성: "text-on-surface-variant",
-  초대됨: "text-tertiary",
-} as const;
+function formatLastSignIn(date: string | null): string {
+  if (!date) return "접속 기록 없음";
+  const diff = Date.now() - new Date(date).getTime();
+  const minutes = Math.floor(diff / 60000);
+  if (minutes < 1) return "방금 전";
+  if (minutes < 60) return `${minutes}분 전`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}시간 전`;
+  const days = Math.floor(hours / 24);
+  if (days < 30) return `${days}일 전`;
+  return new Date(date).toLocaleDateString("ko-KR");
+}
 
-const avatarStyles = [
-  "bg-primary/20 text-primary",
-  "bg-tertiary/20 text-tertiary",
-  "bg-secondary-container text-on-secondary-container",
-  "bg-error/15 text-error",
+const teamTabs: { label: string; value: TeamFilter }[] = [
+  { label: "전체", value: "all" },
+  { label: "운영1팀", value: "운영1팀" },
+  { label: "운영2팀", value: "운영2팀" },
 ];
 
 const columns = [
-  { key: "user", label: "사용자" },
+  { key: "name", label: "이름" },
   { key: "email", label: "이메일" },
   { key: "role", label: "역할", className: "w-24" },
-  { key: "department", label: "부서", className: "w-24" },
-  { key: "lastAccess", label: "마지막 접속", className: "w-36" },
+  { key: "team", label: "팀", className: "w-24" },
   { key: "status", label: "상태", className: "w-24" },
+  { key: "lastSignIn", label: "마지막 접속", className: "w-36" },
   { key: "actions", label: "", className: "w-12" },
 ];
 
-export default function UsersPage() {
-  const activeCount = users.filter((u) => u.status === "활성").length;
-  const inactiveCount = users.filter((u) => u.status === "비활성").length;
-  const invitedCount = users.filter((u) => u.status === "초대됨").length;
+export default async function UsersPage({ searchParams }: UsersPageProps) {
+  const params = await searchParams;
+  const activeTeam = (params.tab ?? "all") as TeamFilter;
+  const searchQuery = (params.search ?? "").toLowerCase();
 
-  const tableData = users.map((user, index) => ({
-    user: (
+  const supabase = createClient();
+  const { data: profiles } = await supabase
+    .from("profiles")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  const allProfiles: Profile[] = profiles ?? [];
+
+  const totalCount = allProfiles.length;
+  const adminCount = allProfiles.filter((p) => p.role === "admin").length;
+  const team1Count = allProfiles.filter((p) => p.team === "운영1팀").length;
+  const team2Count = allProfiles.filter((p) => p.team === "운영2팀").length;
+
+  let filteredProfiles =
+    activeTeam === "all"
+      ? allProfiles
+      : allProfiles.filter((p) => p.team === activeTeam);
+
+  if (searchQuery) {
+    filteredProfiles = filteredProfiles.filter(
+      (p) =>
+        p.name.toLowerCase().includes(searchQuery) ||
+        p.email.toLowerCase().includes(searchQuery),
+    );
+  }
+
+  const tableData = filteredProfiles.map((profile) => ({
+    name: (
       <div className="flex items-center gap-3">
-        <div
-          className={`w-9 h-9 rounded-full flex items-center justify-center text-[11px] font-black flex-shrink-0 ${avatarStyles[index % avatarStyles.length]}`}
-        >
-          {user.avatar}
-        </div>
-        <span className="text-sm font-semibold text-on-surface">{user.name}</span>
-      </div>
-    ),
-    email: (
-      <span className="text-xs text-on-surface-variant truncate">
-        {user.email}
-      </span>
-    ),
-    role: (
-      <StatusBadge variant={roleBadgeVariant[user.role]}>
-        {user.role}
-      </StatusBadge>
-    ),
-    department: (
-      <span className="text-xs text-on-surface">{user.department}</span>
-    ),
-    lastAccess: (
-      <span className="text-xs text-on-surface-variant">{user.lastAccess}</span>
-    ),
-    status: (
-      <div className="flex items-center gap-1.5">
-        <div className={`w-1.5 h-1.5 rounded-full ${statusDotClass[user.status]}`} />
-        <span className={`text-xs font-medium ${statusTextClass[user.status]}`}>
-          {user.status}
+        <UserAvatar name={profile.name} size="sm" />
+        <span className="text-sm font-semibold text-on-surface">
+          {profile.name}
         </span>
       </div>
     ),
+    email: (
+      <span className="text-xs text-on-surface-variant">{profile.email}</span>
+    ),
+    role: (
+      <StatusBadge variant={profile.role === "admin" ? "error" : "success"}>
+        {profile.role === "admin" ? "관리자" : "운영자"}
+      </StatusBadge>
+    ),
+    team: (
+      <span className="text-xs text-on-surface">{profile.team}</span>
+    ),
+    status: (
+      <div className="flex items-center gap-1.5">
+        <div
+          className={cn(
+            "w-1.5 h-1.5 rounded-full",
+            profile.status === "active"
+              ? "bg-primary"
+              : "bg-outline-variant",
+          )}
+        />
+        <span
+          className={cn(
+            "text-xs font-medium",
+            profile.status === "active"
+              ? "text-primary"
+              : "text-on-surface-variant",
+          )}
+        >
+          {profile.status === "active" ? "활성" : "비활성"}
+        </span>
+      </div>
+    ),
+    lastSignIn: (
+      <span className="text-xs text-on-surface-variant">
+        {formatLastSignIn(profile.last_sign_in)}
+      </span>
+    ),
     actions: (
-      <button className="w-8 h-8 rounded-lg hover:bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-colors">
-        <span className="material-symbols-outlined text-[18px]">more_vert</span>
-      </button>
+      <UserActionMenu
+        userId={profile.id}
+        userName={profile.name}
+        status={profile.status}
+      />
     ),
   }));
 
@@ -135,65 +154,47 @@ export default function UsersPage() {
     <div className="space-y-6 animate-fade-in">
       <PageHeader
         title="사용자 관리"
-        description="시스템 사용자를 관리하고 역할 및 권한을 설정하세요."
         breadcrumb={["관리자", "사용자"]}
-        actions={
-          <div className="flex items-center gap-2">
-            <button className="flex items-center gap-2 bg-surface-container-high border border-outline-variant/15 px-4 py-2.5 rounded-xl text-on-surface-variant text-sm hover:text-on-surface transition-colors">
-              <span className="material-symbols-outlined text-[18px]">
-                download
-              </span>
-              내보내기
-            </button>
-            <button className="flex items-center gap-2 bg-primary text-on-primary px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-primary-dim transition-colors">
-              <span className="material-symbols-outlined text-[20px]">
-                person_add
-              </span>
-              사용자 초대
-            </button>
-          </div>
-        }
+        actions={<InviteButton />}
       />
 
       <KpiGrid>
         <KpiCard
-          icon="group"
+          icon={<IconUsers size={18} className="text-on-surface-variant" />}
           label="전체 사용자"
-          value={String(users.length)}
+          value={String(totalCount)}
+          suffix="명"
         />
         <KpiCard
-          icon="person"
-          label="활성"
-          value={String(activeCount)}
-          change="온라인"
-          trend="up"
+          icon={<IconShieldCog size={18} className="text-on-surface-variant" />}
+          label="관리자"
+          value={String(adminCount)}
+          suffix="명"
         />
         <KpiCard
-          icon="person_off"
-          label="비활성"
-          value={String(inactiveCount)}
+          icon={<IconUsersGroup size={18} className="text-on-surface-variant" />}
+          label="운영1팀"
+          value={String(team1Count)}
+          suffix="명"
         />
         <KpiCard
-          icon="mail"
-          label="초대 대기"
-          value={String(invitedCount)}
-          alert={invitedCount > 0}
+          icon={<IconUsersGroup size={18} className="text-on-surface-variant" />}
+          label="운영2팀"
+          value={String(team2Count)}
+          suffix="명"
         />
       </KpiGrid>
 
-      <FilterBar
-        searchPlaceholder="이름, 이메일, 부서로 검색..."
-        tabs={[
-          { label: "전체", value: "all" },
-          { label: "관리자", value: "admin" },
-          { label: "운영자", value: "operator" },
-          { label: "뷰어", value: "viewer" },
-        ]}
-      />
+      <Suspense>
+        <FilterBar
+          searchPlaceholder="이름 또는 이메일 검색..."
+          tabs={teamTabs}
+        />
+      </Suspense>
 
-      <Card className="p-0 overflow-hidden">
+      <TableSection totalCount={filteredProfiles.length}>
         <DataTable columns={columns} data={tableData} />
-      </Card>
+      </TableSection>
     </div>
   );
 }

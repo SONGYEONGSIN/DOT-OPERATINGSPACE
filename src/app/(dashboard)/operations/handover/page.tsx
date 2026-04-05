@@ -4,269 +4,237 @@ import {
   KpiCard,
   StatusBadge,
   Card,
-  StepTimeline,
+  DataTable,
+  TableSection,
 } from "@/components/common";
+import { IconPackage, IconHeadset, IconUserCheck, IconUserOff, IconArrowRight, IconUser, IconHistory } from "@tabler/icons-react";
+import { createClient } from "@/lib/supabase/server";
+import {
+  type Service,
+  type Profile,
+  getStatusConfig,
+  formatRelativeTime,
+  groupBy,
+} from "./types";
+import OperatorCard from "./OperatorCard";
+import HandoverPageTabs from "./HandoverPageTabs";
 
-interface HandoverItem {
-  id: string;
-  title: string;
-  from: string;
-  to: string;
-  university: string;
-  currentStep: number;
-  startDate: string;
-  dueDate: string;
-  daysElapsed: number;
-  priority: "high" | "medium" | "low";
-}
+export default async function HandoverPage() {
+  const supabase = createClient();
 
-const handovers: HandoverItem[] = [
-  {
-    id: "HO-2026-001",
-    title: "서울대 PIMS 시스템 운영 인수인계",
-    from: "김민수",
-    to: "이서연",
-    university: "서울대학교",
-    currentStep: 3,
-    startDate: "2026.03.10",
-    dueDate: "2026.04.10",
-    daysElapsed: 16,
-    priority: "high",
-  },
-  {
-    id: "HO-2026-002",
-    title: "연세대 접수관리자 담당자 변경",
-    from: "박준혁",
-    to: "정하은",
-    university: "연세대학교",
-    currentStep: 2,
-    startDate: "2026.03.15",
-    dueDate: "2026.04.15",
-    daysElapsed: 11,
-    priority: "medium",
-  },
-  {
-    id: "HO-2026-003",
-    title: "고려대 정산 시스템 이관",
-    from: "최영진",
-    to: "한소희",
-    university: "고려대학교",
-    currentStep: 4,
-    startDate: "2026.02.20",
-    dueDate: "2026.03.20",
-    daysElapsed: 34,
-    priority: "low",
-  },
-  {
-    id: "HO-2026-004",
-    title: "성균관대 경쟁률 서비스 인수인계",
-    from: "오태현",
-    to: "신예진",
-    university: "성균관대학교",
-    currentStep: 1,
-    startDate: "2026.03.22",
-    dueDate: "2026.04.22",
-    daysElapsed: 4,
-    priority: "high",
-  },
-  {
-    id: "HO-2026-005",
-    title: "한양대 내부관리자 운영 이관",
-    from: "윤재호",
-    to: "강민지",
-    university: "한양대학교",
-    currentStep: 2,
-    startDate: "2026.03.18",
-    dueDate: "2026.04.18",
-    daysElapsed: 8,
-    priority: "medium",
-  },
-];
+  const { count } = await supabase
+    .from("services")
+    .select("id", { count: "exact", head: true });
 
-const stepLabels = ["문서 작성", "검토", "인수인계", "완료"];
+  const totalRows = count ?? 0;
+  const allServices: Service[] = [];
 
-const priorityVariantMap = {
-  high: "error",
-  medium: "warning",
-  low: "success",
-} as const;
+  for (let offset = 0; offset < totalRows; offset += 1000) {
+    const { data } = await supabase
+      .from("services")
+      .select("*")
+      .order("updated_at", { ascending: false })
+      .range(offset, offset + 999);
+    if (data) allServices.push(...(data as Service[]));
+  }
 
-const priorityLabels = {
-  high: "긴급",
-  medium: "보통",
-  low: "낮음",
-} as const;
+  const { data: profileRows } = await supabase
+    .from("profiles")
+    .select("id, name, role, team, status")
+    .eq("status", "active")
+    .order("name");
 
-function buildSteps(
-  currentStep: number,
-): { label: string; status: "completed" | "active" | "pending" }[] {
-  return stepLabels.map((label, index) => {
-    const stepNum = index + 1;
-    if (stepNum < currentStep) return { label, status: "completed" as const };
-    if (stepNum === currentStep) return { label, status: "active" as const };
-    return { label, status: "pending" as const };
-  });
-}
+  const profiles: Profile[] = (profileRows ?? []) as Profile[];
 
-export default function HandoverPage() {
-  const totalHandovers = handovers.length;
-  const inProgress = handovers.filter((h) => h.currentStep < 4).length;
-  const completed = handovers.filter((h) => h.currentStep === 4).length;
-  const avgDays = Math.round(
-    handovers.reduce((sum, h) => sum + h.daysElapsed, 0) / handovers.length,
+  const operatorCounts: Record<string, number> = {};
+  for (const s of allServices) {
+    if (s.operator) {
+      operatorCounts[s.operator] = (operatorCounts[s.operator] || 0) + 1;
+    }
+  }
+
+  // KPI
+  const totalCount = allServices.length;
+  const uniqueOperators = new Set(
+    allServices.map((s) => s.operator).filter(Boolean),
   );
+  const unassignedCount = allServices.filter((s) => !s.operator).length;
+  const assignedServices = allServices.filter((s) => s.operator);
+
+  // 그룹핑
+  const operatorGroups = groupBy(
+    assignedServices,
+    (s) => s.operator ?? "미배정",
+  );
+  const sortedOperators = Object.entries(operatorGroups).sort(
+    ([, a], [, b]) => b.length - a.length,
+  );
+
+  // 인수인계 이력
+  const { data: handoverLogs } = await supabase
+    .from("handover_logs")
+    .select("*")
+    .order("executed_at", { ascending: false })
+    .limit(20);
+
+  // 서비스 정보 매핑 (join 대신 allServices에서 찾기)
+  const serviceMap = new Map(allServices.map((s) => [s.id, s]));
+
+  const historyColumns = [
+    { key: "date", label: "일시", className: "w-[130px]" },
+    { key: "university", label: "대학명" },
+    { key: "service", label: "서비스명" },
+    { key: "change", label: "변경 내용", className: "w-[200px]" },
+    { key: "memo", label: "메모" },
+  ];
+
+  const historyData = (handoverLogs ?? []).map((log: any) => {
+    const svc = serviceMap.get(log.service_id);
+    return {
+      date: (
+        <span className="text-xs text-on-surface-variant tabular-nums">
+          {new Date(log.executed_at).toLocaleDateString("ko-KR", { month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" })}
+        </span>
+      ),
+      university: (
+        <span className="text-sm text-on-surface">{svc?.university_name ?? "-"}</span>
+      ),
+      service: (
+        <span className="text-sm text-on-surface-variant">
+          {(svc?.service_name ?? "-").replace(/\d{4}학년도\s*|\d{4}-(?=\d학기)/g, "")}
+        </span>
+      ),
+      change: (
+        <div className="flex items-center gap-1.5 text-xs">
+          <span className="text-on-surface-variant">{log.from_person ?? "미배정"}</span>
+          <IconArrowRight size={14} className="text-primary" />
+          <span className="font-bold text-primary">{log.to_person}</span>
+        </div>
+      ),
+      memo: (
+        <span className="text-xs text-on-surface-variant truncate max-w-[150px] block">
+          {log.memo ?? "-"}
+        </span>
+      ),
+    };
+  });
+
+  // 최근 변경
+  const recentChanges = allServices.slice(0, 10);
+
+  const recentTableColumns = [
+    { key: "service", label: "서비스명" },
+    { key: "university", label: "대학명" },
+    { key: "operator", label: "운영자" },
+    { key: "status", label: "상태" },
+    { key: "updatedAt", label: "최근 업데이트" },
+  ];
+
+  const recentTableData = recentChanges.map((s) => {
+    const sc = getStatusConfig(s.status);
+    return {
+      service: (
+        <span className="font-semibold text-on-surface">
+          {(s.service_name ?? "-").replace(/\d{4}학년도\s*|\d{4}-(?=\d학기)/g, "")}
+        </span>
+      ),
+      university: (
+        <span className="text-on-surface-variant">{s.university_name ?? "-"}</span>
+      ),
+      operator: (
+        <div className="flex items-center gap-1.5">
+          <IconUser size={14} className="text-on-surface-variant" />
+          <span>{s.operator ?? "미배정"}</span>
+        </div>
+      ),
+      status: (
+        <StatusBadge variant={sc.variant} dot={s.status === "active"}>
+          {sc.label}
+        </StatusBadge>
+      ),
+      updatedAt: (
+        <span className="text-xs text-on-surface-variant tabular-nums">
+          {formatRelativeTime(s.updated_at)}
+        </span>
+      ),
+    };
+  });
+
+  const avgOperatorLoad =
+    uniqueOperators.size > 0
+      ? Math.round(assignedServices.length / uniqueOperators.size)
+      : 0;
 
   return (
     <div className="space-y-8">
       <PageHeader
         title="인수인계"
-        description="업무 인수인계 현황을 추적하고 프로세스를 관리합니다."
+        description="서비스 담당자 배정 현황을 한눈에 파악하고 인수인계를 관리합니다."
         breadcrumb={["운영", "인수인계"]}
-        actions={
-          <>
-            <button className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-surface-container-high text-on-surface-variant text-sm font-semibold hover:bg-surface-bright transition-colors">
-              <span className="material-symbols-outlined text-lg">
-                filter_list
-              </span>
-              필터
-            </button>
-            <button className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-primary text-on-primary text-sm font-black hover:brightness-110 transition-all active:scale-95">
-              <span className="material-symbols-outlined text-lg">add</span>
-              새 인수인계
-            </button>
-          </>
-        }
       />
 
-      <KpiGrid>
-        <KpiCard
-          icon="swap_horiz"
-          label="전체 건수"
-          value={totalHandovers.toString()}
-          suffix="건"
-        />
-        <KpiCard
-          icon="pending"
-          label="진행중"
-          value={inProgress.toString()}
-          suffix="건"
-          change="활성 프로세스"
-          trend="neutral"
-        />
-        <KpiCard
-          icon="task_alt"
-          label="완료"
-          value={completed.toString()}
-          suffix="건"
-          change="이번 달"
-          trend="up"
-        />
-        <KpiCard
-          icon="schedule"
-          label="평균 소요일"
-          value={avgDays.toString()}
-          suffix="일"
-        />
-      </KpiGrid>
-
-      {/* Handover Cards */}
-      <section>
-        <h2 className="text-sm font-bold text-primary tracking-[0.2em] uppercase mb-4">
-          인수인계 진행현황
-        </h2>
-
-        <div className="space-y-4">
-          {handovers.map((handover) => (
-            <Card key={handover.id} hover className="p-6">
-              {/* Card Header */}
-              <div className="flex items-start justify-between mb-6">
-                <div className="flex items-start gap-4">
-                  <div className="flex items-center justify-center w-11 h-11 rounded-lg bg-surface-container-high shrink-0">
-                    <span className="material-symbols-outlined text-primary text-xl">
-                      swap_horiz
-                    </span>
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-xs font-mono font-semibold text-on-surface-variant">
-                        {handover.id}
-                      </span>
-                      <StatusBadge
-                        variant={priorityVariantMap[handover.priority]}
-                      >
-                        {priorityLabels[handover.priority]}
-                      </StatusBadge>
-                    </div>
-                    <h3 className="text-sm font-bold text-on-surface">
-                      {handover.title}
-                    </h3>
-                    <p className="text-xs text-on-surface-variant mt-0.5">
-                      {handover.university}
-                    </p>
-                  </div>
+      <HandoverPageTabs
+        services={allServices}
+        profiles={profiles}
+        operatorCounts={operatorCounts}
+        historyContent={
+          <>
+            {historyData.length > 0 ? (
+              <TableSection totalCount={historyData.length}>
+                <DataTable columns={historyColumns} data={historyData} />
+              </TableSection>
+            ) : (
+              <Card className="p-12">
+                <div className="flex flex-col items-center gap-2 text-on-surface-variant">
+                  <IconHistory size={40} className="opacity-30" />
+                  <p className="text-sm font-medium">인수인계 이력이 없습니다.</p>
+                  <p className="text-xs">인수인계를 실행하면 이력이 여기에 표시됩니다.</p>
                 </div>
+              </Card>
+            )}
+          </>
+        }
+      >
+        {/* 담당자 현황 콘텐츠 */}
+        <KpiGrid>
+          <KpiCard icon={<IconPackage size={18} className="text-on-surface-variant" />} label="전체 서비스" value={totalCount.toString()} suffix="건" />
+          <KpiCard icon={<IconHeadset size={18} className="text-on-surface-variant" />} label="운영자 수" value={uniqueOperators.size.toString()} suffix="명" change={`평균 ${avgOperatorLoad}건 담당`} trend="neutral" />
+          <KpiCard icon={<IconUserCheck size={18} className="text-on-surface-variant" />} label="배정 완료" value={assignedServices.length.toString()} suffix="건" change={`${totalCount > 0 ? Math.round((assignedServices.length / totalCount) * 100) : 0}%`} trend="up" />
+          <KpiCard icon={<IconUserOff size={18} className="text-on-surface-variant" />} label="미배정" value={unassignedCount.toString()} suffix="건" change={unassignedCount > 0 ? "배정 필요" : undefined} trend={unassignedCount > 0 ? "neutral" : undefined} />
+        </KpiGrid>
 
-                <div className="flex items-center gap-4 text-xs text-on-surface-variant shrink-0">
-                  <div className="flex items-center gap-2">
-                    <div className="text-right">
-                      <p className="text-[10px] uppercase tracking-wider font-bold text-on-surface-variant mb-0.5">
-                        인계자
-                      </p>
-                      <p className="font-semibold text-on-surface">
-                        {handover.from}
-                      </p>
-                    </div>
-                    <span className="material-symbols-outlined text-primary text-lg">
-                      arrow_forward
-                    </span>
-                    <div>
-                      <p className="text-[10px] uppercase tracking-wider font-bold text-on-surface-variant mb-0.5">
-                        인수자
-                      </p>
-                      <p className="font-semibold text-on-surface">
-                        {handover.to}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Step Timeline */}
-              <div className="px-8">
-                <StepTimeline steps={buildSteps(handover.currentStep)} />
-              </div>
-
-              {/* Card Footer */}
-              <div className="flex items-center justify-between mt-6 pt-4 border-t border-outline-variant/10">
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-1.5 text-xs text-on-surface-variant">
-                    <span className="material-symbols-outlined text-sm">
-                      calendar_today
-                    </span>
-                    {handover.startDate} ~ {handover.dueDate}
-                  </div>
-                  <div className="flex items-center gap-1.5 text-xs text-on-surface-variant">
-                    <span className="material-symbols-outlined text-sm">
-                      timer
-                    </span>
-                    {handover.daysElapsed}일 경과
-                  </div>
-                </div>
-                <div className="flex items-center gap-1">
-                  <button className="px-3 py-1.5 rounded-lg text-xs font-semibold text-on-surface-variant hover:bg-surface-container-high transition-colors">
-                    상세보기
-                  </button>
-                  {handover.currentStep < 4 && (
-                    <button className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
-                      단계 진행
-                    </button>
-                  )}
-                </div>
+        <section className="space-y-4">
+          <h2 className="text-sm font-bold text-primary">운영자별 담당 현황</h2>
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+            {sortedOperators.map(([operator, opServices]) => (
+              <OperatorCard key={operator} operator={operator} services={opServices} />
+            ))}
+          </div>
+          {sortedOperators.length === 0 && (
+            <Card className="p-8">
+              <div className="flex flex-col items-center gap-2 text-on-surface-variant">
+                <IconUserOff size={30} />
+                <p className="text-sm">배정된 운영자가 없습니다.</p>
               </div>
             </Card>
-          ))}
-        </div>
-      </section>
+          )}
+        </section>
+
+        <section className="space-y-2">
+          <h2 className="text-sm font-bold text-primary">최근 서비스 변경 로그</h2>
+          <TableSection totalCount={recentChanges.length}>
+            <DataTable
+              columns={recentTableColumns}
+              data={recentTableData}
+              footer={
+                <p className="text-xs text-on-surface-variant text-center">
+                  최근 업데이트 기준 상위 10건
+                </p>
+              }
+            />
+          </TableSection>
+        </section>
+      </HandoverPageTabs>
     </div>
   );
 }

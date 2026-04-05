@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useFormState } from "react-dom";
+import { IconLoader2 } from "@tabler/icons-react";
 import { cn } from "@/lib/cn";
 import { SubmitButton } from "@/components/common";
 import { createClient } from "@/lib/supabase/client";
@@ -54,9 +55,7 @@ export default function LoginForm() {
       >
         {oauthLoading ? (
           <>
-            <span className="material-symbols-outlined animate-spin text-lg text-gray-600">
-              progress_activity
-            </span>
+            <IconLoader2 size={16} className="animate-spin text-gray-600" />
             연결 중...
           </>
         ) : (

@@ -369,3 +369,238 @@ html.light .brand-logo-glow {
 .glow-primary-strong {
   box-shadow: var(--shadow-glow-strong);
 }
+
+/* ── Search/Filter 밝은 배경 (다크 모드) ── */
+.search-input {
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.search-input:focus {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(217, 253, 83, 0.4);
+}
+
+.search-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+html.light .search-input {
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+html.light .search-input:focus {
+  background: rgba(0, 0, 0, 0.06);
+  border-color: rgba(61, 122, 0, 0.3);
+}
+
+html.light .search-input::placeholder {
+  color: rgba(0, 0, 0, 0.35);
+}
+
+/* ── Tiptap Editor ── */
+.tiptap {
+  outline: none;
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: var(--color-on-surface-variant);
+  opacity: 0.4;
+  pointer-events: none;
+  height: 0;
+}
+
+.tiptap h3 {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  margin: 0.75rem 0 0.25rem;
+}
+
+.tiptap p {
+  margin: 0.125rem 0;
+}
+
+.tiptap ul,
+.tiptap ol {
+  padding-left: 1.25rem;
+  margin: 0.25rem 0;
+}
+
+.tiptap ul {
+  list-style-type: disc;
+}
+
+.tiptap ol {
+  list-style-type: decimal;
+}
+
+.tiptap li {
+  margin: 0.125rem 0;
+}
+
+.tiptap li::marker {
+  color: var(--color-primary);
+}
+
+.tiptap blockquote {
+  border-left: 3px solid var(--color-primary);
+  opacity: 0.5;
+  padding-left: 0.75rem;
+  margin: 0.5rem 0;
+  color: var(--color-on-surface-variant);
+}
+
+.tiptap hr {
+  border: none;
+  border-top: 1px solid var(--color-outline-variant);
+  opacity: 0.3;
+  margin: 0.75rem 0;
+}
+
+.tiptap code {
+  background: var(--color-primary);
+  opacity: 0.1;
+  color: var(--color-primary);
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  font-size: 0.8125rem;
+}
+
+.tiptap pre {
+  background: var(--color-surface-container-highest);
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  margin: 0.5rem 0;
+  overflow-x: auto;
+}
+
+.tiptap pre code {
+  background: none;
+  opacity: 1;
+  color: var(--color-on-surface);
+  padding: 0;
+  font-size: 0.8125rem;
+}
+
+.tiptap h2 {
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin: 1rem 0 0.375rem;
+}
+
+.tiptap mark {
+  background-color: var(--color-primary);
+  opacity: 0.25;
+  border-radius: 2px;
+  padding: 1px 2px;
+}
+
+/* 체크리스트 */
+.tiptap ul[data-type="taskList"] {
+  list-style: none;
+  padding-left: 0;
+}
+
+.tiptap ul[data-type="taskList"] li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.tiptap ul[data-type="taskList"] li > label {
+  margin-top: 0.125rem;
+}
+
+.tiptap ul[data-type="taskList"] li > label input[type="checkbox"] {
+  appearance: none;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid var(--color-outline-variant);
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.15s;
+}
+
+.tiptap ul[data-type="taskList"] li > label input[type="checkbox"]:checked {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.tiptap ul[data-type="taskList"] li > label input[type="checkbox"]:checked::after {
+  content: "✓";
+  position: absolute;
+  top: -1px;
+  left: 2px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--color-on-primary);
+}
+
+.tiptap ul[data-type="taskList"] li[data-checked="true"] > div > p {
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+
+/* 테이블 */
+.tiptap table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 0.75rem 0;
+  overflow: hidden;
+  border-radius: 0.375rem;
+}
+
+.tiptap th,
+.tiptap td {
+  border: 1px solid var(--color-outline-variant);
+  opacity: 0.25;
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  font-size: 0.8125rem;
+  vertical-align: top;
+  min-width: 80px;
+}
+
+.tiptap th {
+  background: var(--color-surface-container-high);
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.tiptap td {
+  background: transparent;
+}
+
+.tiptap .selectedCell {
+  background: var(--color-primary);
+  opacity: 0.08;
+}
+
+/* 링크 */
+.tiptap a {
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+.tiptap a:hover {
+  opacity: 0.7;
+}
+
+/* 위/아래 첨자 */
+.tiptap sup {
+  font-size: 0.7em;
+  vertical-align: super;
+}
+
+.tiptap sub {
+  font-size: 0.7em;
+  vertical-align: sub;
+}

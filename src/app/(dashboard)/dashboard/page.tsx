@@ -1,351 +1,391 @@
-export default function DashboardPage() {
+import { createClient } from "@/lib/supabase/server";
+import {
+  PageHeader,
+  KpiCard,
+  KpiGrid,
+  StatusBadge,
+  Card,
+  ProgressBar,
+  DataTable,
+  TableSection,
+} from "@/components/common";
+import {
+  IconNetwork,
+  IconCircleCheck,
+  IconArrowsExchange,
+  IconCreditCardOff,
+  IconCalendarDue,
+  IconUsers,
+  IconListCheck,
+  IconProgress,
+} from "@tabler/icons-react";
+import Link from "next/link";
+
+const TOTAL_CATEGORIES = 14;
+
+function computeStatusLabel(logCount: number) {
+  if (logCount === 0) return { label: "등록예정", variant: "info" as const };
+  if (logCount >= TOTAL_CATEGORIES) return { label: "등록완료", variant: "neutral" as const };
+  return { label: "등록중", variant: "success" as const };
+}
+
+export default async function DashboardPage() {
+  const supabase = createClient();
+
+  // 전체 서비스 수 조회
+  const { count: svcCount } = await supabase
+    .from("services")
+    .select("id", { count: "exact", head: true });
+  const totalSvcRows = svcCount ?? 0;
+
+  // 전체 work_logs 수 조회
+  const { count: wlCount } = await supabase
+    .from("service_work_logs")
+    .select("service_id", { count: "exact", head: true });
+  const totalWlRows = wlCount ?? 0;
+
+  // 서비스 + work_logs 전체 조회 (1000건씩 페이징)
+  const allServices: { id: number; university_name: string | null; service_name: string | null; operator: string | null; category: string | null; writing_end: string | null; payment_end: string | null; writing_start: string | null; payment_start: string | null }[] = [];
+  for (let offset = 0; offset < totalSvcRows; offset += 1000) {
+    const { data } = await supabase
+      .from("services")
+      .select("id, university_name, service_name, operator, category, writing_end, payment_end, writing_start, payment_start")
+      .range(offset, offset + 999);
+    if (data) allServices.push(...data);
+  }
+
+  const allWorkLogs: { service_id: number }[] = [];
+  for (let offset = 0; offset < totalWlRows; offset += 1000) {
+    const { data } = await supabase
+      .from("service_work_logs")
+      .select("service_id")
+      .range(offset, offset + 999);
+    if (data) allWorkLogs.push(...data);
+  }
+
+  // 나머지 데이터 병렬 조회
+  const [
+    { data: handoverLogs },
+    { data: backupRequests },
+    { data: projectTasks },
+    { data: profiles },
+  ] = await Promise.all([
+    supabase.from("handover_logs").select("id, service_id, field, from_person, to_person, executed_by, executed_at").order("executed_at", { ascending: false }).limit(10),
+    supabase.from("backup_requests").select("id, operator_name, leave_type, start_date, end_date, status, created_at").order("created_at", { ascending: false }).limit(10),
+    supabase.from("project_tasks").select("id, project, title, status, priority, assignee, updated_at").order("updated_at", { ascending: false }),
+    supabase.from("profiles").select("name, team, status").eq("status", "active"),
+  ]);
+
+  const allHandoverLogs = handoverLogs ?? [];
+  const allBackupRequests = backupRequests ?? [];
+  const allProjectTasks = projectTasks ?? [];
+  const allProfiles = profiles ?? [];
+
+  // ── 서비스 통계 ──
+  const logCountMap = new Map<number, number>();
+  for (const log of allWorkLogs) {
+    logCountMap.set(log.service_id, (logCountMap.get(log.service_id) ?? 0) + 1);
+  }
+
+  let activeCount = 0;
+  let completedCount = 0;
+  let upcomingCount = 0;
+  for (const svc of allServices) {
+    const cnt = logCountMap.get(svc.id) ?? 0;
+    if (cnt === 0) upcomingCount++;
+    else if (cnt >= TOTAL_CATEGORIES) completedCount++;
+    else activeCount++;
+  }
+
+  // ── 마감 임박 서비스 (7일 이내) ──
+  const now = Date.now();
+  const urgentDeadlines = allServices
+    .map((svc) => {
+      const deadlines: { type: string; date: Date; svc: typeof svc }[] = [];
+      if (svc.writing_end) {
+        const d = new Date(svc.writing_end);
+        const days = Math.ceil((d.getTime() - now) / (1000 * 60 * 60 * 24));
+        if (days >= 0 && days <= 7) deadlines.push({ type: "작성마감", date: d, svc });
+      }
+      if (svc.payment_end) {
+        const d = new Date(svc.payment_end);
+        const days = Math.ceil((d.getTime() - now) / (1000 * 60 * 60 * 24));
+        if (days >= 0 && days <= 7) deadlines.push({ type: "결제마감", date: d, svc });
+      }
+      return deadlines;
+    })
+    .flat()
+    .sort((a, b) => a.date.getTime() - b.date.getTime())
+    .slice(0, 5);
+
+  // ── 프로젝트 통계 ──
+  const taskTotal = allProjectTasks.length;
+  const taskDone = allProjectTasks.filter((t) => t.status === "done").length;
+  const taskInProgress = allProjectTasks.filter((t) => t.status === "in_progress" || t.status === "review").length;
+  const taskPct = taskTotal > 0 ? Math.round((taskDone / taskTotal) * 100) : 0;
+
+  // ── 운영자별 서비스 담당 현황 ──
+  const operatorMap = new Map<string, number>();
+  for (const svc of allServices) {
+    if (svc.operator) {
+      operatorMap.set(svc.operator, (operatorMap.get(svc.operator) ?? 0) + 1);
+    }
+  }
+  const operatorStats = Array.from(operatorMap.entries())
+    .map(([name, count]) => ({ name, count }))
+    .sort((a, b) => b.count - a.count);
+
+  const maxOperatorCount = operatorStats.length > 0 ? operatorStats[0].count : 1;
+
+  // ── 현재 진행 중인 백업 ──
+  const today = new Date().toISOString().slice(0, 10);
+  const activeBackups = allBackupRequests.filter(
+    (b) => b.start_date <= today && b.end_date >= today,
+  );
+
   return (
     <div className="space-y-8">
       {/* ── Header ── */}
-      <section className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <div className="flex items-center gap-3 mb-1">
-            <h1 className="text-3xl font-black tracking-tight text-on-surface">
-              통합 운영 현황
-            </h1>
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-primary-container/20 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
-              <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-              NOMINAL
-            </span>
-          </div>
-          <p className="text-on-surface-variant text-sm">
-            실시간 운영 지표 및 전술적 자원 관리 현황
-          </p>
-        </div>
-        <div className="flex gap-3">
-          <button className="flex items-center gap-2 rounded-xl border border-outline-variant/15 bg-surface-container-high px-4 py-2 text-xs font-bold text-on-surface transition-colors hover:bg-surface-bright">
-            <span className="material-symbols-outlined text-sm">filter_list</span>
-            필터
-          </button>
-          <button className="flex items-center gap-2 rounded-xl border border-outline-variant/15 bg-surface-container-high px-4 py-2 text-xs font-bold text-on-surface transition-colors hover:bg-surface-bright">
-            <span className="material-symbols-outlined text-sm">download</span>
-            내보내기
-          </button>
-        </div>
-      </section>
+      <PageHeader
+        title="통합 운영 현황"
+        description="서비스, 프로젝트, 인력 운영 현황을 실시간으로 확인합니다."
+        breadcrumb={["메인", "대시보드"]}
+      />
 
-      {/* ── KPI Cards (4-column) ── */}
-      <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <div className="group cursor-pointer rounded-xl border-l-2 border-primary bg-surface-container-lowest p-5 transition-all hover:bg-surface-container">
-          <div className="mb-6 flex items-start justify-between">
-            <div className="rounded-lg bg-primary-container/10 p-2 text-primary">
-              <span className="material-symbols-outlined">trending_up</span>
-            </div>
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-primary-container/20 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
-              <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-              LIVE
-            </span>
-          </div>
-          <div className="text-on-surface-variant text-[10px] font-bold uppercase tracking-widest mb-1">
-            서비스 가동률
-          </div>
-          <div className="text-4xl font-black tracking-tight text-on-surface group-hover:text-primary transition-colors">
-            99.98%
-          </div>
-        </div>
-        <div className="group cursor-pointer rounded-xl border-l-2 border-primary bg-surface-container-lowest p-5 transition-all hover:bg-surface-container">
-          <div className="mb-6 flex items-start justify-between">
-            <div className="rounded-lg bg-primary-container/10 p-2 text-primary">
-              <span className="material-symbols-outlined">description</span>
-            </div>
-            <span className="rounded-full bg-primary-container/20 px-2.5 py-0.5 text-[10px] font-bold text-primary">
-              +3 신규
-            </span>
-          </div>
-          <div className="text-on-surface-variant text-[10px] font-bold uppercase tracking-widest mb-1">
-            활성 계약
-          </div>
-          <div className="text-4xl font-black tracking-tight text-on-surface group-hover:text-primary transition-colors">
-            24건
-          </div>
-        </div>
-        <div className="group cursor-pointer rounded-xl border-l-2 border-tertiary bg-surface-container-lowest p-5 transition-all hover:bg-surface-container">
-          <div className="mb-6 flex items-start justify-between">
-            <div className="rounded-lg bg-tertiary-container/10 p-2 text-tertiary">
-              <span className="material-symbols-outlined">input</span>
-            </div>
-            <span className="rounded-full bg-error-container/20 px-2.5 py-0.5 text-[10px] font-bold text-error">
-              2건 긴급
-            </span>
-          </div>
-          <div className="text-on-surface-variant text-[10px] font-bold uppercase tracking-widest mb-1">
-            인수인계 진행
-          </div>
-          <div className="text-4xl font-black tracking-tight text-on-surface group-hover:text-tertiary transition-colors">
-            4건
-          </div>
-        </div>
-        <div className="group cursor-pointer rounded-xl border-l-2 border-error bg-surface-container-lowest p-5 transition-all hover:bg-surface-container">
-          <div className="mb-6 flex items-start justify-between">
-            <div className="rounded-lg bg-error-container/10 p-2 text-error">
-              <span className="material-symbols-outlined">account_balance</span>
-            </div>
-            <span className="rounded-full bg-error-container/20 px-2.5 py-0.5 text-[10px] font-bold text-error">
-              90일 초과 2건
-            </span>
-          </div>
-          <div className="text-on-surface-variant text-[10px] font-bold uppercase tracking-widest mb-1">
-            미수채권
-          </div>
-          <div className="text-4xl font-black tracking-tight text-on-surface group-hover:text-error transition-colors">
-            4.5억
-          </div>
-        </div>
-      </section>
+      {/* ── KPI Cards ── */}
+      <KpiGrid>
+        <KpiCard
+          icon={<IconNetwork size={18} className="text-on-surface-variant" />}
+          label="전체 서비스"
+          value={allServices.length.toString()}
+          suffix="건"
+          change={`등록중 ${activeCount} · 완료 ${completedCount}`}
+        />
+        <KpiCard
+          icon={<IconListCheck size={18} className="text-on-surface-variant" />}
+          label="프로젝트 작업"
+          value={taskTotal.toString()}
+          suffix="건"
+          change={`완료 ${taskDone} · 진행 ${taskInProgress}`}
+        />
+        <KpiCard
+          icon={<IconArrowsExchange size={18} className="text-on-surface-variant" />}
+          label="인수인계"
+          value={allHandoverLogs.length.toString()}
+          suffix="건"
+          change="최근 기록"
+        />
+        <KpiCard
+          icon={<IconUsers size={18} className="text-on-surface-variant" />}
+          label="운영인력"
+          value={allProfiles.length.toString()}
+          suffix="명"
+          change={`운영자 ${operatorStats.length}명 배정`}
+        />
+      </KpiGrid>
 
-      {/* ── Service Status Grid ── */}
-      <section>
-        <h2 className="mb-4 flex items-center gap-2 text-lg font-bold text-on-surface">
-          <span className="material-symbols-outlined text-primary">settings_remote</span>
-          서비스 상태
-        </h2>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <div className="rounded-xl border border-outline-variant/15 bg-surface-container p-5">
-            <div className="mb-4 flex items-center justify-between">
-              <span className="text-sm font-bold text-on-surface">핵심 원격 분석</span>
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-primary-container/20 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
-                <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-                LIVE
-              </span>
+      {/* ── 서비스 현황 + 프로젝트 진행률 ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* 서비스 상태 분포 */}
+        <Card className="p-6">
+          <h3 className="text-sm font-bold text-primary tracking-[0.2em] uppercase mb-5">서비스 등록 현황</h3>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-on-surface-variant">등록중</span>
+                <span className="font-bold text-on-surface">{activeCount}건</span>
+              </div>
+              <ProgressBar value={activeCount} max={allServices.length || 1} size="md" color="primary" />
             </div>
-            <p className="mb-4 text-xs text-on-surface-variant">전체 노드 텔레메트리 수집 정상 운영 중</p>
-            <button className="flex w-full items-center justify-center gap-1.5 rounded-lg bg-surface-container-high px-3 py-2 text-xs font-bold text-on-surface transition-colors hover:bg-surface-bright">
-              <span className="material-symbols-outlined text-sm">monitoring</span>
-              진단
-            </button>
-          </div>
-          <div className="rounded-xl border border-outline-variant/15 bg-surface-container p-5">
-            <div className="mb-4 flex items-center justify-between">
-              <span className="text-sm font-bold text-on-surface">경계 그리드</span>
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-error-container/20 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-error">
-                <span className="h-1.5 w-1.5 rounded-full bg-error animate-pulse" />
-                ALERT
-              </span>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-on-surface-variant">등록완료</span>
+                <span className="font-bold text-on-surface">{completedCount}건</span>
+              </div>
+              <ProgressBar value={completedCount} max={allServices.length || 1} size="md" color="primary" />
             </div>
-            <p className="mb-4 text-xs text-on-surface-variant">비인가 접근 3건 감지, 즉시 확인 필요</p>
-            <button className="flex w-full items-center justify-center gap-1.5 rounded-lg bg-error-container/20 px-3 py-2 text-xs font-bold text-error transition-colors hover:bg-error-container/30">
-              <span className="material-symbols-outlined text-sm">shield</span>
-              해결
-            </button>
-          </div>
-          <div className="rounded-xl border border-outline-variant/15 bg-surface-container p-5">
-            <div className="mb-4 flex items-center justify-between">
-              <span className="text-sm font-bold text-on-surface">릴레이 스테이션</span>
-              <span className="rounded-full bg-tertiary-container/20 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-tertiary">
-                MAINTENANCE
-              </span>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-on-surface-variant">등록예정</span>
+                <span className="font-bold text-on-surface">{upcomingCount}건</span>
+              </div>
+              <ProgressBar value={upcomingCount} max={allServices.length || 1} size="md" color="warning" />
             </div>
-            <p className="mb-4 text-xs text-on-surface-variant">위성 링크 B 재정렬 작업 진행 중</p>
-            <button className="flex w-full items-center justify-center gap-1.5 rounded-lg bg-surface-container-high px-3 py-2 text-xs font-bold text-on-surface transition-colors hover:bg-surface-bright">
-              <span className="material-symbols-outlined text-sm">build</span>
-              진단
-            </button>
           </div>
-          <div className="rounded-xl border border-outline-variant/15 bg-surface-container p-5">
-            <div className="mb-4 flex items-center justify-between">
-              <span className="text-sm font-bold text-on-surface">아카이브 서비스</span>
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-primary-container/20 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
-                <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-                LIVE
-              </span>
-            </div>
-            <p className="mb-4 text-xs text-on-surface-variant">데이터 백업 및 복원 서비스 정상 가동</p>
-            <button className="flex w-full items-center justify-center gap-1.5 rounded-lg bg-surface-container-high px-3 py-2 text-xs font-bold text-on-surface transition-colors hover:bg-surface-bright">
-              <span className="material-symbols-outlined text-sm">monitoring</span>
-              진단
-            </button>
+          <div className="mt-4 pt-4 border-t border-outline-variant/10 text-center">
+            <Link href="/operations/services" className="text-xs font-bold text-primary hover:underline">
+              서비스 관리 바로가기 →
+            </Link>
           </div>
-        </div>
-      </section>
+        </Card>
 
-      {/* ── Two-Column: Contract Table + Handover Timeline ── */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        {/* 프로젝트 달성률 */}
+        <Card className="p-6">
+          <h3 className="text-sm font-bold text-primary tracking-[0.2em] uppercase mb-5">프로젝트 달성률</h3>
+          <div className="flex items-center justify-center mb-6">
+            <div className="relative w-32 h-32">
+              <svg viewBox="0 0 100 100" className="w-full h-full -rotate-90">
+                <circle cx="50" cy="50" r="42" fill="none" strokeWidth="8" className="stroke-surface-container-highest" />
+                <circle
+                  cx="50" cy="50" r="42" fill="none" strokeWidth="8"
+                  className="stroke-primary"
+                  strokeDasharray={`${taskPct * 2.64} 264`}
+                  strokeLinecap="round"
+                />
+              </svg>
+              <div className="absolute inset-0 flex flex-col items-center justify-center">
+                <span className="text-2xl font-black text-on-surface">{taskPct}%</span>
+                <span className="text-[10px] text-on-surface-variant">달성률</span>
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center justify-center gap-6 text-[10px] text-on-surface-variant">
+            <span>할 일 <strong className="text-on-surface">{taskTotal - taskDone - taskInProgress}</strong></span>
+            <span>진행 중 <strong className="text-on-surface">{taskInProgress}</strong></span>
+            <span>완료 <strong className="text-on-surface">{taskDone}</strong></span>
+          </div>
+          <div className="mt-4 pt-4 border-t border-outline-variant/10 text-center">
+            <Link href="/projects" className="text-xs font-bold text-primary hover:underline">
+              프로젝트 현황 바로가기 →
+            </Link>
+          </div>
+        </Card>
+      </div>
+
+      {/* ── 마감 임박 + 운영자 현황 ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* 마감 임박 */}
         <div className="lg:col-span-2">
-          <div className="rounded-xl border border-outline-variant/15 bg-surface-container p-6">
-            <div className="mb-6 flex items-center justify-between">
-              <h2 className="flex items-center gap-2 text-lg font-bold text-on-surface">
-                <span className="material-symbols-outlined text-primary">description</span>
-                계약 관리
-              </h2>
-              <span className="text-xs text-on-surface-variant">활성 계약: 24</span>
+          <Card className="p-6">
+            <div className="flex items-center justify-between mb-5">
+              <h3 className="text-sm font-bold text-primary tracking-[0.2em] uppercase flex items-center gap-2">
+                <IconCalendarDue size={16} />
+                마감 임박 서비스
+              </h3>
+              <StatusBadge variant="error">{urgentDeadlines.length}건</StatusBadge>
             </div>
-            <div className="overflow-x-auto">
-              <table className="w-full text-left">
-                <thead className="border-b border-outline-variant/20 text-[10px] font-black uppercase tracking-widest text-on-surface-variant">
-                  <tr>
-                    <th className="pb-3">계약 ID</th>
-                    <th className="pb-3">업체명</th>
-                    <th className="pb-3">만료일</th>
-                    <th className="pb-3">진행률</th>
-                    <th className="pb-3 text-right">금액</th>
-                  </tr>
-                </thead>
-                <tbody className="text-sm">
-                  <tr className="group border-b border-outline-variant/10 transition-colors hover:bg-surface-container-high">
-                    <td className="py-4 font-mono text-primary">#SH-9920-X</td>
-                    <td className="py-4">
-                      <div className="flex items-center gap-2">
-                        <span className="material-symbols-outlined text-sm text-on-surface-variant">apartment</span>
-                        <span className="font-bold text-on-surface">CyberDyne Systems</span>
-                      </div>
-                    </td>
-                    <td className="py-4 text-on-surface-variant">2026.06.12</td>
-                    <td className="py-4">
-                      <div className="w-32">
-                        <div className="mb-1 flex justify-between text-[10px]">
-                          <span>84%</span>
-                          <span className="font-bold text-error">CRITICAL</span>
+            {urgentDeadlines.length === 0 ? (
+              <p className="text-xs text-on-surface-variant py-6 text-center">7일 이내 마감 예정 서비스가 없습니다.</p>
+            ) : (
+              <div className="space-y-3">
+                {urgentDeadlines.map((item, idx) => {
+                  const daysLeft = Math.ceil((item.date.getTime() - now) / (1000 * 60 * 60 * 24));
+                  return (
+                    <div key={`${item.svc.id}-${item.type}-${idx}`} className="flex items-center justify-between p-3 rounded-lg bg-surface-container-low/50">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-semibold text-on-surface truncate">{item.svc.university_name}</span>
+                          <StatusBadge variant={item.type === "작성마감" ? "warning" : "info"}>{item.type}</StatusBadge>
                         </div>
-                        <div className="h-1 w-full rounded-full bg-surface-container-highest">
-                          <div className="h-full rounded-full bg-error" style={{ width: "84%" }} />
-                        </div>
+                        <p className="text-xs text-on-surface-variant mt-0.5 truncate">
+                          {item.svc.service_name} · {item.svc.operator ?? "미배정"}
+                        </p>
                       </div>
-                    </td>
-                    <td className="py-4 text-right font-bold text-on-surface">2.4억</td>
-                  </tr>
-                  <tr className="group border-b border-outline-variant/10 transition-colors hover:bg-surface-container-high">
-                    <td className="py-4 font-mono text-primary">#SH-4412-B</td>
-                    <td className="py-4">
-                      <div className="flex items-center gap-2">
-                        <span className="material-symbols-outlined text-sm text-on-surface-variant">local_shipping</span>
-                        <span className="font-bold text-on-surface">Nova Logistics</span>
-                      </div>
-                    </td>
-                    <td className="py-4 text-on-surface-variant">2026.09.05</td>
-                    <td className="py-4">
-                      <div className="w-32">
-                        <div className="mb-1 flex justify-between text-[10px]">
-                          <span>42%</span>
-                          <span className="font-bold text-primary">STABLE</span>
-                        </div>
-                        <div className="h-1 w-full rounded-full bg-surface-container-highest">
-                          <div className="h-full rounded-full bg-primary" style={{ width: "42%" }} />
-                        </div>
-                      </div>
-                    </td>
-                    <td className="py-4 text-right font-bold text-on-surface">1.2억</td>
-                  </tr>
-                  <tr className="group border-b border-outline-variant/10 transition-colors hover:bg-surface-container-high">
-                    <td className="py-4 font-mono text-primary">#SH-1029-K</td>
-                    <td className="py-4">
-                      <div className="flex items-center gap-2">
-                        <span className="material-symbols-outlined text-sm text-on-surface-variant">security</span>
-                        <span className="font-bold text-on-surface">Aether Defense</span>
-                      </div>
-                    </td>
-                    <td className="py-4 text-on-surface-variant">2027.02.14</td>
-                    <td className="py-4">
-                      <div className="w-32">
-                        <div className="mb-1 flex justify-between text-[10px]">
-                          <span>12%</span>
-                          <span className="font-bold text-on-surface-variant">LOW</span>
-                        </div>
-                        <div className="h-1 w-full rounded-full bg-surface-container-highest">
-                          <div className="h-full rounded-full bg-primary" style={{ width: "12%" }} />
-                        </div>
-                      </div>
-                    </td>
-                    <td className="py-4 text-right font-bold text-on-surface">0.9억</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+                      <span className={`text-xs font-black tabular-nums whitespace-nowrap ml-3 ${daysLeft <= 3 ? "text-error" : "text-tertiary"}`}>
+                        {daysLeft === 0 ? "오늘 마감" : `D-${daysLeft}`}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </Card>
+        </div>
+
+        {/* 운영자별 담당 현황 */}
+        <Card className="p-6">
+          <h3 className="text-sm font-bold text-primary tracking-[0.2em] uppercase mb-5">운영자별 담당</h3>
+          <div className="space-y-3">
+            {operatorStats.slice(0, 8).map((op) => (
+              <div key={op.name} className="space-y-1.5">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-on-surface font-medium">{op.name}</span>
+                  <span className="font-bold text-on-surface-variant tabular-nums">{op.count}건</span>
+                </div>
+                <ProgressBar value={op.count} max={maxOperatorCount} size="sm" color="primary" />
+              </div>
+            ))}
+          </div>
+        </Card>
+      </div>
+
+      {/* ── 최근 인수인계 + 백업 현황 ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* 최근 인수인계 */}
+        <div>
+          <h3 className="text-sm font-bold text-primary tracking-[0.2em] uppercase mb-4">최근 인수인계</h3>
+          {allHandoverLogs.length === 0 ? (
+            <Card className="p-6">
+              <p className="text-xs text-on-surface-variant text-center">인수인계 기록이 없습니다.</p>
+            </Card>
+          ) : (
+            <Card className="divide-y divide-outline-variant/10 overflow-hidden p-0">
+              {allHandoverLogs.slice(0, 5).map((log) => {
+                const svc = allServices.find((s) => s.id === log.service_id);
+                return (
+                  <div key={log.id} className="px-5 py-3.5 flex items-center gap-3 hover:bg-surface-container-high/50 transition-colors">
+                    <IconArrowsExchange size={16} className="text-primary shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-on-surface truncate">
+                        {svc?.university_name ?? "서비스"} · {svc?.service_name ?? ""}
+                      </p>
+                      <p className="text-[10px] text-on-surface-variant mt-0.5">
+                        {log.from_person ?? "미배정"} → <strong className="text-on-surface">{log.to_person}</strong> · {log.executed_by}
+                      </p>
+                    </div>
+                    <span className="text-[10px] text-on-surface-variant tabular-nums whitespace-nowrap">
+                      {new Date(log.executed_at).toLocaleDateString("ko-KR")}
+                    </span>
+                  </div>
+                );
+              })}
+            </Card>
+          )}
+          <div className="mt-3 text-center">
+            <Link href="/operations/handover" className="text-xs font-bold text-primary hover:underline">
+              전체 보기 →
+            </Link>
           </div>
         </div>
 
-        {/* 인수인계 타임라인 (1/3) */}
-        <div className="lg:col-span-1">
-          <div className="h-full rounded-xl border border-outline-variant/15 border-b-2 border-b-primary/30 bg-surface-container-high p-6">
-            <h2 className="mb-8 flex items-center gap-2 text-lg font-bold text-on-surface">
-              <span className="material-symbols-outlined text-primary">input</span>
-              인수인계 프로세스
-            </h2>
-            <div className="relative space-y-8">
-              <div className="absolute bottom-2 left-[11px] top-2 w-px bg-outline-variant/30" />
-              {/* Step 1: 완료 */}
-              <div className="relative flex gap-4">
-                <div className="z-10 flex h-6 w-6 items-center justify-center rounded-full bg-primary">
-                  <span className="material-symbols-outlined text-xs font-bold text-surface-container-lowest" style={{ fontVariationSettings: "'FILL' 1" }}>check</span>
-                </div>
-                <div>
-                  <div className="text-xs font-bold uppercase tracking-tighter text-primary">로그 확정</div>
-                  <div className="mt-0.5 text-[10px] text-on-surface-variant">Alpha 팀 04:00 완료</div>
-                </div>
-              </div>
-              {/* Step 2: 완료 */}
-              <div className="relative flex gap-4">
-                <div className="z-10 flex h-6 w-6 items-center justify-center rounded-full bg-primary">
-                  <span className="material-symbols-outlined text-xs font-bold text-surface-container-lowest" style={{ fontVariationSettings: "'FILL' 1" }}>check</span>
-                </div>
-                <div>
-                  <div className="text-xs font-bold uppercase tracking-tighter text-primary">자산 인수인계</div>
-                  <div className="mt-0.5 text-[10px] text-on-surface-variant">12/12 항목 확인 완료</div>
-                </div>
-              </div>
-              {/* Step 3: 진행 중 */}
-              <div className="relative flex gap-4">
-                <div className="z-10 flex h-6 w-6 items-center justify-center rounded-full border-4 border-surface-container-high bg-primary">
-                  <div className="h-2 w-2 rounded-full bg-surface-container-lowest" />
-                </div>
-                <div>
-                  <div className="text-xs font-bold uppercase tracking-tighter text-on-surface">브리핑 세션</div>
-                  <div className="mt-0.5 text-[10px] text-on-surface-variant">진행 중 (3/5 항목 완료)</div>
-                  <div className="mt-2 h-1 w-32 overflow-hidden rounded-full bg-surface-container-lowest">
-                    <div className="h-full animate-pulse rounded-full bg-primary" style={{ width: "60%" }} />
+        {/* 백업 현황 */}
+        <div>
+          <h3 className="text-sm font-bold text-primary tracking-[0.2em] uppercase mb-4">
+            백업 현황
+            {activeBackups.length > 0 && (
+              <StatusBadge variant="warning">{activeBackups.length}명 부재</StatusBadge>
+            )}
+          </h3>
+          {allBackupRequests.length === 0 ? (
+            <Card className="p-6">
+              <p className="text-xs text-on-surface-variant text-center">백업 요청이 없습니다.</p>
+            </Card>
+          ) : (
+            <Card className="divide-y divide-outline-variant/10 overflow-hidden p-0">
+              {allBackupRequests.slice(0, 5).map((req) => (
+                <div key={req.id} className="px-5 py-3.5 flex items-center gap-3 hover:bg-surface-container-high/50 transition-colors">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-semibold text-on-surface">{req.operator_name}</span>
+                      <StatusBadge variant={req.status === "작성 완료" ? "success" : "warning"}>
+                        {req.status}
+                      </StatusBadge>
+                    </div>
+                    <p className="text-[10px] text-on-surface-variant mt-0.5">
+                      {req.leave_type} · {req.start_date} ~ {req.end_date}
+                    </p>
                   </div>
                 </div>
-              </div>
-              {/* Step 4: 대기 */}
-              <div className="relative flex gap-4 opacity-50">
-                <div className="z-10 flex h-6 w-6 items-center justify-center rounded-full border-4 border-surface-container-high bg-outline-variant" />
-                <div>
-                  <div className="text-xs font-bold uppercase tracking-tighter text-on-surface">완료</div>
-                  <div className="mt-0.5 text-[10px] text-on-surface-variant">06:00 예정</div>
-                </div>
-              </div>
-            </div>
-            <div className="mt-10 rounded-lg border border-outline-variant/10 bg-surface-container-lowest p-4">
-              <div className="mb-2 text-[10px] font-bold uppercase text-on-surface-variant">현재 관리 책임</div>
-              <div className="flex items-center gap-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-surface-bright">
-                  <span className="material-symbols-outlined text-sm text-primary">shield</span>
-                </div>
-                <div className="text-sm font-bold text-on-surface">섹터 7 경비 부대</div>
-              </div>
-            </div>
+              ))}
+            </Card>
+          )}
+          <div className="mt-3 text-center">
+            <Link href="/operations/backup" className="text-xs font-bold text-primary hover:underline">
+              전체 보기 →
+            </Link>
           </div>
         </div>
       </div>
-
-      {/* ── Footer Metrics Bar ── */}
-      <footer className="grid grid-cols-1 gap-6 border-t border-outline-variant/15 pt-8 md:grid-cols-3">
-        <div className="flex items-center gap-4">
-          <div className="text-4xl font-black tracking-tighter text-primary">99.98</div>
-          <div>
-            <div className="text-[10px] font-bold uppercase tracking-widest text-on-surface">UPTIME SCORE</div>
-            <div className="text-[10px] text-on-surface-variant">최근 24시간 변동: +0.02%</div>
-          </div>
-        </div>
-        <div className="flex items-center gap-4">
-          <div className="text-4xl font-black tracking-tighter text-on-surface">14.2M</div>
-          <div>
-            <div className="text-[10px] font-bold uppercase tracking-widest text-on-surface">HANDOVER SPEED</div>
-            <div className="text-[10px] text-on-surface-variant">평균 목표: 15M (초과 달성)</div>
-          </div>
-        </div>
-        <div className="flex items-center gap-4">
-          <div className="text-4xl font-black tracking-tighter text-primary">LOW</div>
-          <div>
-            <div className="text-[10px] font-bold uppercase tracking-widest text-on-surface">RISK EXPOSURE</div>
-            <div className="text-[10px] text-on-surface-variant">위협 수준: Delta (최소)</div>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

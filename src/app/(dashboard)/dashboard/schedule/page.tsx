@@ -3,336 +3,224 @@ import {
   StatusBadge,
   Card,
 } from "@/components/common";
+import { IconCalendarEvent } from "@tabler/icons-react";
+import { createClient } from "@/lib/supabase/server";
+import CalendarView from "./CalendarView";
+import AddScheduleButton from "./AddScheduleButton";
 
-/* ── 캘린더 데이터 ── */
-const YEAR = 2026;
-const MONTH = 3; // 3월
-
-const DAY_LABELS = ["일", "월", "화", "수", "목", "금", "토"] as const;
-
-// 2026년 3월: 1일 = 일요일, 31일까지
-const firstDayOfWeek = 0; // 일요일
-const daysInMonth = 31;
-const TODAY = 31;
-
-type EventDot = "primary" | "error" | "tertiary";
-
-const calendarEvents: Record<number, EventDot[]> = {
-  2: ["primary"],
-  5: ["primary", "tertiary"],
-  9: ["primary"],
-  11: ["error"],
-  14: ["tertiary"],
-  16: ["primary"],
-  18: ["primary", "error"],
-  20: ["primary"],
-  23: ["tertiary"],
-  25: ["primary"],
-  27: ["error", "primary"],
-  28: ["primary"],
-  30: ["primary"],
-  31: ["primary", "error", "tertiary"],
-};
-
-const dotColorMap: Record<EventDot, string> = {
-  primary: "bg-primary",
-  error: "bg-error",
-  tertiary: "bg-tertiary",
-};
-
-/* ── 주간 일정 데이터 ── */
-type CategoryType = "미팅" | "리뷰" | "마감" | "점검";
-
-interface ScheduleItem {
-  time: string;
-  title: string;
-  category: CategoryType;
+function stripYear(name: string) {
+  return name.replace(/\d{4}학년도\s*|\d{4}-(?=\d학기)/g, "");
 }
 
-interface DaySchedule {
-  day: string;
-  date: string;
-  isToday?: boolean;
-  items: ScheduleItem[];
+interface ServiceSchedule {
+  id: number;
+  university_name: string | null;
+  service_name: string | null;
+  operator: string | null;
+  category: string | null;
+  writing_start: string | null;
+  writing_end: string | null;
+  payment_start: string | null;
+  payment_end: string | null;
 }
 
-const weeklySchedule: DaySchedule[] = [
-  {
-    day: "월",
-    date: "3/30",
-    items: [
-      { time: "09:00", title: "팀 스탠드업", category: "미팅" },
-      { time: "14:00", title: "고객사 A 미팅", category: "미팅" },
-    ],
-  },
-  {
-    day: "화",
-    date: "3/31",
-    isToday: true,
-    items: [
-      { time: "10:00", title: "프로젝트 킥오프", category: "미팅" },
-      { time: "16:00", title: "보안 리뷰", category: "리뷰" },
-    ],
-  },
-  {
-    day: "수",
-    date: "4/1",
-    items: [
-      { time: "09:30", title: "경영진 보고", category: "미팅" },
-      { time: "13:00", title: "시스템 점검", category: "점검" },
-    ],
-  },
-  {
-    day: "목",
-    date: "4/2",
-    items: [
-      { time: "11:00", title: "채용 면접", category: "미팅" },
-      { time: "15:00", title: "파트너 미팅", category: "미팅" },
-    ],
-  },
-  {
-    day: "금",
-    date: "4/3",
-    items: [
-      { time: "09:00", title: "주간 회고", category: "리뷰" },
-      { time: "17:00", title: "주간 리포트 마감", category: "마감" },
-    ],
-  },
-];
+export default async function SchedulePage() {
+  const supabase = createClient();
 
-const categoryVariant: Record<CategoryType, "info" | "warning" | "error" | "neutral"> = {
-  미팅: "info",
-  리뷰: "warning",
-  마감: "error",
-  점검: "neutral",
-};
+  // 일정이 있는 서비스만 조회 (작성기간 또는 결제기간이 있는 것)
+  const { count } = await supabase
+    .from("services")
+    .select("id", { count: "exact", head: true })
+    .or("writing_start.not.is.null,payment_start.not.is.null");
 
-/* ── 다가오는 주요 일정 ── */
-const upcomingEvents = [
-  { title: "한양대 계약 갱신", dDay: 3, variant: "error" as const },
-  { title: "분기 실적 보고", dDay: 7, variant: "warning" as const },
-  { title: "보증보험 갱신", dDay: 14, variant: "info" as const },
-  { title: "시스템 업데이트", dDay: 21, variant: "neutral" as const },
-  { title: "인수인계 완료 예정", dDay: 30, variant: "neutral" as const },
-] as const;
+  const totalRows = count ?? 0;
+  const allServices: ServiceSchedule[] = [];
 
-/* ── 캘린더 셀 빌드 ── */
-function buildCalendarCells() {
-  const cells: Array<{ day: number | null; dots: EventDot[] }> = [];
-
-  // 이전 달 빈 칸
-  for (let i = 0; i < firstDayOfWeek; i++) {
-    cells.push({ day: null, dots: [] });
+  for (let offset = 0; offset < totalRows; offset += 1000) {
+    const { data } = await supabase
+      .from("services")
+      .select("id, university_name, service_name, operator, category, writing_start, writing_end, payment_start, payment_end")
+      .or("writing_start.not.is.null,payment_start.not.is.null")
+      .range(offset, offset + 999);
+    if (data) allServices.push(...(data as ServiceSchedule[]));
   }
 
-  // 이번 달 날짜
-  for (let d = 1; d <= daysInMonth; d++) {
-    cells.push({ day: d, dots: calendarEvents[d] ?? [] });
+  // 커스텀 일정 조회
+  const { data: customSchedules } = await supabase
+    .from("schedules")
+    .select("*")
+    .order("start_date", { ascending: true });
+
+  const schedules = (customSchedules ?? []) as {
+    id: number;
+    title: string;
+    description: string | null;
+    start_date: string;
+    end_date: string;
+    category: string;
+    created_by: string;
+  }[];
+
+  // 이번 주 일정 계산
+  const today = new Date();
+  const dayOfWeek = today.getDay();
+  const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+  const monday = new Date(today);
+  monday.setDate(today.getDate() + mondayOffset);
+  monday.setHours(0, 0, 0, 0);
+
+  const weekDays = Array.from({ length: 5 }, (_, i) => {
+    const d = new Date(monday);
+    d.setDate(monday.getDate() + i);
+    return d;
+  });
+
+  const dayLabels = ["월", "화", "수", "목", "금"];
+
+  function isDateInRange(date: Date, start: string | null, end: string | null) {
+    if (!start || !end) return false;
+    const s = new Date(start);
+    const e = new Date(end);
+    s.setHours(0, 0, 0, 0);
+    e.setHours(23, 59, 59, 999);
+    return date >= s && date <= e;
   }
 
-  // 남은 셀 (7의 배수로 채움)
-  const remaining = cells.length % 7 === 0 ? 0 : 7 - (cells.length % 7);
-  for (let i = 0; i < remaining; i++) {
-    cells.push({ day: null, dots: [] });
-  }
+  const weeklyData = weekDays.map((date, i) => {
+    const isToday = date.toDateString() === today.toDateString();
+    const dateStr = `${date.getMonth() + 1}/${date.getDate()}`;
 
-  return cells;
-}
+    const dayItems: { title: string; subtitle: string; type: "작성" | "결제" | "일정"; category?: string }[] = [];
 
-export default function SchedulePage() {
-  const cells = buildCalendarCells();
+    // 커스텀 일정
+    for (const sc of schedules) {
+      if (isDateInRange(date, sc.start_date, sc.end_date)) {
+        dayItems.push({
+          title: sc.title,
+          subtitle: sc.category,
+          type: "일정",
+          category: sc.category,
+        });
+      }
+    }
+
+    // 서비스 일정
+    for (const s of allServices) {
+      if (isDateInRange(date, s.writing_start, s.writing_end)) {
+        dayItems.push({
+          title: stripYear(s.service_name ?? "-"),
+          subtitle: s.university_name ?? "-",
+          type: "작성",
+        });
+      }
+      if (isDateInRange(date, s.payment_start, s.payment_end)) {
+        dayItems.push({
+          title: stripYear(s.service_name ?? "-"),
+          subtitle: s.university_name ?? "-",
+          type: "결제",
+        });
+      }
+    }
+
+    // 중복 제거
+    const unique = dayItems.filter((v, i, a) => a.findIndex((t) => t.title === v.title && t.type === v.type) === i);
+
+    return {
+      day: dayLabels[i],
+      date: dateStr,
+      isToday,
+      items: unique.slice(0, 5),
+      totalCount: unique.length,
+    };
+  });
+
+  // CalendarView에 전달할 데이터
+  const calendarServices = allServices.map((s) => ({
+    id: s.id,
+    university_name: s.university_name,
+    service_name: s.service_name,
+    writing_start: s.writing_start,
+    writing_end: s.writing_end,
+    payment_start: s.payment_start,
+    payment_end: s.payment_end,
+  }));
+
+  const calendarSchedules = schedules.map((s) => ({
+    id: s.id,
+    title: s.title,
+    category: s.category,
+    start_date: s.start_date,
+    end_date: s.end_date,
+  }));
 
   return (
     <div className="space-y-8">
-      {/* ── Header ── */}
       <PageHeader
         title="전체 일정"
+        description="서비스 작성기간 및 결제기간 일정을 한눈에 확인합니다."
         breadcrumb={["메인", "전체일정"]}
-        actions={
-          <button className="flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-bold text-on-primary transition-all hover:brightness-110 active:scale-95">
-            <span className="material-symbols-outlined text-sm">add</span>
-            일정 추가
-          </button>
-        }
+        actions={<AddScheduleButton />}
       />
 
-      {/* ── 월간 캘린더 ── */}
-      <section>
-        <Card className="p-6">
-          <div className="mb-6 flex items-center justify-between">
-            <h3 className="flex items-center gap-2 text-lg font-bold text-on-surface">
-              <span className="material-symbols-outlined text-primary">calendar_month</span>
-              {YEAR}년 {MONTH}월
-            </h3>
-            <div className="flex items-center gap-4 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
-              <div className="flex items-center gap-1.5">
-                <span className="h-2 w-2 rounded-full bg-primary" />
-                일반
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span className="h-2 w-2 rounded-full bg-error" />
-                긴급
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span className="h-2 w-2 rounded-full bg-tertiary" />
-                주의
-              </div>
-            </div>
-          </div>
+      {/* 월간 캘린더 */}
+      <CalendarView services={calendarServices} schedules={calendarSchedules} />
 
-          {/* 요일 헤더 */}
-          <div className="grid grid-cols-7 mb-2">
-            {DAY_LABELS.map((label, i) => (
-              <div
-                key={label}
-                className={`text-center text-[10px] font-bold uppercase tracking-widest py-2 ${
-                  i === 0
-                    ? "text-error/70"
-                    : i === 6
-                      ? "text-secondary/70"
-                      : "text-on-surface-variant"
-                }`}
-              >
-                {label}
-              </div>
-            ))}
-          </div>
-
-          {/* 날짜 그리드 */}
-          <div className="grid grid-cols-7 border-t border-outline-variant/10">
-            {cells.map((cell, idx) => {
-              const isToday = cell.day === TODAY;
-              const isWeekend =
-                idx % 7 === 0 || idx % 7 === 6;
-
-              return (
-                <div
-                  key={idx}
-                  className="relative flex flex-col items-center gap-1 border-b border-r border-outline-variant/10 py-3 min-h-[72px] transition-colors hover:bg-surface-container-high"
+      {/* 이번 주 일정 */}
+      <Card className="p-6">
+        <h3 className="mb-6 flex items-center gap-2 text-sm font-bold text-on-surface">
+          <IconCalendarEvent size={18} className="text-primary" />
+          이번 주 서비스 일정
+        </h3>
+        <div className="space-y-6">
+          {weeklyData.map((dayBlock) => (
+            <div key={dayBlock.day}>
+              <div className="mb-3 flex items-center gap-2">
+                <span
+                  className={`flex h-7 w-7 items-center justify-center rounded-lg text-xs font-bold ${
+                    dayBlock.isToday
+                      ? "bg-primary text-on-primary"
+                      : "bg-surface-container-high text-on-surface-variant"
+                  }`}
                 >
-                  {cell.day !== null && (
-                    <>
-                      <span
-                        className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold ${
-                          isToday
-                            ? "bg-primary text-on-primary"
-                            : isWeekend
-                              ? "text-on-surface-variant/60"
-                              : "text-on-surface"
-                        }`}
-                      >
-                        {cell.day}
-                      </span>
-                      {cell.dots.length > 0 && (
-                        <div className="flex items-center gap-1">
-                          {cell.dots.map((dot, dotIdx) => (
-                            <span
-                              key={dotIdx}
-                              className={`h-1.5 w-1.5 rounded-full ${dotColorMap[dot]}`}
-                            />
-                          ))}
-                        </div>
-                      )}
-                    </>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </Card>
-      </section>
-
-      {/* ── 이번 주 일정 (2열) ── */}
-      <section className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-        {/* 주간 일정 (8/12) */}
-        <div className="lg:col-span-8">
-          <Card className="p-6">
-            <h3 className="mb-6 flex items-center gap-2 text-sm font-bold text-on-surface">
-              <span className="material-symbols-outlined text-primary text-lg">date_range</span>
-              주간 일정
-            </h3>
-            <div className="space-y-6">
-              {weeklySchedule.map((dayBlock) => (
-                <div key={dayBlock.day}>
-                  <div className="mb-3 flex items-center gap-2">
-                    <span
-                      className={`flex h-7 w-7 items-center justify-center rounded-lg text-xs font-bold ${
-                        dayBlock.isToday
-                          ? "bg-primary text-on-primary"
-                          : "bg-surface-container-high text-on-surface-variant"
-                      }`}
+                  {dayBlock.day}
+                </span>
+                <span className="text-xs text-on-surface-variant">{dayBlock.date}</span>
+                {dayBlock.isToday && <StatusBadge variant="success">오늘</StatusBadge>}
+                {dayBlock.totalCount > 0 && (
+                  <span className="text-[10px] text-on-surface-variant">{dayBlock.totalCount}건</span>
+                )}
+              </div>
+              <div className="ml-2 space-y-2 border-l border-outline-variant/20 pl-5">
+                {dayBlock.items.length > 0 ? (
+                  dayBlock.items.map((item, idx) => (
+                    <div
+                      key={idx}
+                      className="flex items-center justify-between rounded-lg border border-outline-variant/10 bg-surface-container-high p-3 transition-colors hover:bg-surface-bright"
                     >
-                      {dayBlock.day}
-                    </span>
-                    <span className="text-xs text-on-surface-variant">{dayBlock.date}</span>
-                    {dayBlock.isToday && (
-                      <StatusBadge variant="success">오늘</StatusBadge>
-                    )}
-                  </div>
-                  <div className="ml-2 space-y-2 border-l border-outline-variant/20 pl-5">
-                    {dayBlock.items.map((item) => (
-                      <div
-                        key={`${dayBlock.day}-${item.time}`}
-                        className="flex items-center justify-between rounded-lg border border-outline-variant/10 bg-surface-container-high p-3 transition-colors hover:bg-surface-bright"
-                      >
-                        <div className="flex items-center gap-3">
-                          <span className="w-14 shrink-0 text-xs font-mono font-bold text-on-surface-variant">
-                            {item.time}
-                          </span>
-                          <span className="text-sm font-medium text-on-surface">
-                            {item.title}
-                          </span>
-                        </div>
-                        <StatusBadge variant={categoryVariant[item.category]}>
-                          {item.category}
-                        </StatusBadge>
+                      <div className="flex items-center gap-3">
+                        <span className="text-xs text-on-surface-variant truncate max-w-[120px]">
+                          {item.subtitle}
+                        </span>
+                        <span className="text-sm font-medium text-on-surface">
+                          {item.title}
+                        </span>
                       </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
+                      <StatusBadge variant={item.type === "작성" ? "info" : item.type === "결제" ? "warning" : "success"}>
+                        {item.type === "작성" ? "작성기간" : item.type === "결제" ? "결제기간" : item.category ?? "일정"}
+                      </StatusBadge>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-xs text-on-surface-variant/50 py-2">일정 없음</p>
+                )}
+                {dayBlock.totalCount > 5 && (
+                  <p className="text-xs text-on-surface-variant">외 {dayBlock.totalCount - 5}건</p>
+                )}
+              </div>
             </div>
-          </Card>
+          ))}
         </div>
-
-        {/* 다가오는 주요 일정 (4/12) */}
-        <div className="lg:col-span-4">
-          <Card className="p-6">
-            <h3 className="mb-6 flex items-center gap-2 text-sm font-bold text-on-surface">
-              <span className="material-symbols-outlined text-primary text-lg">upcoming</span>
-              다가오는 주요 일정
-            </h3>
-            <div className="space-y-4">
-              {upcomingEvents.map((event) => (
-                <div
-                  key={event.title}
-                  className="flex items-center justify-between rounded-lg border border-outline-variant/10 bg-surface-container-high p-4 transition-colors hover:bg-surface-bright"
-                >
-                  <div className="flex flex-col gap-1">
-                    <span className="text-sm font-bold text-on-surface">
-                      {event.title}
-                    </span>
-                    <StatusBadge variant={event.variant}>
-                      D-{event.dDay}
-                    </StatusBadge>
-                  </div>
-                  <span
-                    className={`text-2xl font-black tracking-tighter ${
-                      event.variant === "error"
-                        ? "text-error"
-                        : event.variant === "warning"
-                          ? "text-tertiary"
-                          : "text-on-surface-variant/40"
-                    }`}
-                  >
-                    {event.dDay}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </Card>
-        </div>
-      </section>
+      </Card>
     </div>
   );
 }

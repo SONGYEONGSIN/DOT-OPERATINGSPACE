@@ -5,101 +5,140 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/cn";
 import { BrandLogo } from "@/components/common";
+import { signOut } from "@/features/auth/actions";
+import {
+  IconLayoutDashboard,
+  IconSpeakerphone,
+  IconCalendar,
+  IconFileDescription,
+  IconNetwork,
+  IconArrowsExchange,
+  IconBuildingBank,
+  IconAddressBook,
+  IconCloudUpload,
+  IconTopologyComplex,
+  IconClipboardCheck,
+  IconUserShield,
+  IconChartBar,
+  IconTool,
+  IconReportAnalytics,
+  IconCash,
+  IconSchool,
+  IconBuildingArch,
+  IconUserCheck,
+  IconShieldCheck,
+  IconCertificate,
+  IconAlertTriangle,
+  IconAlertOctagon,
+  IconFolders,
+  IconFileAnalytics,
+  IconTrendingUp,
+  IconHistory,
+  IconBrain,
+  IconMessageChatbot,
+  IconRocket,
+  IconSettings,
+  IconUsers,
+  IconServer,
+  IconChevronDown,
+  IconLogout,
+  type IconProps,
+} from "@tabler/icons-react";
+import type { ForwardRefExoticComponent, RefAttributes } from "react";
+
+type TablerIcon = ForwardRefExoticComponent<IconProps & RefAttributes<SVGSVGElement>>;
 
 interface NavChild {
   label: string;
-  icon?: string;
+  icon: TablerIcon;
   href: string;
 }
 
 interface NavItem {
   label: string;
-  icon: string;
   href: string;
   collapsible?: boolean;
-  children?: NavChild[];
+  children: NavChild[];
 }
 
 const navigation: NavItem[] = [
   {
     label: "메인",
-    icon: "space_dashboard",
     href: "/dashboard",
+    collapsible: true,
     children: [
-      { label: "대시보드", icon: "dashboard", href: "/dashboard" },
-      { label: "브리핑", icon: "campaign", href: "/dashboard/briefing" },
-      { label: "전체일정", icon: "calendar_month", href: "/dashboard/schedule" },
+      { label: "대시보드", icon: IconLayoutDashboard, href: "/dashboard" },
+      { label: "브리핑", icon: IconSpeakerphone, href: "/dashboard/briefing" },
+      { label: "전체일정", icon: IconCalendar, href: "/dashboard/schedule" },
     ],
   },
   {
     label: "운영",
-    icon: "business_center",
     href: "/operations",
     collapsible: true,
     children: [
-      { label: "계약서", icon: "description", href: "/operations/contracts" },
-      { label: "서비스", icon: "lan", href: "/operations/services" },
-      { label: "인수인계", icon: "swap_horiz", href: "/operations/handover" },
-      { label: "미수채권", icon: "account_balance", href: "/operations/receivables" },
-      { label: "대학연락처", icon: "contacts", href: "/operations/contacts" },
+      { label: "계약서 관리", icon: IconFileDescription, href: "/operations/contracts" },
+      { label: "서비스 관리", icon: IconNetwork, href: "/operations/services" },
+      { label: "인수인계", icon: IconArrowsExchange, href: "/operations/handover" },
+      { label: "미수채권", icon: IconBuildingBank, href: "/operations/receivables" },
+      { label: "대학연락처", icon: IconAddressBook, href: "/operations/contacts" },
+      { label: "백업요청", icon: IconCloudUpload, href: "/operations/backup" },
+      { label: "사고리포트", icon: IconAlertOctagon, href: "/operations/incidents" },
+      { label: "기타", icon: IconFolders, href: "/operations/etc" },
     ],
   },
   {
     label: "프로젝트",
-    icon: "folder_special",
     href: "/projects",
     collapsible: true,
     children: [
-      { label: "PIMS", icon: "hub", href: "/projects/pims" },
-      { label: "접수관리자", icon: "assignment", href: "/projects/reception" },
-      { label: "내부관리자", icon: "admin_panel_settings", href: "/projects/internal" },
-      { label: "경쟁률", icon: "leaderboard", href: "/projects/competition" },
-      { label: "생성툴", icon: "construction", href: "/projects/generator" },
-      { label: "매출/분석", icon: "analytics", href: "/projects/revenue" },
-      { label: "정산/진학캐쉬", icon: "payments", href: "/projects/settlement" },
-      { label: "초중고", icon: "school", href: "/projects/k12" },
-      { label: "대학교육협의회", icon: "account_balance", href: "/projects/kcue" },
-      { label: "추천인검증", icon: "verified_user", href: "/projects/referral" },
-      { label: "보증보험", icon: "shield", href: "/projects/insurance" },
-      { label: "실적증명", icon: "workspace_premium", href: "/projects/performance" },
-      { label: "유의사항", icon: "warning", href: "/projects/notices" },
+      { label: "PIMS", icon: IconTopologyComplex, href: "/projects/pims" },
+      { label: "접수관리자", icon: IconClipboardCheck, href: "/projects/reception" },
+      { label: "내부관리자", icon: IconUserShield, href: "/projects/internal" },
+      { label: "경쟁률", icon: IconChartBar, href: "/projects/competition" },
+      { label: "생성툴", icon: IconTool, href: "/projects/generator" },
+      { label: "매출/분석", icon: IconReportAnalytics, href: "/projects/revenue" },
+      { label: "정산/진학캐쉬", icon: IconCash, href: "/projects/settlement" },
+      { label: "초중고", icon: IconSchool, href: "/projects/k12" },
+      { label: "대학교육협의회", icon: IconBuildingArch, href: "/projects/kcue" },
+      { label: "추천인검증", icon: IconUserCheck, href: "/projects/referral" },
+      { label: "보증보험", icon: IconShieldCheck, href: "/projects/insurance" },
+      { label: "실적증명", icon: IconCertificate, href: "/projects/performance" },
+      { label: "유의사항", icon: IconAlertTriangle, href: "/projects/notices" },
     ],
   },
   {
     label: "분석 & 보고",
-    icon: "monitoring",
     href: "/analytics",
     children: [
-      { label: "보고서", icon: "summarize", href: "/analytics/reports" },
-      { label: "성과", icon: "trending_up", href: "/analytics/performance" },
-      { label: "업무로그", icon: "history", href: "/analytics/work-logs" },
+      { label: "보고서", icon: IconFileAnalytics, href: "/analytics/reports" },
+      { label: "성과", icon: IconTrendingUp, href: "/analytics/performance" },
+      { label: "업무로그", icon: IconHistory, href: "/analytics/work-logs" },
     ],
   },
   {
     label: "AI & 자동화",
-    icon: "smart_toy",
     href: "/ai",
     children: [
-      { label: "AI 인사이트", icon: "psychology", href: "/ai/insights" },
-      { label: "AI 어시스턴트", icon: "assistant", href: "/ai/assistant" },
+      { label: "AI 인사이트", icon: IconBrain, href: "/ai/insights" },
+      { label: "AI 어시스턴트", icon: IconMessageChatbot, href: "/ai/assistant" },
     ],
   },
   {
     label: "지원",
-    icon: "support_agent",
     href: "/support",
     children: [
-      { label: "온보딩", icon: "rocket_launch", href: "/support/onboarding" },
-      { label: "시스템 개선요청", icon: "build", href: "/support/requests" },
+      { label: "온보딩", icon: IconRocket, href: "/support/onboarding" },
+      { label: "시스템 개선요청", icon: IconSettings, href: "/support/requests" },
     ],
   },
   {
     label: "관리자",
-    icon: "admin_panel_settings",
     href: "/admin",
     children: [
-      { label: "사용자", icon: "group", href: "/admin/users" },
-      { label: "시스템", icon: "settings", href: "/admin/system" },
+      { label: "사용자", icon: IconUsers, href: "/admin/users" },
+      { label: "대학배정", icon: IconBuildingArch, href: "/admin/assignments" },
+      { label: "시스템", icon: IconServer, href: "/admin/system" },
     ],
   },
 ];
@@ -109,6 +148,7 @@ export default function Sidebar() {
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
 
   function isActive(href: string) {
+    if (href === "/dashboard") return pathname === "/dashboard";
     return pathname === href || pathname.startsWith(href + "/");
   }
 
@@ -126,7 +166,7 @@ export default function Sidebar() {
       {/* Navigation */}
       <nav className="flex-1 overflow-y-auto px-3 py-2">
         {navigation.map((item, index) => {
-          const isCollapsed = collapsed[item.href] ?? false;
+          const isCollapsedState = collapsed[item.href] ?? false;
           const isCollapsible = item.collapsible;
 
           return (
@@ -136,27 +176,21 @@ export default function Sidebar() {
             >
               {/* 대메뉴 카테고리 라벨 */}
               <div className="flex items-center justify-between px-3 mb-1.5">
-                <div className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-outline-variant text-[14px]">
-                    {item.icon}
-                  </span>
-                  <span className="text-[10px] font-bold text-outline-variant uppercase tracking-[0.15em]">
-                    {item.label}
-                  </span>
-                </div>
+                <span className="text-[10px] font-bold text-outline-variant uppercase tracking-[0.15em]">
+                  {item.label}
+                </span>
                 {isCollapsible && (
                   <button
                     onClick={() => toggleCollapse(item.href)}
                     className="p-0.5 text-outline-variant hover:text-on-surface-variant transition-colors rounded"
                   >
-                    <span
+                    <IconChevronDown
+                      size={14}
                       className={cn(
-                        "material-symbols-outlined text-[14px] transition-transform duration-200",
-                        isCollapsed && "-rotate-90",
+                        "transition-transform duration-200",
+                        isCollapsedState && "-rotate-90",
                       )}
-                    >
-                      expand_more
-                    </span>
+                    />
                   </button>
                 )}
               </div>
@@ -165,11 +199,12 @@ export default function Sidebar() {
               <div
                 className={cn(
                   "space-y-0.5 overflow-hidden transition-all duration-200",
-                  isCollapsible && isCollapsed ? "max-h-0 opacity-0" : "max-h-[800px] opacity-100",
+                  isCollapsible && isCollapsedState ? "max-h-0 opacity-0" : "max-h-[800px] opacity-100",
                 )}
               >
-                {item.children?.map((child) => {
+                {item.children.map((child) => {
                   const active = isActive(child.href);
+                  const ChildIcon = child.icon;
                   return (
                     <Link
                       key={child.href}
@@ -181,14 +216,14 @@ export default function Sidebar() {
                           : "text-on-surface-variant hover:bg-surface-container hover:text-on-surface",
                       )}
                     >
-                      <span
+                      <ChildIcon
+                        size={16}
+                        stroke={active ? 2 : 1.5}
                         className={cn(
-                          "material-symbols-outlined text-base",
+                          "shrink-0",
                           active ? "text-primary" : "text-outline",
                         )}
-                      >
-                        {child.icon}
-                      </span>
+                      />
                       <span>{child.label}</span>
                     </Link>
                   );
@@ -215,8 +250,11 @@ export default function Sidebar() {
               Supervisor
             </p>
           </div>
-          <button className="text-on-surface-variant hover:text-primary transition-colors">
-            <span className="material-symbols-outlined text-lg">logout</span>
+          <button
+            onClick={() => signOut()}
+            className="text-on-surface-variant hover:text-primary transition-colors"
+          >
+            <IconLogout size={18} stroke={1.5} />
           </button>
         </div>
       </div>
