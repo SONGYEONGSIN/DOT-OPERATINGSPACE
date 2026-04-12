@@ -119,7 +119,7 @@ export async function sendContractReminder(
         </div>
 
         <p style="margin-top:24px;font-size:12px;color:#868e96;">
-          DOT. OperatingSpace에서 자동 발송된 메일입니다.
+          Orchestrator System에서 자동 발송된 메일입니다.
         </p>
       </div>
     </div>

@@ -7,11 +7,17 @@ import { cn } from "@/lib/cn";
 import { UserAvatar, DatePicker } from "@/components/common";
 import { createIncident } from "./actions";
 
-const SEVERITIES = [
-  { value: "낮음", label: "낮음" },
-  { value: "보통", label: "보통" },
-  { value: "높음", label: "높음" },
-  { value: "긴급", label: "긴급" },
+const CATEGORIES = [
+  "PIMS", "SMS", "결제", "경쟁률", "기타", "로그인/회원가입",
+  "모니터링", "사이트", "수험번호", "알림톡", "원서작성",
+  "유의사항", "입학홈페이지", "전산", "전형료", "추천서",
+  "출력물", "카톡챗봇", "콜프로그램", "특이사항/수정권한", "관리자",
+] as const;
+
+const DEPARTMENTS = ["운영부", "대학영업", "영업기획", "개발부"] as const;
+
+const STATUSES = [
+  "할 일", "진행 중", "처리완료", "보류", "처리예정", "테스트", "거절",
 ] as const;
 
 interface IncidentFormProps {
@@ -31,18 +37,21 @@ export default function IncidentForm({ profiles }: IncidentFormProps) {
   const [title, setTitle] = useState("");
   const [incidentDate, setIncidentDate] = useState("");
   const [university, setUniversity] = useState("");
-  const [service, setService] = useState("");
+  const [category, setCategory] = useState("");
+  const [department, setDepartment] = useState("");
   const [reporter, setReporter] = useState("");
-  const [severity, setSeverity] = useState("보통");
+  const [assignee, setAssignee] = useState("");
+  const [status, setStatus] = useState("할 일");
   const [background, setBackground] = useState("");
   const [cause, setCause] = useState("");
   const [resolution, setResolution] = useState("");
   const [prevention, setPrevention] = useState("");
 
   function reset() {
-    setTitle(""); setIncidentDate(""); setUniversity(""); setService("");
-    setReporter(""); setSeverity("보통"); setBackground(""); setCause("");
-    setResolution(""); setPrevention(""); setError("");
+    setTitle(""); setIncidentDate(""); setUniversity(""); setCategory("");
+    setDepartment(""); setReporter(""); setAssignee(""); setStatus("할 일");
+    setBackground(""); setCause(""); setResolution(""); setPrevention("");
+    setError("");
   }
 
   function handleSubmit(e: React.FormEvent) {
@@ -50,7 +59,10 @@ export default function IncidentForm({ profiles }: IncidentFormProps) {
     setError("");
 
     startTransition(async () => {
-      const result = await createIncident(title, incidentDate, university, service, reporter, severity, background, cause, resolution, prevention);
+      const result = await createIncident(
+        title, incidentDate, university, category, department,
+        reporter, assignee, status, background, cause, resolution, prevention,
+      );
       if (result.error) {
         setError(result.error);
       } else {
@@ -94,8 +106,24 @@ export default function IncidentForm({ profiles }: IncidentFormProps) {
                 )}
 
                 <div>
-                  <label className={labelClass}>사고 제목</label>
+                  <label className={labelClass}>요약 (제목)</label>
                   <input type="text" required value={title} onChange={(e) => setTitle(e.target.value)} placeholder="사고 내용을 간략히 작성" className={inputClass} />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className={labelClass}>분류</label>
+                    <select value={category} onChange={(e) => setCategory(e.target.value)} className={`${inputClass} appearance-none`} required>
+                      <option value="">분류 선택</option>
+                      {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <label className={labelClass}>상태</label>
+                    <select value={status} onChange={(e) => setStatus(e.target.value)} className={`${inputClass} appearance-none`}>
+                      {STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
+                    </select>
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
@@ -104,22 +132,17 @@ export default function IncidentForm({ profiles }: IncidentFormProps) {
                     <DatePicker value={incidentDate} onChange={setIncidentDate} placeholder="발생일 선택" includeTime />
                   </div>
                   <div>
-                    <label className={labelClass}>중요도</label>
-                    <select value={severity} onChange={(e) => setSeverity(e.target.value)} className={`${inputClass} appearance-none`}>
-                      {SEVERITIES.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
+                    <label className={labelClass}>부서</label>
+                    <select value={department} onChange={(e) => setDepartment(e.target.value)} className={`${inputClass} appearance-none`}>
+                      <option value="">부서 선택</option>
+                      {DEPARTMENTS.map((d) => <option key={d} value={d}>{d}</option>)}
                     </select>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className={labelClass}>관련 대학</label>
-                    <input type="text" value={university} onChange={(e) => setUniversity(e.target.value)} placeholder="대학명 (선택)" className={inputClass} />
-                  </div>
-                  <div>
-                    <label className={labelClass}>관련 서비스</label>
-                    <input type="text" value={service} onChange={(e) => setService(e.target.value)} placeholder="서비스명 (선택)" className={inputClass} />
-                  </div>
+                <div>
+                  <label className={labelClass}>대학교</label>
+                  <input type="text" value={university} onChange={(e) => setUniversity(e.target.value)} placeholder="대학명 (선택)" className={inputClass} />
                 </div>
 
                 <div>
@@ -142,10 +165,30 @@ export default function IncidentForm({ profiles }: IncidentFormProps) {
                   </div>
                 </div>
 
+                <div>
+                  <label className={labelClass}>담당자</label>
+                  <div className="grid grid-cols-4 md:grid-cols-6 gap-2">
+                    {profiles.map((p) => (
+                      <button
+                        key={p.name}
+                        type="button"
+                        onClick={() => setAssignee(p.name)}
+                        className={cn(
+                          "flex items-center gap-2 p-2 rounded-lg border-2 transition-all text-left",
+                          assignee === p.name ? "border-primary bg-primary/5" : "border-outline-variant/10 hover:border-outline-variant/30",
+                        )}
+                      >
+                        <UserAvatar name={p.name} size="sm" className="!w-5 !h-5" />
+                        <span className="text-xs font-medium text-on-surface truncate">{p.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
                 <hr className="border-outline-variant/10" />
 
                 <div>
-                  <label className={labelClass}>경위 (발생 경위)</label>
+                  <label className={labelClass}>경위 (사고 내용)</label>
                   <textarea value={background} onChange={(e) => setBackground(e.target.value)} placeholder="사고가 발생하게 된 경위를 작성해주세요" rows={4} className={`${inputClass} resize-none overflow-y-auto max-h-[200px]`} />
                 </div>
 
@@ -155,7 +198,7 @@ export default function IncidentForm({ profiles }: IncidentFormProps) {
                 </div>
 
                 <div>
-                  <label className={labelClass}>처리 (조치 내용)</label>
+                  <label className={labelClass}>처리 (사고 처리)</label>
                   <textarea value={resolution} onChange={(e) => setResolution(e.target.value)} placeholder="사고 발생 후 수행한 조치 내용을 작성해주세요" rows={4} className={`${inputClass} resize-none overflow-y-auto max-h-[200px]`} />
                 </div>
 

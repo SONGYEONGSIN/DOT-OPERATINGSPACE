@@ -60,6 +60,14 @@ npx tsc --noEmit     # 타입 체크
 - `donts.md` — 금지 사항
 - `design.md` — 디자인 토큰, 색상 규칙, 공통 컴포넌트
 
+## Reference: claude-builds
+
+UI/UX 설계, 디자인 시스템, 에이전트 구성 작업 시 `/Users/yss/개발/claude-builds`를 참고한다:
+
+- **디자인 규칙**: `rules/design.md` — 안티-제네릭 가드레일, Phase 0 미학 방향, 쿠키커터 방지
+- **디자이너 에이전트**: `agents/designer.md` — 레퍼런스 분석, 톤 선택, 토큰 결정 프로세스
+- **코딩 규칙**: `rules/conventions.md`, `rules/donts.md`, `rules/tdd.md`
+
 ## Learning System
 
 코드 수정 시 메트릭이 자동 수집되고, 학습 내용이 `.claude/memory/`에 축적된다:

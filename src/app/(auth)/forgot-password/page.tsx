@@ -3,6 +3,7 @@
 import { useFormState } from "react-dom";
 import Link from "next/link";
 import { cn } from "@/lib/cn";
+import { IconArrowLeft, IconLock, IconMail } from "@tabler/icons-react";
 import { BrandLogo, SubmitButton, ThemeToggle } from "@/components/common";
 import { forgotPassword, type AuthState } from "@/features/auth/actions";
 
@@ -33,18 +34,14 @@ export default function ForgotPasswordPage() {
             href="/login"
             className="inline-flex items-center gap-1 text-sm text-on-surface-variant hover:text-primary transition-colors mb-8"
           >
-            <span className="material-symbols-outlined text-lg">
-              arrow_back
-            </span>
+            <IconArrowLeft size={18} />
             로그인으로 돌아가기
           </Link>
 
           <div className="bg-surface-container rounded-xl border border-outline-variant/15 overflow-hidden shadow-2xl">
             <div className="p-8">
               <div className="text-center mb-8">
-                <span className="material-symbols-outlined text-primary text-4xl mb-4 block">
-                  lock_reset
-                </span>
+                <IconLock size={36} className="text-primary mb-4 mx-auto block" />
                 <h1 className="text-2xl font-black tracking-tighter mb-2">
                   비밀번호 찾기
                 </h1>
@@ -55,9 +52,7 @@ export default function ForgotPasswordPage() {
 
               {state.success ? (
                 <div className="text-center py-4">
-                  <span className="material-symbols-outlined text-primary text-5xl mb-4 block">
-                    mark_email_read
-                  </span>
+                  <IconMail size={48} className="text-primary mb-4 mx-auto block" />
                   <h3 className="text-lg font-bold mb-2">이메일 발송 완료</h3>
                   <p className="text-sm text-on-surface-variant leading-relaxed mb-6">
                     {state.success}

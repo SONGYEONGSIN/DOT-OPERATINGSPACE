@@ -1,4 +1,5 @@
 #!/bin/bash
+set -u  # 미정의 변수 사용 시 즉시 에러
 # smart-guard.sh — PreToolUse prompt 훅 래퍼
 #
 # 기존 command-guard.sh를 직접 실행(빠른 차단)하고,
@@ -35,7 +36,8 @@ fi
 
 # 2차: 프로젝트 컨텍스트 기반 검증
 # .claude/memory/patterns.md에서 프로젝트별 금지 패턴 로드
-PROJECT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
+PROJECT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || echo "")
+[ -z "$PROJECT_ROOT" ] && exit 0
 PATTERNS_FILE="${PROJECT_ROOT}/.claude/memory/patterns.md"
 if [ -f "$PATTERNS_FILE" ]; then
   # patterns.md에서 "금지:" 또는 "DENY:" 라인 추출

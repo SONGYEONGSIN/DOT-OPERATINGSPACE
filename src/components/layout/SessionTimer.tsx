@@ -3,15 +3,16 @@
 import { useState, useEffect, useCallback } from "react";
 import { cn } from "@/lib/cn";
 
-
 const SESSION_DURATION = 15 * 60; // 15분 (초)
 const WARNING_THRESHOLD = 3 * 60; // 3분 남았을 때 경고
 
 export default function SessionTimer() {
   const [remaining, setRemaining] = useState(SESSION_DURATION);
+  const [showExtendModal, setShowExtendModal] = useState(false);
 
   const resetTimer = useCallback(() => {
     setRemaining(SESSION_DURATION);
+    setShowExtendModal(false);
   }, []);
 
   // 사용자 활동 감지 시 타이머 리셋
@@ -42,6 +43,10 @@ export default function SessionTimer() {
           window.location.href = "/login";
           return 0;
         }
+        // 1분 남았을 때 연장 모달 표시
+        if (prev === 60) {
+          setShowExtendModal(true);
+        }
         return prev - 1;
       });
     }, 1000);
@@ -54,14 +59,48 @@ export default function SessionTimer() {
   const isWarning = remaining <= WARNING_THRESHOLD;
 
   return (
-    <span
-      className={cn(
-        "flex items-center h-9 text-sm font-bold tabular-nums transition-colors",
-        isWarning ? "text-error" : "text-on-surface-variant",
+    <>
+      <span
+        className={cn(
+          "flex items-center h-9 text-sm font-bold tabular-nums transition-colors",
+          isWarning ? "text-error" : "text-on-surface-variant",
+        )}
+        title="세션 남은 시간 (활동 시 자동 갱신)"
+      >
+        {String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}
+      </span>
+
+      {showExtendModal && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center">
+          <div className="absolute inset-0 bg-surface-container-lowest/80 backdrop-blur-sm" />
+          <div className="relative w-full max-w-sm bg-surface-container rounded-2xl border border-outline-variant/15 shadow-2xl animate-slide-up p-6 text-center">
+            <div className="w-12 h-12 rounded-full bg-error/10 flex items-center justify-center mx-auto mb-4">
+              <span className="text-2xl">⏱</span>
+            </div>
+            <h2 className="text-lg font-bold text-on-surface mb-2">세션 만료 예정</h2>
+            <p className="text-sm text-on-surface-variant mb-1">
+              <span className="font-bold text-error tabular-nums">{remaining}초</span> 후 자동 로그아웃됩니다.
+            </p>
+            <p className="text-xs text-on-surface-variant mb-6">세션을 연장하시겠습니까?</p>
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => { window.location.href = "/login"; }}
+                className="flex-1 py-3 bg-surface-container-high text-on-surface-variant font-bold rounded-lg text-sm hover:bg-surface-container-highest transition-colors"
+              >
+                로그아웃
+              </button>
+              <button
+                type="button"
+                onClick={resetTimer}
+                className="flex-1 py-3 bg-primary text-on-primary font-bold rounded-lg text-sm hover:bg-primary/90 transition-colors"
+              >
+                세션 연장
+              </button>
+            </div>
+          </div>
+        </div>
       )}
-      title="세션 남은 시간 (활동 시 자동 갱신)"
-    >
-      {String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}
-    </span>
+    </>
   );
 }

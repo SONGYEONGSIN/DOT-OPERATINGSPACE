@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useFormState } from "react-dom";
-import { IconCircleCheck, IconCircle } from "@tabler/icons-react";
+import { IconCircleCheck, IconCircle, IconMail } from "@tabler/icons-react";
 import { cn } from "@/lib/cn";
 import { SubmitButton } from "@/components/common";
 import { register, type AuthState } from "./actions";
@@ -79,9 +79,7 @@ export default function RegisterForm() {
   if (state.success) {
     return (
       <div className="py-8 text-center">
-        <span className="material-symbols-outlined text-primary text-5xl mb-4 block">
-          mark_email_read
-        </span>
+        <IconMail size={48} className="text-primary mb-4 mx-auto block" />
         <h3 className="text-lg font-bold mb-2">이메일을 확인해 주세요</h3>
         <p className="text-sm text-on-surface-variant leading-relaxed">
           {state.success}

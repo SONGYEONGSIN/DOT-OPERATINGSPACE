@@ -119,7 +119,11 @@ export async function fetchContracts(): Promise<{
         serviceYn: row[3] ? String(row[3]).trim() : "",
         region: row[4] ? String(row[4]).trim() : null,
         universityName: name,
-        exclusiveType: row[7] ? String(row[7]).trim() : (row[6] ? String(row[6]).trim() : null),
+        exclusiveType: row[7]
+          ? String(row[7]).trim()
+          : row[6]
+            ? String(row[6]).trim()
+            : null,
         salesperson: row[8] ? String(row[8]).trim() : null,
         operator: row[9] ? String(row[9]).trim() : null,
         contractStatus: row[10] ? String(row[10]).trim() : null,
@@ -304,13 +308,17 @@ export async function fetchReceivables(): Promise<{
   let headerIdx = -1;
   for (let i = 0; i < Math.min(10, rows.length); i++) {
     const row = rows[i];
-    if (Array.isArray(row) && row.some((cell) => String(cell).includes("청구일자"))) {
+    if (
+      Array.isArray(row) &&
+      row.some((cell) => String(cell).includes("청구일자"))
+    ) {
       headerIdx = i;
       break;
     }
   }
 
-  if (headerIdx === -1) return { items: [], sheetName: latestSheet, totalAmount: 0 };
+  if (headerIdx === -1)
+    return { items: [], sheetName: latestSheet, totalAmount: 0 };
 
   const items: ReceivableItem[] = [];
   const now = new Date();
@@ -321,15 +329,28 @@ export async function fetchReceivables(): Promise<{
 
     // 소계/합계 행 건너뛰기
     const col1 = String(row[1] ?? "");
-    if (col1.includes("소 계") || col1.includes("합   계") || col1.includes("합계")) continue;
+    if (
+      col1.includes("소 계") ||
+      col1.includes("합   계") ||
+      col1.includes("합계")
+    )
+      continue;
 
     const invoiceDateRaw = row[1];
     const amount = Number(row[6]) || 0;
     if (!invoiceDateRaw || amount === 0) continue;
 
-    const invoiceDate = typeof invoiceDateRaw === "number" ? formatExcelDate(invoiceDateRaw) : String(invoiceDateRaw);
-    const invoiceDateObj = typeof invoiceDateRaw === "number" ? excelDateToDate(invoiceDateRaw) : new Date();
-    const daysElapsed = Math.floor((now.getTime() - invoiceDateObj.getTime()) / (1000 * 60 * 60 * 24));
+    const invoiceDate =
+      typeof invoiceDateRaw === "number"
+        ? formatExcelDate(invoiceDateRaw)
+        : String(invoiceDateRaw);
+    const invoiceDateObj =
+      typeof invoiceDateRaw === "number"
+        ? excelDateToDate(invoiceDateRaw)
+        : new Date();
+    const daysElapsed = Math.floor(
+      (now.getTime() - invoiceDateObj.getTime()) / (1000 * 60 * 60 * 24),
+    );
 
     items.push({
       invoiceDate,
@@ -339,8 +360,18 @@ export async function fetchReceivables(): Promise<{
       operator: row[5] ? String(row[5]).trim() : null,
       amount,
       schoolContact: row[7] ? String(row[7]) : null,
-      mailSentDate: typeof row[8] === "number" ? formatExcelDate(row[8]) : row[8] ? String(row[8]) : null,
-      expectedPayDate: typeof row[9] === "number" ? formatExcelDate(row[9]) : row[9] ? String(row[9]) : null,
+      mailSentDate:
+        typeof row[8] === "number"
+          ? formatExcelDate(row[8])
+          : row[8]
+            ? String(row[8])
+            : null,
+      expectedPayDate:
+        typeof row[9] === "number"
+          ? formatExcelDate(row[9])
+          : row[9]
+            ? String(row[9])
+            : null,
       memo: row[10] ? String(row[10]) : null,
       daysElapsed: Math.max(0, daysElapsed),
     });
@@ -366,7 +397,9 @@ export interface DocumentItem {
   year: string;
 }
 
-export async function fetchDocuments(): Promise<{ items: DocumentItem[] } | null> {
+export async function fetchDocuments(): Promise<{
+  items: DocumentItem[];
+} | null> {
   const token = await getGraphToken();
   if (!token) return null;
 
@@ -376,7 +409,11 @@ export async function fetchDocuments(): Promise<{ items: DocumentItem[] } | null
 
   const res = await fetch(
     `https://graph.microsoft.com/v1.0/drives/${driveId}/items/${itemId}/content`,
-    { headers: { Authorization: `Bearer ${token}` }, redirect: "follow", cache: "no-store" },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+      redirect: "follow",
+      cache: "no-store",
+    },
   );
   if (!res.ok) return null;
 
@@ -385,7 +422,12 @@ export async function fetchDocuments(): Promise<{ items: DocumentItem[] } | null
 
   const items: DocumentItem[] = [];
 
-  const targetSheets = ["(발신)2026년", "(수신)2026년", "(발신)2025년", "(수신)2025년"];
+  const targetSheets = [
+    "(발신)2026년",
+    "(수신)2026년",
+    "(발신)2025년",
+    "(수신)2025년",
+  ];
   for (const sheetName of targetSheets) {
     if (!wb.Sheets[sheetName]) continue;
     const isSend = sheetName.includes("발신");
@@ -414,11 +456,17 @@ export async function fetchDocuments(): Promise<{ items: DocumentItem[] } | null
       if (!docNumber || !title) continue;
 
       const dateRaw = row[2];
-      const dateStr = typeof dateRaw === "number" ? formatExcelDate(dateRaw) : dateRaw ? String(dateRaw) : null;
+      const dateStr =
+        typeof dateRaw === "number"
+          ? formatExcelDate(dateRaw)
+          : dateRaw
+            ? String(dateRaw)
+            : null;
 
       // F열 하이퍼링크 추출
       const hyperlink = getCellLink("F", i);
-      const fileLinkValue = hyperlink ?? (row[5] ? String(row[5]).trim() : null);
+      const fileLinkValue =
+        hyperlink ?? (row[5] ? String(row[5]).trim() : null);
 
       if (isRecv) {
         items.push({
@@ -451,7 +499,6 @@ export async function fetchDocuments(): Promise<{ items: DocumentItem[] } | null
   }
 
   items.reverse();
-
   return { items };
 }
 
@@ -469,7 +516,9 @@ export interface MailItem {
   year: string;
 }
 
-export async function fetchMailRecords(): Promise<{ items: MailItem[] } | null> {
+export async function fetchMailRecords(): Promise<{
+  items: MailItem[];
+} | null> {
   const token = await getGraphToken();
   if (!token) return null;
 
@@ -479,7 +528,11 @@ export async function fetchMailRecords(): Promise<{ items: MailItem[] } | null> 
 
   const res = await fetch(
     `https://graph.microsoft.com/v1.0/drives/${driveId}/items/${itemId}/content`,
-    { headers: { Authorization: `Bearer ${token}` }, redirect: "follow", cache: "no-store" },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+      redirect: "follow",
+      cache: "no-store",
+    },
   );
   if (!res.ok) return null;
 
@@ -493,7 +546,9 @@ export async function fetchMailRecords(): Promise<{ items: MailItem[] } | null> 
     const sheetName = "2025년도 우편물발송(04월~)";
     const year = "2025";
 
-    const rows = XLSX.utils.sheet_to_json<any[]>(wb.Sheets[sheetName], { header: 1 });
+    const rows = XLSX.utils.sheet_to_json<any[]>(wb.Sheets[sheetName], {
+      header: 1,
+    });
 
     for (let i = 1; i < rows.length; i++) {
       const row = rows[i];
@@ -502,7 +557,12 @@ export async function fetchMailRecords(): Promise<{ items: MailItem[] } | null> 
       if (!recipient) continue;
 
       const dateRaw = row[1];
-      const dateStr = typeof dateRaw === "number" ? formatExcelDate(dateRaw) : dateRaw ? String(dateRaw) : null;
+      const dateStr =
+        typeof dateRaw === "number"
+          ? formatExcelDate(dateRaw)
+          : dateRaw
+            ? String(dateRaw)
+            : null;
 
       items.push({
         no: typeof row[0] === "number" ? row[0] : null,
@@ -521,4 +581,487 @@ export async function fetchMailRecords(): Promise<{ items: MailItem[] } | null> 
   items.reverse();
 
   return { items };
+}
+
+// ── 대학배정 ──
+
+export interface OperatorSummary {
+  name: string;
+  susi4: number;
+  susiJunmun: number;
+  susiPoly: number;
+  susiTotal: number;
+  jungsi4: number;
+  jungsiJunmun: number;
+  jungsiPoly: number;
+  jungsiTotal: number;
+  etcGeneral: number;
+  etcJaewoe: number;
+  etcForeign: number;
+  etcJunmun: number;
+  etcK12: number;
+  etcGrad: number;
+  etcPimsFull: number;
+  etcPimsSelect: number;
+  etcScore: number;
+  etcMock: number;
+  etcApp: number;
+}
+
+export interface AssignmentItem {
+  category: string;
+  region: string;
+  universityName: string;
+  univId: number | null;
+  salesperson: string;
+  exclusiveSusi: string;
+  exclusiveJungsi: string;
+  changed: string;
+  op2027: {
+    jaewoe: string;
+    susi: string;
+    jungsi: string;
+    pyeonip: string;
+    foreigner: string;
+    backup: string;
+  };
+  dev2027: {
+    jaewoe: string;
+    susi: string;
+    jungsi: string;
+    pyeonip: string;
+    foreigner: string;
+    backup: string;
+  };
+  op2026: {
+    jaewoe: string;
+    susi: string;
+    jungsi: string;
+    pyeonip: string;
+    foreigner: string;
+    backup: string;
+  };
+  dev2026: {
+    jaewoe: string;
+    susi: string;
+    jungsi: string;
+    pyeonip: string;
+    foreigner: string;
+    backup: string;
+  };
+  remark: string;
+}
+
+export interface GradAssignment {
+  universityName: string;
+  univId: number | null;
+  serviceType: string;
+  serviceYn: string;
+  serviceCount: number;
+  changed: string;
+  operator: string;
+  developer: string;
+  prevOperator: string;
+  prevDeveloper: string;
+  remark: string;
+  gradNames: string;
+}
+
+export interface PimsAssignment {
+  category: string;
+  region: string;
+  universityName: string;
+  serviceType: string;
+  changed: string;
+  operatorFull: string;
+  operatorReception: string;
+  operatorRefund: string;
+  prevOperator: string;
+  remark: string;
+}
+
+export interface SimpleAssignment {
+  universityName: string;
+  operator: string;
+  developer: string;
+  prevOperator: string;
+  prevDeveloper: string;
+  remark: string;
+}
+
+export interface ScoreAssignment {
+  universityName: string;
+  serviceYn: string;
+  changed: string;
+  operator: string;
+  developer: string;
+  susiNaesin: boolean;
+  jungsiNaesin: boolean;
+  jungsiSuneung: boolean;
+  prevOperator: string;
+  prevDeveloper: string;
+  remark: string;
+}
+
+export interface AppAssignment {
+  universityName: string;
+  univId: number | null;
+  receptionOp: string;
+  salesperson: string;
+  operator: string;
+  developer: string;
+  prevOperator: string;
+  prevDeveloper: string;
+  status: string;
+  device: string;
+  usage: string;
+  remark: string;
+}
+
+export interface AssignmentData {
+  operatorSummary: OperatorSummary[];
+  developerSummary: OperatorSummary[];
+  assignments: AssignmentItem[];
+  gradAssignments: GradAssignment[];
+  pimsAssignments: PimsAssignment[];
+  mockAssignments: SimpleAssignment[];
+  scoreAssignments: ScoreAssignment[];
+  appAssignments: AppAssignment[];
+}
+
+export async function fetchAssignments(): Promise<AssignmentData | null> {
+  const token = await getGraphToken();
+  if (!token) return null;
+  const driveId = process.env.SHAREPOINT_DRIVE_ID;
+  const itemId = process.env.SHAREPOINT_ASSIGNMENTS_ITEM_ID;
+  if (!driveId || !itemId) return null;
+
+  const res = await fetch(
+    `https://graph.microsoft.com/v1.0/drives/${driveId}/items/${itemId}/content`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+      redirect: "follow",
+      cache: "no-store",
+    },
+  );
+  if (!res.ok) return null;
+
+  const buffer = Buffer.from(await res.arrayBuffer());
+  const wb = XLSX.read(buffer);
+  const st = (v: any) => (v != null ? String(v).trim() : "");
+  const nm = (v: any) => (typeof v === "number" ? v : 0);
+
+  // 01. 배정 현황
+  const rows01 = XLSX.utils.sheet_to_json<any[]>(wb.Sheets["01. 배정 현황"], {
+    header: 1,
+  });
+  const operatorSummary: OperatorSummary[] = [];
+  const developerSummary: OperatorSummary[] = [];
+  function parseSummaryRow(row: any[]): OperatorSummary {
+    return {
+      name: st(row[0]),
+      susi4: nm(row[1]),
+      susiJunmun: nm(row[2]),
+      susiPoly: nm(row[3]),
+      susiTotal: nm(row[4]),
+      jungsi4: nm(row[7]),
+      jungsiJunmun: nm(row[8]),
+      jungsiPoly: nm(row[9]),
+      jungsiTotal: nm(row[10]),
+      etcGeneral: nm(row[19]),
+      etcJaewoe: nm(row[20]),
+      etcForeign: nm(row[21]),
+      etcJunmun: nm(row[22]),
+      etcK12: nm(row[23]),
+      etcGrad: nm(row[24]),
+      etcPimsFull: nm(row[25]),
+      etcPimsSelect: nm(row[26]),
+      etcScore: nm(row[27]),
+      etcMock: nm(row[28]),
+      etcApp: nm(row[29]),
+    };
+  }
+  for (let i = 2; i < rows01.length; i++) {
+    const row = rows01[i];
+    if (!row?.[0] || st(row[0]) === "합계") break;
+    operatorSummary.push(parseSummaryRow(row));
+  }
+  for (let i = 24; i < rows01.length; i++) {
+    const row = rows01[i];
+    if (!row?.[0] || st(row[0]) === "합계") break;
+    developerSummary.push(parseSummaryRow(row));
+  }
+
+  // 02. 배정리스트
+  const rows02 = XLSX.utils.sheet_to_json<any[]>(wb.Sheets["02. 배정리스트"], {
+    header: 1,
+  });
+  const assignments: AssignmentItem[] = [];
+  for (let i = 2; i < rows02.length; i++) {
+    const r = rows02[i];
+    if (!r?.[3] || !st(r[3])) continue;
+    assignments.push({
+      category: st(r[1]),
+      region: st(r[2]),
+      universityName: st(r[3]),
+      univId: typeof r[4] === "number" ? r[4] : null,
+      salesperson: st(r[5]),
+      exclusiveSusi: st(r[6]),
+      exclusiveJungsi: st(r[7]),
+      changed: st(r[11]),
+      op2027: {
+        jaewoe: st(r[12]),
+        susi: st(r[13]),
+        jungsi: st(r[14]),
+        pyeonip: st(r[15]),
+        foreigner: st(r[16]),
+        backup: st(r[17]),
+      },
+      dev2027: {
+        jaewoe: st(r[18]),
+        susi: st(r[19]),
+        jungsi: st(r[20]),
+        pyeonip: st(r[21]),
+        foreigner: st(r[22]),
+        backup: st(r[23]),
+      },
+      op2026: {
+        jaewoe: st(r[24]),
+        susi: st(r[25]),
+        jungsi: st(r[26]),
+        pyeonip: st(r[27]),
+        foreigner: st(r[28]),
+        backup: st(r[29]),
+      },
+      dev2026: {
+        jaewoe: st(r[30]),
+        susi: st(r[31]),
+        jungsi: st(r[32]),
+        pyeonip: st(r[33]),
+        foreigner: st(r[34]),
+        backup: st(r[35]),
+      },
+      remark: st(r[36]),
+    });
+  }
+
+  // 03. 대학원
+  const rows03 = XLSX.utils.sheet_to_json<any[]>(wb.Sheets["03. 대학원"], {
+    header: 1,
+  });
+  const gradAssignments: GradAssignment[] = [];
+  for (let i = 1; i < rows03.length; i++) {
+    const r = rows03[i];
+    if (!r?.[1]) continue;
+    gradAssignments.push({
+      universityName: st(r[1]),
+      univId: typeof r[2] === "number" ? r[2] : null,
+      serviceType: st(r[3]),
+      serviceYn: st(r[4]),
+      serviceCount: nm(r[5]),
+      changed: st(r[6]),
+      operator: st(r[7]),
+      developer: st(r[8]),
+      prevOperator: st(r[9]),
+      prevDeveloper: st(r[10]),
+      remark: st(r[13]),
+      gradNames: st(r[14]),
+    });
+  }
+
+  // 04. PIMS
+  const rows04 = XLSX.utils.sheet_to_json<any[]>(wb.Sheets["04. PIMS"], {
+    header: 1,
+  });
+  const pimsAssignments: PimsAssignment[] = [];
+  for (let i = 1; i < rows04.length; i++) {
+    const r = rows04[i];
+    if (!r?.[3]) continue;
+    pimsAssignments.push({
+      category: st(r[1]),
+      region: st(r[2]),
+      universityName: st(r[3]),
+      serviceType: st(r[4]),
+      changed: st(r[5]),
+      operatorFull: st(r[6]),
+      operatorReception: st(r[8]),
+      operatorRefund: st(r[7]),
+      prevOperator: st(r[9]),
+      remark: st(r[10]),
+    });
+  }
+
+  // 05. 모의논술
+  const rows05 = XLSX.utils.sheet_to_json<any[]>(wb.Sheets["05. 모의논술"], {
+    header: 1,
+  });
+  const mockAssignments: SimpleAssignment[] = [];
+  for (let i = 1; i < rows05.length; i++) {
+    const r = rows05[i];
+    if (!r?.[1]) continue;
+    mockAssignments.push({
+      universityName: st(r[1]),
+      operator: st(r[2]),
+      developer: st(r[3]),
+      prevOperator: st(r[4]),
+      prevDeveloper: st(r[5]),
+      remark: st(r[6]),
+    });
+  }
+
+  // 06. 성적산출
+  const rows06 = XLSX.utils.sheet_to_json<any[]>(wb.Sheets["06. 성적산출"], {
+    header: 1,
+  });
+  const scoreAssignments: ScoreAssignment[] = [];
+  for (let i = 1; i < rows06.length; i++) {
+    const r = rows06[i];
+    if (!r?.[1]) continue;
+    scoreAssignments.push({
+      universityName: st(r[1]),
+      serviceYn: st(r[2]),
+      changed: st(r[3]),
+      operator: st(r[4]),
+      developer: st(r[5]),
+      susiNaesin: st(r[6]) === "O",
+      jungsiNaesin: st(r[7]) === "O",
+      jungsiSuneung: st(r[8]) === "O",
+      prevOperator: st(r[9]),
+      prevDeveloper: st(r[10]),
+      remark: st(r[13]),
+    });
+  }
+
+  // 07. 상담앱
+  const rows07 = XLSX.utils.sheet_to_json<any[]>(wb.Sheets["07. 상담앱"], {
+    header: 1,
+  });
+  const appAssignments: AppAssignment[] = [];
+  for (let i = 1; i < rows07.length; i++) {
+    const r = rows07[i];
+    if (!r?.[1]) continue;
+    appAssignments.push({
+      universityName: st(r[1]),
+      univId: typeof r[0] === "number" ? r[0] : null,
+      receptionOp: st(r[3]),
+      salesperson: st(r[4]),
+      operator: st(r[5]),
+      developer: st(r[6]),
+      prevOperator: st(r[7]),
+      prevDeveloper: st(r[8]),
+      status: st(r[9]),
+      device: st(r[17]),
+      usage: st(r[19]),
+      remark: st(r[20]),
+    });
+  }
+
+  return {
+    operatorSummary,
+    developerSummary,
+    assignments,
+    gradAssignments,
+    pimsAssignments,
+    mockAssignments,
+    scoreAssignments,
+    appAssignments,
+  };
+}
+
+// ── 기초자료 ──
+
+export interface BaseDataItem {
+  receptionType: string; // 접수구분
+  serviceId: number | null; // 서비스ID
+  universityName: string; // 대학명
+  region: string; // 지역
+  serviceName: string; // 서비스명
+  developer: string; // 개발자
+  operator: string; // 운영자
+  universityType: string; // 대학구분
+}
+
+export interface OperatorBaseStats {
+  name: string;
+  totalServices: number;
+  byType: Record<string, number>; // receptionType별 건수
+  byUnivType: Record<string, number>; // 대학구분별 건수
+}
+
+export async function fetchBaseData(): Promise<{
+  items: BaseDataItem[];
+  operatorStats: OperatorBaseStats[];
+} | null> {
+  const token = await getGraphToken();
+  if (!token) return null;
+  const driveId = process.env.SHAREPOINT_DRIVE_ID;
+  const itemId = process.env.SHAREPOINT_ASSIGNMENTS_ITEM_ID;
+  if (!driveId || !itemId) return null;
+
+  const res = await fetch(
+    `https://graph.microsoft.com/v1.0/drives/${driveId}/items/${itemId}/content`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+      redirect: "follow",
+      cache: "no-store",
+    },
+  );
+  if (!res.ok) return null;
+
+  const buffer = Buffer.from(await res.arrayBuffer());
+  const wb = XLSX.read(buffer);
+  const st = (v: unknown) => (v != null ? String(v).trim() : "");
+
+  // 기초자료 시트 찾기 (이름에 "기초자료" 포함)
+  const baseSheetName = wb.SheetNames.find((n) => n.includes("기초자료"));
+  if (!baseSheetName || !wb.Sheets[baseSheetName])
+    return { items: [], operatorStats: [] };
+
+  const rows = XLSX.utils.sheet_to_json<unknown[]>(wb.Sheets[baseSheetName], {
+    header: 1,
+  });
+  const items: BaseDataItem[] = [];
+
+  for (let i = 1; i < rows.length; i++) {
+    const r = rows[i] as unknown[];
+    if (!r?.[2]) continue; // 대학명 필수
+    items.push({
+      receptionType: st(r[0]),
+      serviceId: typeof r[1] === "number" ? r[1] : null,
+      universityName: st(r[2]),
+      region: st(r[3]),
+      serviceName: st(r[4]),
+      developer: st(r[5]),
+      operator: st(r[6]),
+      universityType: st(r[7]),
+    });
+  }
+
+  // 운영자별 통계 집계
+  const statsMap = new Map<string, OperatorBaseStats>();
+  for (const item of items) {
+    if (!item.operator) continue;
+    let stat = statsMap.get(item.operator);
+    if (!stat) {
+      stat = {
+        name: item.operator,
+        totalServices: 0,
+        byType: {},
+        byUnivType: {},
+      };
+      statsMap.set(item.operator, stat);
+    }
+    stat.totalServices++;
+    stat.byType[item.receptionType] =
+      (stat.byType[item.receptionType] ?? 0) + 1;
+    stat.byUnivType[item.universityType] =
+      (stat.byUnivType[item.universityType] ?? 0) + 1;
+  }
+
+  return {
+    items,
+    operatorStats: [...statsMap.values()].sort(
+      (a, b) => b.totalServices - a.totalServices,
+    ),
+  };
 }

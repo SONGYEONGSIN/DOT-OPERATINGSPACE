@@ -1,261 +1,316 @@
-import PageHeader from "@/components/common/PageHeader";
-import StepTimeline from "@/components/common/StepTimeline";
-import StatusBadge from "@/components/common/StatusBadge";
-import Card from "@/components/common/Card";
-import ProgressBar from "@/components/common/ProgressBar";
+import { PageHeader, Card } from "@/components/common";
+import { IconCircleCheck, IconArrowBackUp, IconNote, IconBook, IconUser, IconBuilding, IconSchool, IconHammer, IconPrinter, IconWorld, IconApps, IconRocket, IconFileText, IconFileSpreadsheet, IconPresentation, IconFile, IconExternalLink } from "@tabler/icons-react";
+import { createClient } from "@/lib/supabase/server";
+import { getOnboardingTargets, getOperatorProgress, getOperatorLogs, getAllOnboardingLogs, getTrainingMaterials } from "./actions";
+import type { OnboardingProgressItem } from "./actions";
+import OnboardingTabs from "./OnboardingTabs";
+import OperatorManage from "./OperatorManage";
 
-const steps = [
+const STEPS: {
+  step: number;
+  title: string;
+  description: string;
+  icon: typeof IconUser;
+  items: { key: string; label: string; hint: string }[];
+}[] = [
   {
-    step: 1,
-    title: "계정 설정",
-    description: "프로필 정보를 입력하고 보안 설정을 완료하세요.",
-    icon: "person",
-    status: "completed" as const,
+    step: 1, title: "입사 및 계정 설정",
+    description: "첫날 인사, 자리 안내, 계정 세팅을 완료하세요.",
+    icon: IconUser,
     items: [
-      { label: "프로필 사진 업로드", done: true },
-      { label: "기본 정보 입력 (이름, 부서, 직책)", done: true },
-      { label: "비밀번호 변경", done: true },
-      { label: "2단계 인증 설정", done: true },
+      { key: "s1_greet", label: "인사 및 자리 안내", hint: "팀장/사수 매니저와 인사, 좌석 배정" },
+      { key: "s1_account", label: "계정 발급 및 지문 등록", hint: "시스템 계정 발급, 4층 지문 등록 (9~10시)" },
+      { key: "s1_desktop", label: "데스크탑 세팅", hint: "PC 설치, 필요 프로그램 세팅" },
+      { key: "s1_profile", label: "Orchestrator System 프로필 등록", hint: "좌측 하단 계정정보에서 이름/팀/사진 설정" },
+      { key: "s1_password", label: "비밀번호 변경", hint: "계정정보 > 비밀번호 초기화" },
     ],
   },
   {
-    step: 2,
-    title: "시스템 소개",
-    description: "DOT 운영 공간의 주요 기능과 구조를 이해하세요.",
-    icon: "explore",
-    status: "completed" as const,
+    step: 2, title: "조직 및 업무 소개",
+    description: "조직 구조, 진학어플라이 서비스, 계약 프로세스를 이해하세요.",
+    icon: IconBuilding,
     items: [
-      { label: "대시보드 둘러보기", done: true },
-      { label: "네비게이션 구조 이해", done: true },
-      { label: "주요 기능 소개 영상 시청", done: true },
+      { key: "s2_org", label: "조직 소개 및 교육과정 안내", hint: "서비스사업부 조직 구성, 교육 일정 확인" },
+      { key: "s2_site", label: "진학어플라이 사이트 및 업무 소개", hint: "진학어플라이 서비스 전반 이해" },
+      { key: "s2_contract", label: "계약 및 업무 프로세스", hint: "계약서 작성/진행, 날인 프로세스, 보증보험, 대학 자료 요청" },
+      { key: "s2_system", label: "Orchestrator System 메뉴 구조 파악", hint: "대시보드, 브리핑, 전체일정, 서비스관리 등 확인" },
     ],
   },
   {
-    step: 3,
-    title: "업무 환경 구성",
-    description: "자주 사용하는 도구와 환경을 설정하세요.",
-    icon: "tune",
-    status: "active" as const,
+    step: 3, title: "내부 시스템 교육",
+    description: "내부관리자, 성적산출, 대학관리자 페이지를 학습하세요.",
+    icon: IconSchool,
     items: [
-      { label: "알림 설정 (이메일, 인앱)", done: true },
-      { label: "대시보드 위젯 커스터마이징", done: true },
-      { label: "자주 쓰는 보고서 템플릿 선택", done: false },
-      { label: "단축키 설정", done: false },
+      { key: "s3_internal", label: "내부관리자 페이지 교육", hint: "내부관리자 페이지 주요 기능 소개" },
+      { key: "s3_score", label: "성적산출 페이지 교육", hint: "수시/정시 내신·수능 성적산출 방법" },
+      { key: "s3_univ_admin", label: "대학관리자 페이지 교육", hint: "대학관리자 페이지 구조 및 주요 기능" },
     ],
   },
   {
-    step: 4,
-    title: "팀 연동",
-    description: "팀원들과 협업 채널을 연결하세요.",
-    icon: "group",
-    status: "pending" as const,
+    step: 4, title: "기초데이터 및 생성툴",
+    description: "기초데이터 작성법과 생성툴 사용법을 실습하세요.",
+    icon: IconHammer,
     items: [
-      { label: "팀 채널 가입", done: false },
-      { label: "팀원 소개 및 역할 확인", done: false },
-      { label: "공유 프로젝트 접근 권한 설정", done: false },
+      { key: "s4_basic_theory", label: "기초데이터 작성법 교육", hint: "기초데이터 항목별 작성 방법 이론" },
+      { key: "s4_basic_practice", label: "기초데이터 실습", hint: "담당 대학 기초데이터 직접 작성" },
+      { key: "s4_generator_theory", label: "생성툴 사용법 교육", hint: "생성툴 기능 및 페이지 생성 방법" },
+      { key: "s4_generator_practice", label: "생성툴 실습", hint: "담당 대학 공통원서 페이지 생성 실습" },
     ],
   },
   {
-    step: 5,
-    title: "첫 업무 시작",
-    description: "실제 업무를 시작하며 시스템에 익숙해지세요.",
-    icon: "rocket_launch",
-    status: "pending" as const,
+    step: 5, title: "유의사항 · 출력물 · 전산",
+    description: "유의사항, 오즈(출력물), 전산파일 제작법을 학습하세요.",
+    icon: IconPrinter,
     items: [
-      { label: "첫 번째 업무 로그 작성", done: false },
-      { label: "보고서 1건 열람", done: false },
-      { label: "AI 어시스턴트에게 질문하기", done: false },
-      { label: "시스템 개선 의견 1건 제출", done: false },
+      { key: "s5_notice", label: "유의사항 페이지 제작법", hint: "대학별 유의사항 작성 및 관리 방법" },
+      { key: "s5_oz", label: "출력물(오즈) 제작법", hint: "오즈 리포트 디자이너 사용법" },
+      { key: "s5_digital", label: "전산파일 세팅법", hint: "전산 파일 제작 및 업로드 방법" },
+      { key: "s5_practice", label: "유의사항/오즈/전산 실습", hint: "담당 대학 기준 실습" },
+    ],
+  },
+  {
+    step: 6, title: "엔터사이트 교육",
+    description: "엔터사이트 구조를 이해하고 담당 대학을 실습하세요.",
+    icon: IconWorld,
+    items: [
+      { key: "s6_enter_theory", label: "엔터사이트 교육", hint: "엔터 구조, 파일 업로드 세팅 방법" },
+      { key: "s6_enter_practice", label: "엔터사이트 담당 대학 실습", hint: "담당 대학 기준 엔터 사이트 직접 세팅" },
+      { key: "s6_enter_feedback", label: "엔터 실습 피드백", hint: "사수 매니저에게 실습 결과 피드백 받기" },
+    ],
+  },
+  {
+    step: 7, title: "부가 업무 교육",
+    description: "콜프로그램, 경쟁률, PIMS, 정산 등 부가 업무를 학습하세요.",
+    icon: IconApps,
+    items: [
+      { key: "s7_call", label: "콜프로그램 세팅", hint: "콜 프로그램 세팅, 1:1 게시판 사용법" },
+      { key: "s7_competition", label: "경쟁률 페이지 제작", hint: "대학별 경쟁률 페이지 생성 방법" },
+      { key: "s7_pims", label: "PIMS 교육", hint: "합격자통합관리시스템 소개 및 세팅" },
+      { key: "s7_settlement", label: "정산 교육", hint: "운영자 지출결의 방법 및 전표 발행" },
+    ],
+  },
+  {
+    step: 8, title: "실전 업무 시작",
+    description: "담당 대학을 확인하고 실제 업무를 시작하세요.",
+    icon: IconRocket,
+    items: [
+      { key: "s8_assignment", label: "담당 대학 배정 확인", hint: "관리자 > 대학배정 메뉴에서 확인" },
+      { key: "s8_service_detail", label: "담당 서비스 상세 확인", hint: "서비스 관리에서 담당 대학 클릭" },
+      { key: "s8_worklog", label: "작업이력 1건 작성", hint: "서비스 상세 > 작업이력에서 항목별 작성" },
+      { key: "s8_practice", label: "개인 실습 과제 수행", hint: "교육 내용 기반 실습 과제 진행" },
+      { key: "s8_eval", label: "최종 교육 평가", hint: "사수 매니저와 교육 평가 및 Q&A" },
+      { key: "s8_complete", label: "온보딩 완료 보고", hint: "팀장에게 온보딩 완료 보고" },
     ],
   },
 ];
 
-const totalItems = steps.flatMap((s) => s.items);
-const completedItems = totalItems.filter((i) => i.done);
-const completionPercent = Math.round(
-  (completedItems.length / totalItems.length) * 100,
-);
+const TOTAL_ITEMS = STEPS.flatMap((s) => s.items).length;
 
-const timelineSteps = steps.map((s) => ({
-  label: s.title,
-  status: s.status === "active" ? ("active" as const) : s.status,
-}));
 
-const statusBadgeVariant = {
-  completed: "success",
-  active: "warning",
-  pending: "neutral",
-} as const;
+export default async function OnboardingPage() {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
 
-const statusLabel = {
-  completed: "완료",
-  active: "진행중",
-  pending: "대기",
-} as const;
+  let profile: { name: string; team: string; role: string; created_at: string } | null = null;
+  if (user) {
+    const { data } = await supabase.from("profiles").select("name, team, role, created_at").eq("email", user.email!).single();
+    profile = data;
+  }
 
-export default function OnboardingPage() {
-  return (
-    <div className="space-y-6 animate-fade-in">
-      <PageHeader
-        title="온보딩"
-        description="DOT 운영 공간을 효과적으로 시작하기 위한 단계별 가이드입니다."
-        breadcrumb={["지원", "온보딩"]}
-      />
+  // 교육자료
+  const materials = await getTrainingMaterials();
 
-      {/* Welcome Banner */}
-      <Card className="relative p-6 overflow-hidden !border-primary/20">
-        <div className="absolute inset-0 kinetic-grid" />
-        <div className="relative flex items-center justify-between">
-          <div className="flex items-center gap-5">
-            <div className="w-14 h-14 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center">
-              <span className="material-symbols-outlined text-primary text-[28px]">
-                waving_hand
-              </span>
-            </div>
-            <div>
-              <h2 className="text-lg font-bold text-on-surface">
-                환영합니다, 한소희 님!
-              </h2>
-              <p className="text-sm text-on-surface-variant mt-0.5">
-                디자인팀에 합류하신 것을 축하드립니다. 아래 가이드를 따라
-                시스템 설정을 완료해 주세요.
-              </p>
-            </div>
-          </div>
+  // 온보딩 대상자
+  const targets = await getOnboardingTargets();
+  const operatorProgressMap: Record<string, OnboardingProgressItem[]> = {};
+  const operatorLogsMap: Record<string, import("./actions").OnboardingLog[]> = {};
+  for (const t of targets) {
+    operatorProgressMap[t.user_email] = await getOperatorProgress(t.user_email);
+    operatorLogsMap[t.user_email] = await getOperatorLogs(t.user_email);
+  }
 
-          {/* Progress Ring */}
-          <div className="flex items-center gap-4">
-            <div className="relative w-20 h-20">
-              <svg className="w-20 h-20 -rotate-90" viewBox="0 0 80 80">
-                <circle
-                  cx="40"
-                  cy="40"
-                  r="34"
-                  fill="none"
-                  className="stroke-surface-container-high"
-                  strokeWidth="6"
-                />
-                <circle
-                  cx="40"
-                  cy="40"
-                  r="34"
-                  fill="none"
-                  className="stroke-primary"
-                  strokeWidth="6"
-                  strokeLinecap="round"
-                  strokeDasharray={`${(completionPercent / 100) * 2 * Math.PI * 34} ${2 * Math.PI * 34}`}
-                />
-              </svg>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-lg font-black text-primary">
-                  {completionPercent}%
-                </span>
-              </div>
-            </div>
-            <div className="text-right">
-              <p className="text-sm font-bold text-on-surface">
-                {completedItems.length}/{totalItems.length}
-              </p>
-              <p className="text-xs text-on-surface-variant">완료됨</p>
-            </div>
+  // 전체 기록
+  const allLogs = await getAllOnboardingLogs();
+
+  // 프로필 목록 (대상자 추가용)
+  const { data: allProfiles } = await supabase.from("profiles").select("email, name").eq("status", "active").order("name");
+  const nameMap = new Map((allProfiles ?? []).map((p) => [p.email, p.name]));
+  const availableProfiles = (allProfiles ?? []).map((p) => ({ email: p.email, name: p.name }));
+
+  // ── Guide Content ──
+  const guideContent = (
+    <div className="space-y-6">
+      <Card className="p-5 !border-primary/20">
+        <div className="flex items-center gap-4">
+          <IconBook size={28} className="text-primary" />
+          <div>
+            <h3 className="text-base font-bold text-on-surface">신입사원 온보딩 가이드</h3>
+            <p className="text-sm text-on-surface-variant mt-0.5">2주 교육과정 기반 단계별 가이드입니다. 진행 관리는 운영자 관리 탭에서 할 수 있습니다.</p>
           </div>
         </div>
       </Card>
 
-      {/* Step Timeline Overview */}
-      <Card className="p-6">
-        <StepTimeline steps={timelineSteps} />
+      {/* 가이드 (읽기 전용) */}
+      <div className="space-y-4">
+        {STEPS.map((step) => (
+          <Card key={step.step} className="p-5">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
+                <step.icon size={20} className="text-primary" />
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-on-surface">{step.title}</h3>
+                <p className="text-xs text-on-surface-variant mt-0.5">{step.description}</p>
+              </div>
+            </div>
+            <div className="ml-12 space-y-2">
+              {step.items.map((item) => (
+                <div key={item.key} className="flex items-start gap-2.5">
+                  <span className="w-5 h-5 mt-0.5 rounded-md border border-outline-variant flex items-center justify-center shrink-0 text-[10px] font-bold text-on-surface-variant">
+                    {step.items.indexOf(item) + 1}
+                  </span>
+                  <div>
+                    <p className="text-sm text-on-surface">{item.label}</p>
+                    {item.hint && <p className="text-[11px] text-on-surface-variant mt-0.5">{item.hint}</p>}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+
+  // ── Manage Content ──
+  const manageSteps = STEPS.map((s) => ({ step: s.step, title: s.title, items: s.items.map((i) => ({ key: i.key, label: i.label })) }));
+  const manageContent = (
+    <div className="space-y-6">
+      <Card className="p-5">
+        <div className="mb-4">
+          <h3 className="text-sm font-bold text-on-surface">온보딩 체크리스트</h3>
+        </div>
+        <OperatorManage targets={targets} steps={manageSteps} totalItemCount={TOTAL_ITEMS} operatorProgressMap={operatorProgressMap} operatorLogsMap={operatorLogsMap} availableProfiles={availableProfiles} />
+      </Card>
+    </div>
+  );
+
+  // ── History Content ──
+  const historyContent = (
+    <div className="space-y-6">
+      <Card className="p-5">
+        <h3 className="text-sm font-bold text-on-surface mb-4">전체 온보딩 기록</h3>
+        {allLogs.length > 0 ? (
+          <div className="space-y-3 max-h-[600px] overflow-y-auto">
+            {allLogs.map((log) => {
+              const time = new Date(log.created_at);
+              const timeStr = time.toLocaleDateString("ko-KR", { month: "short", day: "numeric" }) + " " + time.toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" });
+              const userName = nameMap.get(log.user_email) ?? log.user_email;
+              return (
+                <div key={log.id} className="flex items-start gap-3">
+                  <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${log.action === "complete" ? "bg-primary/10" : log.action === "memo" ? "bg-tertiary/10" : "bg-surface-container-high"}`}>
+                    {log.action === "complete" ? <IconCircleCheck size={14} className="text-primary" /> : log.action === "memo" ? <IconNote size={14} className="text-tertiary" /> : <IconArrowBackUp size={14} className="text-on-surface-variant" />}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-bold text-on-surface">{userName}</span>
+                      <span className="text-[10px] text-on-surface-variant tabular-nums">{timeStr}</span>
+                    </div>
+                    {log.action === "memo" ? (
+                      <p className="text-sm text-on-surface mt-0.5">{log.memo}</p>
+                    ) : (
+                      <p className="text-sm text-on-surface-variant mt-0.5">
+                        <span className="text-on-surface font-medium">{log.item_label}</span> {log.action === "complete" ? "완료" : "취소"}
+                        {log.memo && <span className="text-[10px] text-on-surface-variant ml-2">({log.memo})</span>}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <p className="text-xs text-on-surface-variant text-center py-8">아직 기록이 없습니다.</p>
+        )}
+      </Card>
+    </div>
+  );
+
+  // ── Materials Content ──
+  const fileIcon = (type: string) => {
+    if (type === "doc" || type === "docx" || type === "hwp") return <IconFileText size={16} className="text-primary" />;
+    if (type === "xls" || type === "xlsx") return <IconFileSpreadsheet size={16} className="text-tertiary" />;
+    if (type === "ppt" || type === "pptx") return <IconPresentation size={16} className="text-error" />;
+    if (type === "pdf") return <IconFile size={16} className="text-on-surface-variant" />;
+    return <IconFile size={16} className="text-on-surface-variant" />;
+  };
+
+  const formatSize = (bytes: number) => {
+    if (bytes < 1024) return `${bytes}B`;
+    if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)}KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(1)}MB`;
+  };
+
+  // 폴더별 그룹
+  const folderGroups = new Map<string, typeof materials>();
+  for (const m of materials) {
+    const folder = m.folder ?? "기타";
+    if (!folderGroups.has(folder)) folderGroups.set(folder, []);
+    folderGroups.get(folder)!.push(m);
+  }
+
+  const materialsContent = (
+    <div className="space-y-6">
+      <Card className="p-5 !border-primary/20">
+        <div className="flex items-center gap-4">
+          <IconBook size={28} className="text-primary" />
+          <div>
+            <h3 className="text-base font-bold text-on-surface">교육자료</h3>
+            <p className="text-sm text-on-surface-variant mt-0.5">SharePoint 매뉴얼 폴더의 교육 자료입니다. 클릭하면 SharePoint에서 열립니다.</p>
+          </div>
+          <span className="ml-auto text-xs font-bold text-on-surface-variant">{materials.length}개 파일</span>
+        </div>
       </Card>
 
-      {/* Step Detail Cards */}
-      <div className="space-y-4">
-        {steps.map((step) => {
-          const stepDone = step.items.filter((i) => i.done).length;
-          const stepTotal = step.items.length;
+      {[...folderGroups.entries()].map(([folder, files]) => (
+        <Card key={folder} className="p-5">
+          <h3 className="text-sm font-bold text-on-surface mb-3">{folder}</h3>
+          <div className="space-y-1.5">
+            {files.map((file, idx) => (
+              <a
+                key={idx}
+                href={file.webUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-surface-container-high/50 transition-colors group"
+              >
+                {fileIcon(file.type)}
+                <span className="flex-1 text-sm text-on-surface group-hover:text-primary transition-colors truncate">{file.name}</span>
+                <span className="text-[10px] text-on-surface-variant uppercase font-bold">{file.type}</span>
+                <span className="text-[10px] text-on-surface-variant tabular-nums">{formatSize(file.size)}</span>
+                <IconExternalLink size={12} className="text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity" />
+              </a>
+            ))}
+          </div>
+        </Card>
+      ))}
 
-          return (
-            <Card
-              key={step.step}
-              className={`p-5 ${step.status === "active" ? "!border-primary/30" : ""}`}
-            >
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex items-center gap-3">
-                  <div
-                    className={`w-9 h-9 rounded-lg flex items-center justify-center ${
-                      step.status === "pending"
-                        ? "bg-surface-container-high"
-                        : "bg-primary/10"
-                    }`}
-                  >
-                    <span
-                      className={`material-symbols-outlined text-[20px] ${
-                        step.status === "pending"
-                          ? "text-on-surface-variant"
-                          : "text-primary"
-                      }`}
-                    >
-                      {step.icon}
-                    </span>
-                  </div>
-                  <div>
-                    <h3 className="text-base font-bold text-on-surface">
-                      {step.title}
-                    </h3>
-                    <p className="text-xs text-on-surface-variant mt-0.5">
-                      {step.description}
-                    </p>
-                  </div>
-                </div>
-                <StatusBadge variant={statusBadgeVariant[step.status]}>
-                  {statusLabel[step.status]}
-                </StatusBadge>
-              </div>
+      {materials.length === 0 && (
+        <Card className="p-12 text-center">
+          <p className="text-sm text-on-surface-variant">교육자료를 불러올 수 없습니다.</p>
+        </Card>
+      )}
+    </div>
+  );
 
-              {/* Checklist */}
-              <div className="space-y-2 ml-12">
-                {step.items.map((item) => (
-                  <div key={item.label} className="flex items-center gap-2.5">
-                    <div
-                      className={`w-5 h-5 rounded-md border flex items-center justify-center flex-shrink-0 ${
-                        item.done
-                          ? "bg-primary border-primary"
-                          : "border-outline-variant bg-transparent"
-                      }`}
-                    >
-                      {item.done && (
-                        <span className="material-symbols-outlined text-on-primary text-[14px]">
-                          check
-                        </span>
-                      )}
-                    </div>
-                    <span
-                      className={`text-sm ${
-                        item.done
-                          ? "text-on-surface-variant line-through"
-                          : "text-on-surface"
-                      }`}
-                    >
-                      {item.label}
-                    </span>
-                  </div>
-                ))}
-              </div>
-
-              {/* Step Progress */}
-              {step.status !== "pending" && (
-                <div className="flex items-center gap-2 mt-4 ml-12">
-                  <div className="flex-1">
-                    <ProgressBar value={stepDone} max={stepTotal} />
-                  </div>
-                  <span className="text-[10px] font-bold text-on-surface-variant">
-                    {stepDone}/{stepTotal}
-                  </span>
-                </div>
-              )}
-            </Card>
-          );
-        })}
-      </div>
+  return (
+    <div className="space-y-6 animate-fade-in">
+      <PageHeader
+        title="온보딩"
+        description="Orchestrator System을 효과적으로 시작하기 위한 단계별 가이드입니다."
+        breadcrumb={["지원", "온보딩"]}
+      />
+      <OnboardingTabs guideContent={guideContent} materialsContent={materialsContent} manageContent={manageContent} historyContent={historyContent} />
     </div>
   );
 }

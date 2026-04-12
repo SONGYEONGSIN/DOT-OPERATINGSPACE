@@ -1,4 +1,5 @@
 #!/bin/bash
+set -u  # 미정의 변수 사용 시 즉시 에러
 # PostToolUse hook: README/아키텍처 수치 자동 동기화
 # agents/, hooks/, skills/, rules/ 파일이 변경되면 수치를 갱신한다
 # 비차단 — 실패해도 exit 0
@@ -13,7 +14,7 @@ case "$FILE_PATH" in
 esac
 
 # 프로젝트 루트 탐색
-PROJECT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
+PROJECT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || echo "")
 if [ -z "$PROJECT_ROOT" ]; then
   exit 0
 fi

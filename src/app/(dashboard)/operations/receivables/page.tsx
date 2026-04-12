@@ -29,9 +29,9 @@ export default async function ReceivablesPage({ searchParams }: PageProps) {
   const totalAmount = result?.totalAmount ?? 0;
   const sheetName = result?.sheetName ?? "-";
 
-  // 입금 여부 판단
-  const paidItems = items.filter((r) => r.memo && String(r.memo).trim() !== "" && String(r.memo).trim() !== "-");
-  const unpaidItems = items.filter((r) => !r.memo || String(r.memo).trim() === "" || String(r.memo).trim() === "-");
+  // 입금 여부 판단: 적요에 "입금완료"가 포함된 경우만 입금 처리
+  const paidItems = items.filter((r) => r.memo && String(r.memo).includes("입금완료"));
+  const unpaidItems = items.filter((r) => !r.memo || !String(r.memo).includes("입금완료"));
   const paidAmount = paidItems.reduce((sum, r) => sum + r.amount, 0);
   const unpaidAmount = unpaidItems.reduce((sum, r) => sum + r.amount, 0);
 

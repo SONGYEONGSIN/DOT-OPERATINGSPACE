@@ -12,16 +12,19 @@ export async function createIncident(
   title: string,
   incidentDate: string,
   university: string,
-  service: string,
+  category: string,
+  department: string,
   reporter: string,
-  severity: string,
+  assignee: string,
+  status: string,
   background: string,
   cause: string,
   resolution: string,
   prevention: string,
 ): Promise<IncidentResult> {
-  if (!title.trim()) return { error: "제목을 입력해주세요." };
+  if (!title.trim()) return { error: "요약(제목)을 입력해주세요." };
   if (!reporter.trim()) return { error: "보고자를 선택해주세요." };
+  if (!category) return { error: "분류를 선택해주세요." };
 
   const supabase = createClient();
 
@@ -29,10 +32,12 @@ export async function createIncident(
     title: title.trim(),
     incident_date: incidentDate || new Date().toISOString(),
     university: university.trim() || null,
-    service: service.trim() || null,
+    category,
+    department: department || null,
     reporter: reporter.trim(),
-    severity,
-    status: "접수",
+    assignee: assignee.trim() || null,
+    severity: "중요사항",
+    status,
     background: background.trim() || null,
     cause: cause.trim() || null,
     resolution: resolution.trim() || null,
@@ -48,20 +53,24 @@ export async function createIncident(
 export async function updateIncident(
   id: number,
   title: string,
-  severity: string,
+  category: string,
+  department: string,
+  assignee: string,
   status: string,
   background: string,
   cause: string,
   resolution: string,
   prevention: string,
 ): Promise<IncidentResult> {
-  if (!title.trim()) return { error: "제목을 입력해주세요." };
+  if (!title.trim()) return { error: "요약(제목)을 입력해주세요." };
 
   const supabase = createClient();
 
   const { error } = await supabase.from("incident_reports").update({
     title: title.trim(),
-    severity,
+    category,
+    department: department || null,
+    assignee: assignee.trim() || null,
     status,
     background: background.trim() || null,
     cause: cause.trim() || null,

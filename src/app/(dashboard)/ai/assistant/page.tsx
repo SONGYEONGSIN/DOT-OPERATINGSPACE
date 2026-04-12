@@ -1,5 +1,6 @@
 import PageHeader from "@/components/common/PageHeader";
 import Card from "@/components/common/Card";
+import { IconRobot, IconDotsVertical, IconChartBar, IconFileDescription, IconSearch, IconBulb, IconCalendar, IconTrendingUp, IconPaperclip, IconSend, IconMessage } from "@tabler/icons-react";
 
 const messages = [
   {
@@ -25,12 +26,12 @@ const messages = [
 ];
 
 const suggestedPrompts = [
-  { icon: "bar_chart", title: "성과 분석", prompt: "이번 달 팀별 성과 비교 분석해줘" },
-  { icon: "description", title: "보고서 작성", prompt: "주간 운영 현황 보고서 초안 작성해줘" },
-  { icon: "search", title: "데이터 조회", prompt: "최근 7일간 시스템 가동률을 알려줘" },
-  { icon: "lightbulb", title: "개선 제안", prompt: "운영 효율성 개선 방안을 제안해줘" },
-  { icon: "schedule", title: "일정 관리", prompt: "이번 주 주요 일정과 마감 업무를 정리해줘" },
-  { icon: "trending_up", title: "트렌드 분석", prompt: "최근 3개월간 프로젝트 완료율 추이를 분석해줘" },
+  { icon: IconChartBar, title: "성과 분석", prompt: "이번 달 팀별 성과 비교 분석해줘" },
+  { icon: IconFileDescription, title: "보고서 작성", prompt: "주간 운영 현황 보고서 초안 작성해줘" },
+  { icon: IconSearch, title: "데이터 조회", prompt: "최근 7일간 시스템 가동률을 알려줘" },
+  { icon: IconBulb, title: "개선 제안", prompt: "운영 효율성 개선 방안을 제안해줘" },
+  { icon: IconCalendar, title: "일정 관리", prompt: "이번 주 주요 일정과 마감 업무를 정리해줘" },
+  { icon: IconTrendingUp, title: "트렌드 분석", prompt: "최근 3개월간 프로젝트 완료율 추이를 분석해줘" },
 ];
 
 const recentConversations = [
@@ -55,9 +56,7 @@ export default function AssistantPage() {
           {/* Chat Header */}
           <div className="flex items-center gap-3 px-5 py-3.5 border-b border-outline-variant/15">
             <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-              <span className="material-symbols-outlined text-primary text-[18px]">
-                smart_toy
-              </span>
+              <IconRobot size={18} className="text-primary" />
             </div>
             <div className="flex-1">
               <p className="text-sm font-bold text-on-surface">DOT 어시스턴트</p>
@@ -67,7 +66,7 @@ export default function AssistantPage() {
               </div>
             </div>
             <button className="w-8 h-8 rounded-lg hover:bg-surface-container-high flex items-center justify-center text-on-surface-variant transition-colors">
-              <span className="material-symbols-outlined text-[18px]">more_vert</span>
+              <IconDotsVertical size={18} />
             </button>
           </div>
 
@@ -80,9 +79,7 @@ export default function AssistantPage() {
               >
                 {msg.role === "assistant" && (
                   <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="material-symbols-outlined text-primary text-[16px]">
-                      smart_toy
-                    </span>
+                    <IconRobot size={16} className="text-primary" />
                   </div>
                 )}
                 <div
@@ -128,9 +125,7 @@ export default function AssistantPage() {
                   key={sp.title}
                   className="flex items-center gap-1.5 bg-surface-container-high border border-outline-variant/15 rounded-full px-3 py-1.5 text-xs text-on-surface-variant hover:text-primary hover:border-primary/20 transition-colors whitespace-nowrap flex-shrink-0"
                 >
-                  <span className="material-symbols-outlined text-[14px]">
-                    {sp.icon}
-                  </span>
+                  <sp.icon size={14} />
                   {sp.prompt}
                 </button>
               ))}
@@ -146,12 +141,10 @@ export default function AssistantPage() {
                 className="flex-1 bg-transparent text-sm text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none"
               />
               <button className="w-8 h-8 rounded-lg hover:bg-surface-container flex items-center justify-center text-on-surface-variant transition-colors">
-                <span className="material-symbols-outlined text-[20px]">
-                  attach_file
-                </span>
+                <IconPaperclip size={20} />
               </button>
               <button className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-on-primary hover:bg-primary-dim transition-colors">
-                <span className="material-symbols-outlined text-[18px]">send</span>
+                <IconSend size={18} />
               </button>
             </div>
           </div>
@@ -170,9 +163,7 @@ export default function AssistantPage() {
                   key={sp.title}
                   className="flex flex-col items-start gap-1.5 bg-surface-container-high rounded-lg p-3 hover:bg-primary/10 hover:border-primary/20 border border-transparent transition-colors text-left group"
                 >
-                  <span className="material-symbols-outlined text-on-surface-variant text-[20px] group-hover:text-primary transition-colors">
-                    {sp.icon}
-                  </span>
+                  <sp.icon size={20} className="text-on-surface-variant group-hover:text-primary transition-colors" />
                   <span className="text-[11px] font-semibold text-on-surface group-hover:text-primary transition-colors">
                     {sp.title}
                   </span>
@@ -209,9 +200,7 @@ export default function AssistantPage() {
                     {conv.preview}
                   </p>
                   <div className="flex items-center gap-1 mt-1">
-                    <span className="material-symbols-outlined text-on-surface-variant text-[11px]">
-                      chat_bubble
-                    </span>
+                    <IconMessage size={11} className="text-on-surface-variant" />
                     <span className="text-[10px] text-on-surface-variant">
                       {conv.messageCount}개 메시지
                     </span>

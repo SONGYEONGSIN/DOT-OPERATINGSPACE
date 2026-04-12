@@ -100,18 +100,16 @@ export default function AddDocumentButton() {
                   <input type="text" required value={title} onChange={(e) => setTitle(e.target.value)} placeholder="공문 제목" className={inputClass} />
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className={labelClass}>작성자</label>
-                    <input type="text" value={writer} onChange={(e) => setWriter(e.target.value)} placeholder="작성자" className={inputClass} />
-                  </div>
-                  {type === "수신" && (
-                    <div>
-                      <label className={labelClass}>발신자</label>
-                      <input type="text" value={receiver} onChange={(e) => setReceiver(e.target.value)} placeholder="발신자" className={inputClass} />
-                    </div>
-                  )}
+                <div>
+                  <label className={labelClass}>작성자</label>
+                  <input type="text" value={writer} onChange={(e) => setWriter(e.target.value)} placeholder="작성자" className={inputClass} />
                 </div>
+                {type === "수신" && (
+                  <div>
+                    <label className={labelClass}>발신자</label>
+                    <input type="text" value={receiver} onChange={(e) => setReceiver(e.target.value)} placeholder="발신자" className={inputClass} />
+                  </div>
+                )}
 
                 <div className="flex gap-3 pt-2">
                   <button type="button" onClick={() => setOpen(false)} className="flex-1 py-3 bg-surface-container-high text-on-surface-variant font-bold rounded-lg text-sm">취소</button>

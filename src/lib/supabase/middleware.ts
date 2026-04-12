@@ -50,8 +50,8 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // 로그인 된 사용자가 auth 페이지 접근 → 대시보드로
-  if (user && isAuthPage) {
+  // 로그인 된 사용자가 auth 페이지 접근 → 대시보드로 (비밀번호 재설정은 예외)
+  if (user && isAuthPage && !request.nextUrl.pathname.startsWith("/reset-password")) {
     const url = request.nextUrl.clone();
     url.pathname = "/dashboard";
     return NextResponse.redirect(url);

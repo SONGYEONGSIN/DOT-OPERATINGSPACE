@@ -25,7 +25,8 @@ const TOTAL_CATEGORIES = 14;
 
 function computeStatusLabel(logCount: number) {
   if (logCount === 0) return { label: "등록예정", variant: "info" as const };
-  if (logCount >= TOTAL_CATEGORIES) return { label: "등록완료", variant: "neutral" as const };
+  if (logCount >= TOTAL_CATEGORIES)
+    return { label: "등록완료", variant: "neutral" as const };
   return { label: "등록중", variant: "success" as const };
 }
 
@@ -45,11 +46,23 @@ export default async function DashboardPage() {
   const totalWlRows = wlCount ?? 0;
 
   // 서비스 + work_logs 전체 조회 (1000건씩 페이징)
-  const allServices: { id: number; university_name: string | null; service_name: string | null; operator: string | null; category: string | null; writing_end: string | null; payment_end: string | null; writing_start: string | null; payment_start: string | null }[] = [];
+  const allServices: {
+    id: number;
+    university_name: string | null;
+    service_name: string | null;
+    operator: string | null;
+    category: string | null;
+    writing_end: string | null;
+    payment_end: string | null;
+    writing_start: string | null;
+    payment_start: string | null;
+  }[] = [];
   for (let offset = 0; offset < totalSvcRows; offset += 1000) {
     const { data } = await supabase
       .from("services")
-      .select("id, university_name, service_name, operator, category, writing_end, payment_end, writing_start, payment_start")
+      .select(
+        "id, university_name, service_name, operator, category, writing_end, payment_end, writing_start, payment_start",
+      )
       .range(offset, offset + 999);
     if (data) allServices.push(...data);
   }
@@ -70,10 +83,28 @@ export default async function DashboardPage() {
     { data: projectTasks },
     { data: profiles },
   ] = await Promise.all([
-    supabase.from("handover_logs").select("id, service_id, field, from_person, to_person, executed_by, executed_at").order("executed_at", { ascending: false }).limit(10),
-    supabase.from("backup_requests").select("id, operator_name, leave_type, start_date, end_date, status, created_at").order("created_at", { ascending: false }).limit(10),
-    supabase.from("project_tasks").select("id, project, title, status, priority, assignee, updated_at").order("updated_at", { ascending: false }),
-    supabase.from("profiles").select("name, team, status").eq("status", "active"),
+    supabase
+      .from("handover_logs")
+      .select(
+        "id, service_id, field, from_person, to_person, executed_by, executed_at",
+      )
+      .order("executed_at", { ascending: false })
+      .limit(10),
+    supabase
+      .from("backup_requests")
+      .select(
+        "id, operator_name, leave_type, start_date, end_date, status, created_at",
+      )
+      .order("created_at", { ascending: false })
+      .limit(10),
+    supabase
+      .from("project_tasks")
+      .select("id, project, title, status, priority, assignee, updated_at")
+      .order("updated_at", { ascending: false }),
+    supabase
+      .from("profiles")
+      .select("name, team, status")
+      .eq("status", "active"),
   ]);
 
   const allHandoverLogs = handoverLogs ?? [];
@@ -105,12 +136,14 @@ export default async function DashboardPage() {
       if (svc.writing_end) {
         const d = new Date(svc.writing_end);
         const days = Math.ceil((d.getTime() - now) / (1000 * 60 * 60 * 24));
-        if (days >= 0 && days <= 7) deadlines.push({ type: "작성마감", date: d, svc });
+        if (days >= 0 && days <= 7)
+          deadlines.push({ type: "작성마감", date: d, svc });
       }
       if (svc.payment_end) {
         const d = new Date(svc.payment_end);
         const days = Math.ceil((d.getTime() - now) / (1000 * 60 * 60 * 24));
-        if (days >= 0 && days <= 7) deadlines.push({ type: "결제마감", date: d, svc });
+        if (days >= 0 && days <= 7)
+          deadlines.push({ type: "결제마감", date: d, svc });
       }
       return deadlines;
     })
@@ -121,7 +154,9 @@ export default async function DashboardPage() {
   // ── 프로젝트 통계 ──
   const taskTotal = allProjectTasks.length;
   const taskDone = allProjectTasks.filter((t) => t.status === "done").length;
-  const taskInProgress = allProjectTasks.filter((t) => t.status === "in_progress" || t.status === "review").length;
+  const taskInProgress = allProjectTasks.filter(
+    (t) => t.status === "in_progress" || t.status === "review",
+  ).length;
   const taskPct = taskTotal > 0 ? Math.round((taskDone / taskTotal) * 100) : 0;
 
   // ── 운영자별 서비스 담당 현황 ──
@@ -131,11 +166,14 @@ export default async function DashboardPage() {
       operatorMap.set(svc.operator, (operatorMap.get(svc.operator) ?? 0) + 1);
     }
   }
+  const excludedOperators = new Set(["송영신", "허승철"]);
   const operatorStats = Array.from(operatorMap.entries())
+    .filter(([name]) => !excludedOperators.has(name))
     .map(([name, count]) => ({ name, count }))
     .sort((a, b) => b.count - a.count);
 
-  const maxOperatorCount = operatorStats.length > 0 ? operatorStats[0].count : 1;
+  const maxOperatorCount =
+    operatorStats.length > 0 ? operatorStats[0].count : 1;
 
   // ── 현재 진행 중인 백업 ──
   const today = new Date().toISOString().slice(0, 10);
@@ -169,7 +207,9 @@ export default async function DashboardPage() {
           change={`완료 ${taskDone} · 진행 ${taskInProgress}`}
         />
         <KpiCard
-          icon={<IconArrowsExchange size={18} className="text-on-surface-variant" />}
+          icon={
+            <IconArrowsExchange size={18} className="text-on-surface-variant" />
+          }
           label="인수인계"
           value={allHandoverLogs.length.toString()}
           suffix="건"
@@ -188,32 +228,58 @@ export default async function DashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* 서비스 상태 분포 */}
         <Card className="p-6">
-          <h3 className="text-sm font-bold text-primary tracking-[0.2em] uppercase mb-5">서비스 등록 현황</h3>
+          <h3 className="text-sm font-bold text-primary tracking-[0.2em] uppercase mb-5">
+            서비스 등록 현황
+          </h3>
           <div className="space-y-4">
             <div className="space-y-2">
               <div className="flex items-center justify-between text-xs">
                 <span className="text-on-surface-variant">등록중</span>
-                <span className="font-bold text-on-surface">{activeCount}건</span>
+                <span className="font-bold text-on-surface">
+                  {activeCount.toLocaleString()}건
+                </span>
               </div>
-              <ProgressBar value={activeCount} max={allServices.length || 1} size="md" color="primary" />
+              <ProgressBar
+                value={activeCount}
+                max={allServices.length || 1}
+                size="md"
+                color="primary"
+              />
             </div>
             <div className="space-y-2">
               <div className="flex items-center justify-between text-xs">
                 <span className="text-on-surface-variant">등록완료</span>
-                <span className="font-bold text-on-surface">{completedCount}건</span>
+                <span className="font-bold text-on-surface">
+                  {completedCount.toLocaleString()}건
+                </span>
               </div>
-              <ProgressBar value={completedCount} max={allServices.length || 1} size="md" color="primary" />
+              <ProgressBar
+                value={completedCount}
+                max={allServices.length || 1}
+                size="md"
+                color="primary"
+              />
             </div>
             <div className="space-y-2">
               <div className="flex items-center justify-between text-xs">
                 <span className="text-on-surface-variant">등록예정</span>
-                <span className="font-bold text-on-surface">{upcomingCount}건</span>
+                <span className="font-bold text-on-surface">
+                  {upcomingCount.toLocaleString()}건
+                </span>
               </div>
-              <ProgressBar value={upcomingCount} max={allServices.length || 1} size="md" color="warning" />
+              <ProgressBar
+                value={upcomingCount}
+                max={allServices.length || 1}
+                size="md"
+                color="warning"
+              />
             </div>
           </div>
           <div className="mt-4 pt-4 border-t border-outline-variant/10 text-center">
-            <Link href="/operations/services" className="text-xs font-bold text-primary hover:underline">
+            <Link
+              href="/operations/services"
+              className="text-xs font-bold text-primary hover:underline"
+            >
               서비스 관리 바로가기 →
             </Link>
           </div>
@@ -221,31 +287,61 @@ export default async function DashboardPage() {
 
         {/* 프로젝트 달성률 */}
         <Card className="p-6">
-          <h3 className="text-sm font-bold text-primary tracking-[0.2em] uppercase mb-5">프로젝트 달성률</h3>
+          <h3 className="text-sm font-bold text-primary tracking-[0.2em] uppercase mb-5">
+            프로젝트 달성률
+          </h3>
           <div className="flex items-center justify-center mb-6">
             <div className="relative w-32 h-32">
               <svg viewBox="0 0 100 100" className="w-full h-full -rotate-90">
-                <circle cx="50" cy="50" r="42" fill="none" strokeWidth="8" className="stroke-surface-container-highest" />
                 <circle
-                  cx="50" cy="50" r="42" fill="none" strokeWidth="8"
+                  cx="50"
+                  cy="50"
+                  r="42"
+                  fill="none"
+                  strokeWidth="8"
+                  className="stroke-surface-container-highest"
+                />
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="42"
+                  fill="none"
+                  strokeWidth="8"
                   className="stroke-primary"
                   strokeDasharray={`${taskPct * 2.64} 264`}
                   strokeLinecap="round"
                 />
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-2xl font-black text-on-surface">{taskPct}%</span>
-                <span className="text-[10px] text-on-surface-variant">달성률</span>
+                <span className="text-2xl font-black text-on-surface">
+                  {taskPct}%
+                </span>
+                <span className="text-[10px] text-on-surface-variant">
+                  달성률
+                </span>
               </div>
             </div>
           </div>
           <div className="flex items-center justify-center gap-6 text-[10px] text-on-surface-variant">
-            <span>할 일 <strong className="text-on-surface">{taskTotal - taskDone - taskInProgress}</strong></span>
-            <span>진행 중 <strong className="text-on-surface">{taskInProgress}</strong></span>
-            <span>완료 <strong className="text-on-surface">{taskDone}</strong></span>
+            <span>
+              할 일{" "}
+              <strong className="text-on-surface">
+                {taskTotal - taskDone - taskInProgress}
+              </strong>
+            </span>
+            <span>
+              진행 중{" "}
+              <strong className="text-on-surface">{taskInProgress}</strong>
+            </span>
+            <span>
+              완료 <strong className="text-on-surface">{taskDone}</strong>
+            </span>
           </div>
           <div className="mt-4 pt-4 border-t border-outline-variant/10 text-center">
-            <Link href="/projects" className="text-xs font-bold text-primary hover:underline">
+            <Link
+              href="/projects"
+              className="text-xs font-bold text-primary hover:underline"
+            >
               프로젝트 현황 바로가기 →
             </Link>
           </div>
@@ -262,26 +358,46 @@ export default async function DashboardPage() {
                 <IconCalendarDue size={16} />
                 마감 임박 서비스
               </h3>
-              <StatusBadge variant="error">{urgentDeadlines.length}건</StatusBadge>
+              <StatusBadge variant="error">
+                {urgentDeadlines.length}건
+              </StatusBadge>
             </div>
             {urgentDeadlines.length === 0 ? (
-              <p className="text-xs text-on-surface-variant py-6 text-center">7일 이내 마감 예정 서비스가 없습니다.</p>
+              <p className="text-xs text-on-surface-variant py-6 text-center">
+                7일 이내 마감 예정 서비스가 없습니다.
+              </p>
             ) : (
               <div className="space-y-3">
                 {urgentDeadlines.map((item, idx) => {
-                  const daysLeft = Math.ceil((item.date.getTime() - now) / (1000 * 60 * 60 * 24));
+                  const daysLeft = Math.ceil(
+                    (item.date.getTime() - now) / (1000 * 60 * 60 * 24),
+                  );
                   return (
-                    <div key={`${item.svc.id}-${item.type}-${idx}`} className="flex items-center justify-between p-3 rounded-lg bg-surface-container-low/50">
+                    <div
+                      key={`${item.svc.id}-${item.type}-${idx}`}
+                      className="flex items-center justify-between p-3 rounded-lg bg-surface-container-low/50"
+                    >
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <span className="text-sm font-semibold text-on-surface truncate">{item.svc.university_name}</span>
-                          <StatusBadge variant={item.type === "작성마감" ? "warning" : "info"}>{item.type}</StatusBadge>
+                          <span className="text-sm font-semibold text-on-surface truncate">
+                            {item.svc.university_name}
+                          </span>
+                          <StatusBadge
+                            variant={
+                              item.type === "작성마감" ? "warning" : "info"
+                            }
+                          >
+                            {item.type}
+                          </StatusBadge>
                         </div>
                         <p className="text-xs text-on-surface-variant mt-0.5 truncate">
-                          {item.svc.service_name} · {item.svc.operator ?? "미배정"}
+                          {item.svc.service_name} ·{" "}
+                          {item.svc.operator ?? "미배정"}
                         </p>
                       </div>
-                      <span className={`text-xs font-black tabular-nums whitespace-nowrap ml-3 ${daysLeft <= 3 ? "text-error" : "text-tertiary"}`}>
+                      <span
+                        className={`text-xs font-black tabular-nums whitespace-nowrap ml-3 ${daysLeft <= 3 ? "text-error" : "text-tertiary"}`}
+                      >
                         {daysLeft === 0 ? "오늘 마감" : `D-${daysLeft}`}
                       </span>
                     </div>
@@ -294,15 +410,24 @@ export default async function DashboardPage() {
 
         {/* 운영자별 담당 현황 */}
         <Card className="p-6">
-          <h3 className="text-sm font-bold text-primary tracking-[0.2em] uppercase mb-5">운영자별 담당</h3>
-          <div className="space-y-3">
-            {operatorStats.slice(0, 8).map((op) => (
+          <h3 className="text-sm font-bold text-primary tracking-[0.2em] uppercase mb-5">
+            운영자별 담당
+          </h3>
+          <div className="space-y-3 max-h-[480px] overflow-y-auto">
+            {operatorStats.map((op) => (
               <div key={op.name} className="space-y-1.5">
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-on-surface font-medium">{op.name}</span>
-                  <span className="font-bold text-on-surface-variant tabular-nums">{op.count}건</span>
+                  <span className="font-bold text-on-surface-variant tabular-nums">
+                    {op.count}건
+                  </span>
                 </div>
-                <ProgressBar value={op.count} max={maxOperatorCount} size="sm" color="primary" />
+                <ProgressBar
+                  value={op.count}
+                  max={maxOperatorCount}
+                  size="sm"
+                  color="primary"
+                />
               </div>
             ))}
           </div>
@@ -313,24 +438,39 @@ export default async function DashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* 최근 인수인계 */}
         <div>
-          <h3 className="text-sm font-bold text-primary tracking-[0.2em] uppercase mb-4">최근 인수인계</h3>
+          <h3 className="text-sm font-bold text-primary tracking-[0.2em] uppercase mb-4">
+            최근 인수인계
+          </h3>
           {allHandoverLogs.length === 0 ? (
             <Card className="p-6">
-              <p className="text-xs text-on-surface-variant text-center">인수인계 기록이 없습니다.</p>
+              <p className="text-xs text-on-surface-variant text-center">
+                인수인계 기록이 없습니다.
+              </p>
             </Card>
           ) : (
             <Card className="divide-y divide-outline-variant/10 overflow-hidden p-0">
               {allHandoverLogs.slice(0, 5).map((log) => {
                 const svc = allServices.find((s) => s.id === log.service_id);
                 return (
-                  <div key={log.id} className="px-5 py-3.5 flex items-center gap-3 hover:bg-surface-container-high/50 transition-colors">
-                    <IconArrowsExchange size={16} className="text-primary shrink-0" />
+                  <div
+                    key={log.id}
+                    className="px-5 py-3.5 flex items-center gap-3 hover:bg-surface-container-high/50 transition-colors"
+                  >
+                    <IconArrowsExchange
+                      size={16}
+                      className="text-primary shrink-0"
+                    />
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold text-on-surface truncate">
-                        {svc?.university_name ?? "서비스"} · {svc?.service_name ?? ""}
+                        {svc?.university_name ?? "서비스"} ·{" "}
+                        {svc?.service_name ?? ""}
                       </p>
                       <p className="text-[10px] text-on-surface-variant mt-0.5">
-                        {log.from_person ?? "미배정"} → <strong className="text-on-surface">{log.to_person}</strong> · {log.executed_by}
+                        {log.from_person ?? "미배정"} →{" "}
+                        <strong className="text-on-surface">
+                          {log.to_person}
+                        </strong>{" "}
+                        · {log.executed_by}
                       </p>
                     </div>
                     <span className="text-[10px] text-on-surface-variant tabular-nums whitespace-nowrap">
@@ -342,7 +482,10 @@ export default async function DashboardPage() {
             </Card>
           )}
           <div className="mt-3 text-center">
-            <Link href="/operations/handover" className="text-xs font-bold text-primary hover:underline">
+            <Link
+              href="/operations/handover"
+              className="text-xs font-bold text-primary hover:underline"
+            >
               전체 보기 →
             </Link>
           </div>
@@ -353,21 +496,34 @@ export default async function DashboardPage() {
           <h3 className="text-sm font-bold text-primary tracking-[0.2em] uppercase mb-4">
             백업 현황
             {activeBackups.length > 0 && (
-              <StatusBadge variant="warning">{activeBackups.length}명 부재</StatusBadge>
+              <StatusBadge variant="warning">
+                {activeBackups.length}명 부재
+              </StatusBadge>
             )}
           </h3>
           {allBackupRequests.length === 0 ? (
             <Card className="p-6">
-              <p className="text-xs text-on-surface-variant text-center">백업 요청이 없습니다.</p>
+              <p className="text-xs text-on-surface-variant text-center">
+                백업 요청이 없습니다.
+              </p>
             </Card>
           ) : (
             <Card className="divide-y divide-outline-variant/10 overflow-hidden p-0">
               {allBackupRequests.slice(0, 5).map((req) => (
-                <div key={req.id} className="px-5 py-3.5 flex items-center gap-3 hover:bg-surface-container-high/50 transition-colors">
+                <div
+                  key={req.id}
+                  className="px-5 py-3.5 flex items-center gap-3 hover:bg-surface-container-high/50 transition-colors"
+                >
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-semibold text-on-surface">{req.operator_name}</span>
-                      <StatusBadge variant={req.status === "작성 완료" ? "success" : "warning"}>
+                      <span className="text-sm font-semibold text-on-surface">
+                        {req.operator_name}
+                      </span>
+                      <StatusBadge
+                        variant={
+                          req.status === "작성 완료" ? "success" : "warning"
+                        }
+                      >
                         {req.status}
                       </StatusBadge>
                     </div>
@@ -380,7 +536,10 @@ export default async function DashboardPage() {
             </Card>
           )}
           <div className="mt-3 text-center">
-            <Link href="/operations/backup" className="text-xs font-bold text-primary hover:underline">
+            <Link
+              href="/operations/backup"
+              className="text-xs font-bold text-primary hover:underline"
+            >
               전체 보기 →
             </Link>
           </div>

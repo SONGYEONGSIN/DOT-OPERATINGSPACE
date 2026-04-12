@@ -463,10 +463,12 @@ export default function TiptapEditor({
   content,
   onUpdate,
   disabled,
+  placeholder = "작업 내용을 입력하세요...",
 }: {
   content: string;
   onUpdate: (html: string) => void;
   disabled?: boolean;
+  placeholder?: string;
 }) {
   const editor = useEditor({
     immediatelyRender: false,
@@ -476,7 +478,7 @@ export default function TiptapEditor({
       }),
       Underline,
       Placeholder.configure({
-        placeholder: "작업 내용을 입력하세요...",
+        placeholder,
       }),
       Highlight.configure({ multicolor: false }),
       TextStyle,
@@ -506,7 +508,7 @@ export default function TiptapEditor({
     },
     editorProps: {
       attributes: {
-        class: "tiptap min-h-[360px] p-5 text-sm text-on-surface leading-relaxed focus:outline-none",
+        class: "tiptap min-h-[120px] p-5 text-sm text-on-surface leading-relaxed focus:outline-none",
       },
     },
   });

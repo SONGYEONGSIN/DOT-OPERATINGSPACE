@@ -1,8 +1,4 @@
-import {
-  PageHeader,
-  StatusBadge,
-  Card,
-} from "@/components/common";
+import { PageHeader, StatusBadge, Card } from "@/components/common";
 import { IconCalendarEvent } from "@tabler/icons-react";
 import { createClient } from "@/lib/supabase/server";
 import CalendarView from "./CalendarView";
@@ -10,6 +6,14 @@ import AddScheduleButton from "./AddScheduleButton";
 
 function stripYear(name: string) {
   return name.replace(/\d{4}학년도\s*|\d{4}-(?=\d학기)/g, "");
+}
+
+function formatPeriod(start: string | null, end: string | null) {
+  if (!start || !end) return "";
+  const s = new Date(start);
+  const e = new Date(end);
+  const fmt = (d: Date) => `${d.getMonth() + 1}/${d.getDate()}`;
+  return `${fmt(s)}~${fmt(e)}`;
 }
 
 interface ServiceSchedule {
@@ -39,7 +43,9 @@ export default async function SchedulePage() {
   for (let offset = 0; offset < totalRows; offset += 1000) {
     const { data } = await supabase
       .from("services")
-      .select("id, university_name, service_name, operator, category, writing_start, writing_end, payment_start, payment_end")
+      .select(
+        "id, university_name, service_name, operator, category, writing_start, writing_end, payment_start, payment_end",
+      )
       .or("writing_start.not.is.null,payment_start.not.is.null")
       .range(offset, offset + 999);
     if (data) allServices.push(...(data as ServiceSchedule[]));
@@ -90,7 +96,13 @@ export default async function SchedulePage() {
     const isToday = date.toDateString() === today.toDateString();
     const dateStr = `${date.getMonth() + 1}/${date.getDate()}`;
 
-    const dayItems: { title: string; subtitle: string; type: "작성" | "결제" | "일정"; category?: string }[] = [];
+    const dayItems: {
+      title: string;
+      subtitle: string;
+      type: "작성" | "결제" | "일정";
+      category?: string;
+      period?: string;
+    }[] = [];
 
     // 커스텀 일정
     for (const sc of schedules) {
@@ -100,6 +112,7 @@ export default async function SchedulePage() {
           subtitle: sc.category,
           type: "일정",
           category: sc.category,
+          period: formatPeriod(sc.start_date, sc.end_date),
         });
       }
     }
@@ -111,6 +124,7 @@ export default async function SchedulePage() {
           title: stripYear(s.service_name ?? "-"),
           subtitle: s.university_name ?? "-",
           type: "작성",
+          period: formatPeriod(s.writing_start, s.writing_end),
         });
       }
       if (isDateInRange(date, s.payment_start, s.payment_end)) {
@@ -118,12 +132,16 @@ export default async function SchedulePage() {
           title: stripYear(s.service_name ?? "-"),
           subtitle: s.university_name ?? "-",
           type: "결제",
+          period: formatPeriod(s.payment_start, s.payment_end),
         });
       }
     }
 
     // 중복 제거
-    const unique = dayItems.filter((v, i, a) => a.findIndex((t) => t.title === v.title && t.type === v.type) === i);
+    const unique = dayItems.filter(
+      (v, i, a) =>
+        a.findIndex((t) => t.title === v.title && t.type === v.type) === i,
+    );
 
     return {
       day: dayLabels[i],
@@ -184,10 +202,16 @@ export default async function SchedulePage() {
                 >
                   {dayBlock.day}
                 </span>
-                <span className="text-xs text-on-surface-variant">{dayBlock.date}</span>
-                {dayBlock.isToday && <StatusBadge variant="success">오늘</StatusBadge>}
+                <span className="text-xs text-on-surface-variant">
+                  {dayBlock.date}
+                </span>
+                {dayBlock.isToday && (
+                  <StatusBadge variant="success">오늘</StatusBadge>
+                )}
                 {dayBlock.totalCount > 0 && (
-                  <span className="text-[10px] text-on-surface-variant">{dayBlock.totalCount}건</span>
+                  <span className="text-[10px] text-on-surface-variant">
+                    {dayBlock.totalCount}건
+                  </span>
                 )}
               </div>
               <div className="ml-2 space-y-2 border-l border-outline-variant/20 pl-5">
@@ -204,17 +228,38 @@ export default async function SchedulePage() {
                         <span className="text-sm font-medium text-on-surface">
                           {item.title}
                         </span>
+                        {item.period && (
+                          <span className="text-[10px] text-on-surface-variant/60">
+                            {item.period}
+                          </span>
+                        )}
                       </div>
-                      <StatusBadge variant={item.type === "작성" ? "info" : item.type === "결제" ? "warning" : "success"}>
-                        {item.type === "작성" ? "작성기간" : item.type === "결제" ? "결제기간" : item.category ?? "일정"}
+                      <StatusBadge
+                        variant={
+                          item.type === "작성"
+                            ? "info"
+                            : item.type === "결제"
+                              ? "warning"
+                              : "success"
+                        }
+                      >
+                        {item.type === "작성"
+                          ? "작성기간"
+                          : item.type === "결제"
+                            ? "결제기간"
+                            : (item.category ?? "일정")}
                       </StatusBadge>
                     </div>
                   ))
                 ) : (
-                  <p className="text-xs text-on-surface-variant/50 py-2">일정 없음</p>
+                  <p className="text-xs text-on-surface-variant/50 py-2">
+                    일정 없음
+                  </p>
                 )}
                 {dayBlock.totalCount > 5 && (
-                  <p className="text-xs text-on-surface-variant">외 {dayBlock.totalCount - 5}건</p>
+                  <p className="text-xs text-on-surface-variant">
+                    외 {dayBlock.totalCount - 5}건
+                  </p>
                 )}
               </div>
             </div>

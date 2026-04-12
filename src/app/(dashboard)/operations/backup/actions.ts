@@ -141,7 +141,7 @@ async function sendBackupNotification(id: number) {
           ${req.ops_backup_content ? `<h3 style="font-size:14px;margin:16px 0 8px;">운영 백업 내용</h3><div style="font-size:13px;line-height:1.6;padding:12px;background:#fafafa;border-radius:8px;">${req.ops_backup_content}</div>` : ""}
           ${req.dev_backup_content ? `<h3 style="font-size:14px;margin:16px 0 8px;">개발 백업 내용</h3><div style="font-size:13px;line-height:1.6;padding:12px;background:#fafafa;border-radius:8px;">${req.dev_backup_content}</div>` : ""}
           <hr style="border:none;border-top:1px solid #eee;margin:24px 0;" />
-          <p style="font-size:11px;color:#aaa;">DOT. OperatingSpace 내부운영관리시스템</p>
+          <p style="font-size:11px;color:#aaa;">Orchestrator System 내부운영관리시스템</p>
         </div>
       `,
     });

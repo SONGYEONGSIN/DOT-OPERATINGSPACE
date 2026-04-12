@@ -16,7 +16,7 @@ export default function AuthCard() {
           시작할 준비가 되셨나요?
         </h2>
         <p className="text-on-surface-variant text-sm">
-          지금 DOT.의 파트너가 되어 보안 수준을 높이세요.
+          지금 Orchestrator System의 파트너가 되어 보안 수준을 높이세요.
         </p>
       </div>
 

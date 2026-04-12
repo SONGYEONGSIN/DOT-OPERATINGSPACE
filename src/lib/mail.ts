@@ -30,7 +30,7 @@ export async function sendMail({
   attachments?: MailAttachment[];
 }) {
   return transporter.sendMail({
-    from: `"DOT. OperatingSpace" <${process.env.GMAIL_USER}>`,
+    from: `"Orchestrator System" <${process.env.GMAIL_USER}>`,
     to: Array.isArray(to) ? to.join(", ") : to,
     cc: cc ? (Array.isArray(cc) ? cc.join(", ") : cc) : undefined,
     bcc: bcc ? (Array.isArray(bcc) ? bcc.join(", ") : bcc) : undefined,

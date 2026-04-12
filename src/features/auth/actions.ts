@@ -109,7 +109,7 @@ export async function forgotPassword(
   const { error } = await supabase.auth.resetPasswordForEmail(
     parsed.data.email,
     {
-      redirectTo: `${process.env.NEXT_PUBLIC_SUPABASE_URL ? "" : "http://localhost:3003"}/reset-password`,
+      redirectTo: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3003"}/callback?next=/reset-password`,
     },
   );
 

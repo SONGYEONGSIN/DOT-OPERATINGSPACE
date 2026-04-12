@@ -1,10 +1,11 @@
 #!/bin/bash
+set -u  # 미정의 변수 사용 시 즉시 에러
 # Stop hook: 커밋 안 한 변경사항이 있으면 경고
 # NOTE: session-review.sh에서 더 상세한 리뷰를 수행하므로,
 # 이 훅은 session-review.sh 없이 단독으로 사용할 때를 위해 유지.
 # 두 훅을 함께 등록할 경우, settings에서 이 훅을 제거하면 중복 출력이 없어짐.
 
-PROJECT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
+PROJECT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || echo "")
 if [ -z "$PROJECT_ROOT" ]; then
   exit 0
 fi

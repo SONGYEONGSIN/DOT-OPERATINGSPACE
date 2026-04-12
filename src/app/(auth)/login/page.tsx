@@ -2,6 +2,16 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { cn } from "@/lib/cn";
+import {
+  IconTrendingDown,
+  IconWorld,
+  IconCode,
+  IconRobot,
+  IconChartBar,
+  IconApps,
+  IconGauge,
+  IconAlertTriangle,
+} from "@tabler/icons-react";
 import { AuthCard } from "@/features/auth";
 import { ThemeToggle, BrandLogo } from "@/components/common";
 
@@ -38,7 +48,7 @@ function LiveMetric({
   label,
   trend,
   trendColor = "text-[#4ade80]",
-  trendIcon = "trending_down",
+  trendIcon: TrendIcon = IconTrendingDown,
 }: {
   base: number;
   range: number;
@@ -47,7 +57,7 @@ function LiveMetric({
   label: string;
   trend: string;
   trendColor?: string;
-  trendIcon?: string;
+  trendIcon?: typeof IconTrendingDown;
 }) {
   const [value, setValue] = useState(base);
 
@@ -73,7 +83,7 @@ function LiveMetric({
         <span className="text-xl font-bold text-primary/60">{unit}</span>
       </div>
       <div className={cn("mt-4 flex items-center gap-2 text-xs", trendColor)}>
-        <span className="material-symbols-outlined text-sm">{trendIcon}</span>
+        <TrendIcon size={14} />
         <span>{trend}</span>
       </div>
     </div>
@@ -83,14 +93,44 @@ function LiveMetric({
 /* ── Bar Chart ── */
 function BarChart({
   title,
-  value,
-  heights,
+  baseValue,
+  unit,
+  barCount = 10,
+  minH = 15,
+  maxH = 90,
+  interval = 800,
 }: {
   title: string;
-  value: string;
-  heights: number[];
+  baseValue: number;
+  unit: string;
+  barCount?: number;
+  minH?: number;
+  maxH?: number;
+  interval?: number;
 }) {
   const { ref, isInView } = useInView();
+  const [bars, setBars] = useState<number[]>(
+    Array.from(
+      { length: barCount },
+      (_, i) => minH + ((i * 7 + 13) % (maxH - minH)),
+    ),
+  );
+  const [displayValue, setDisplayValue] = useState(baseValue);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
+
+  useEffect(() => {
+    if (!mounted || !isInView) return;
+    const id = setInterval(() => {
+      setBars((prev) => {
+        const next = [...prev.slice(1), minH + Math.random() * (maxH - minH)];
+        return next;
+      });
+      setDisplayValue(baseValue + (Math.random() - 0.5) * baseValue * 0.15);
+    }, interval);
+    return () => clearInterval(id);
+  }, [mounted, isInView, baseValue, minH, maxH, interval]);
 
   return (
     <div ref={ref}>
@@ -98,18 +138,19 @@ function BarChart({
         <span className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest">
           {title}
         </span>
-        <span className="text-primary font-bold text-sm">{value}</span>
+        <span className="text-primary font-bold text-sm">
+          {displayValue.toFixed(1)} {unit}
+        </span>
       </div>
-      <div className="h-24 flex items-end gap-1 px-2 border-l border-b border-outline-variant/20">
-        {heights.map((h, i) => (
+      <div className="h-24 flex items-end gap-1.5 px-2 border-l border-b border-outline-variant/20">
+        {bars.map((h, i) => (
           <div
             key={i}
-            className="w-full rounded-t-sm transition-all duration-700 ease-out animate-bar-pulse"
+            className="w-full min-w-[12px] rounded-t"
             style={{
               height: isInView ? `${h}%` : "0%",
-              background: `rgba(217, 253, 83, ${0.15 + h * 0.007})`,
-              transitionDelay: `${i * 50}ms`,
-              animationDelay: `${(i % 3) * 0.2}s`,
+              background: `rgba(217, 253, 83, ${0.2 + h * 0.008})`,
+              transition: "height 0.6s cubic-bezier(0.4, 0, 0.2, 1)",
             }}
           />
         ))}
@@ -120,12 +161,12 @@ function BarChart({
 
 /* ── Feature Card ── */
 function FeatureCard({
-  icon,
+  icon: Icon,
   title,
   description,
   delay,
 }: {
-  icon: string;
+  icon: typeof IconRobot;
   title: string;
   description: string;
   delay: number;
@@ -143,9 +184,7 @@ function FeatureCard({
       style={{ transitionDelay: `${delay * 1000}ms` }}
     >
       <div className="flex items-center gap-3 mb-2">
-        <span className="material-symbols-outlined text-primary text-2xl">
-          {icon}
-        </span>
+        <Icon size={24} className="text-primary" />
         <h4 className="font-bold text-lg tracking-tight">{title}</h4>
       </div>
       <p className="text-sm text-on-surface-variant leading-relaxed">
@@ -190,7 +229,7 @@ export default function LoginPage() {
     <div className="bg-surface text-on-surface min-h-screen">
       {/* ━━━ Top NavBar ━━━ */}
       <nav className="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/15 shadow-glow-strong">
-        <div className="flex justify-between items-center h-16 px-6 w-full max-w-[1920px] mx-auto">
+        <div className="flex justify-between items-center h-24 px-6 w-full max-w-[1920px] mx-auto">
           <BrandLogo />
           <div className="flex items-center gap-2">
             <ThemeToggle />
@@ -225,9 +264,9 @@ export default function LoginPage() {
               <span className="text-primary">하나의 플랫폼에서.</span>
             </h1>
 
-            <p className="text-on-surface-variant text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
-              서비스 관리, 계약, 인수인계, AI 분석까지 DOT.에서 모든 운영
-              업무를 처리하세요.
+            <p className="text-on-surface-variant text-lg md:text-xl max-w-4xl mx-auto leading-relaxed">
+              서비스 관리, 계약, 인수인계, AI 분석까지 Orchestrator System에서
+              모든 운영 업무를 처리하세요.
             </p>
           </div>
         </section>
@@ -270,9 +309,7 @@ export default function LoginPage() {
                 {/* Dashboard Header */}
                 <div className="p-6 border-b border-outline-variant/10 flex justify-between items-center bg-surface-bright/30">
                   <div className="flex items-center gap-3">
-                    <span className="material-symbols-outlined text-primary">
-                      analytics
-                    </span>
+                    <IconChartBar size={24} className="text-primary" />
                     <h3 className="font-bold text-lg">실시간 성능 모니터링</h3>
                   </div>
                   <div className="flex items-center gap-2">
@@ -287,19 +324,19 @@ export default function LoginPage() {
                   {/* Feature Cards */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
                     <FeatureCard
-                      icon="dashboard_customize"
+                      icon={IconApps}
                       title="통합 운영 관리"
                       description="서비스 관리, 계약, 인수인계 등 파편화된 모든 운영 업무를 단일 대시보드에서 효율적으로 통제하세요."
                       delay={0}
                     />
                     <FeatureCard
-                      icon="smart_toy"
+                      icon={IconRobot}
                       title="AI & 자동화"
                       description="반복적인 태스크는 스마트 자동화로, 복잡한 판단은 전용 AI 어시스턴트의 도움을 받아 최상의 효율성을 유지합니다."
                       delay={0.1}
                     />
                     <FeatureCard
-                      icon="monitoring"
+                      icon={IconChartBar}
                       title="분석 & 보고"
                       description="실시간 리포팅 시스템을 통해 데이터 기반의 신속하고 정확한 의사결정 인사이트를 확보할 수 있습니다."
                       delay={0.2}
@@ -310,13 +347,14 @@ export default function LoginPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <BarChart
                       title="Network Traffic"
-                      value="4.2 Gbps"
-                      heights={[30, 45, 60, 40, 70, 55, 85, 65, 45, 50]}
+                      baseValue={4.2}
+                      unit="Gbps"
                     />
                     <BarChart
                       title="CPU Utilization"
-                      value="24.8%"
-                      heights={[20, 30, 25, 40, 35, 50, 45, 30, 40, 25]}
+                      baseValue={24.8}
+                      unit="%"
+                      interval={600}
                     />
                   </div>
                 </div>
@@ -334,8 +372,8 @@ export default function LoginPage() {
                   decimals={1}
                   unit="ms"
                   trend="8% improvement from last hour"
-                  trendColor="text-[#4ade80]"
-                  trendIcon="trending_down"
+                  trendColor="text-error/80"
+                  trendIcon={IconTrendingDown}
                 />
                 <LiveMetric
                   label="Data Throughput"
@@ -345,7 +383,7 @@ export default function LoginPage() {
                   unit="GB/s"
                   trend="Peak load handled successfully"
                   trendColor="text-on-surface-variant"
-                  trendIcon="speed"
+                  trendIcon={IconGauge}
                 />
                 <LiveMetric
                   label="Error Rate"
@@ -355,7 +393,7 @@ export default function LoginPage() {
                   unit="%"
                   trend="2 isolated incidents flagged"
                   trendColor="text-error/80"
-                  trendIcon="report_problem"
+                  trendIcon={IconAlertTriangle}
                 />
               </AnimatedSection>
             </div>
@@ -379,7 +417,7 @@ export default function LoginPage() {
         <div className="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
           <div className="col-span-1">
             <div className="mb-6">
-              <BrandLogo size="small" />
+              <BrandLogo size="small" showSubtitle className="-translate-x-6" />
             </div>
             <p className="text-on-surface-variant text-sm leading-relaxed">
               차세대 통합 운영 관리의 표준.
@@ -466,20 +504,20 @@ export default function LoginPage() {
         </div>
         <div className="max-w-[1400px] mx-auto mt-16 pt-8 border-t border-outline-variant/10 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-xs text-on-surface-variant">
-            © 2024 DOT. Global. All rights reserved.
+            © 2024 Orchestrator System. All rights reserved.
           </p>
           <div className="flex gap-6">
             <a
               href="#"
               className="text-on-surface-variant hover:text-primary transition-colors"
             >
-              <span className="material-symbols-outlined text-sm">public</span>
+              <IconWorld size={14} />
             </a>
             <a
               href="#"
               className="text-on-surface-variant hover:text-primary transition-colors"
             >
-              <span className="material-symbols-outlined text-sm">code</span>
+              <IconCode size={14} />
             </a>
           </div>
         </div>

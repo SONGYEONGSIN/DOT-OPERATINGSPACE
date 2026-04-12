@@ -1,4 +1,5 @@
 #!/bin/bash
+set -u  # 미정의 변수 사용 시 즉시 에러
 # pattern-check.sh — PostToolUse prompt 훅
 #
 # Write/Edit 도구 사용 후, .claude/memory/patterns.md에 학습된 패턴을
@@ -19,7 +20,7 @@ if [ -z "$FILE_PATH" ] || [ ! -f "$FILE_PATH" ]; then
   exit 0
 fi
 
-PROJECT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
+PROJECT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || echo "")
 [ -z "$PROJECT_ROOT" ] && exit 0
 
 PATTERNS_FILE="${PROJECT_ROOT}/.claude/memory/patterns.md"

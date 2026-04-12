@@ -3,6 +3,7 @@
 import { useFormState } from "react-dom";
 import Link from "next/link";
 import { cn } from "@/lib/cn";
+import { IconLock } from "@tabler/icons-react";
 import { BrandLogo, SubmitButton, ThemeToggle } from "@/components/common";
 import { resetPassword, type AuthState } from "@/features/auth/actions";
 
@@ -31,9 +32,7 @@ export default function ResetPasswordPage() {
           <div className="bg-surface-container rounded-xl border border-outline-variant/15 overflow-hidden shadow-2xl">
             <div className="p-8">
               <div className="text-center mb-8">
-                <span className="material-symbols-outlined text-primary text-4xl mb-4 block">
-                  password
-                </span>
+                <IconLock size={36} className="text-primary mb-4 mx-auto block" />
                 <h1 className="text-2xl font-black tracking-tighter mb-2">
                   새 비밀번호 설정
                 </h1>

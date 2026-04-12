@@ -162,7 +162,7 @@ export async function sendDunningMail(
 
         <p style="margin-top: 24px; font-size: 12px; color: #868e96;">
           담당자: ${operator} | 진학어플라이<br/>
-          본 메일은 DOT. OperatingSpace에서 자동 발송되었습니다.
+          본 메일은 Orchestrator System에서 자동 발송되었습니다.
         </p>
       </div>
     </div>

@@ -5,7 +5,7 @@ import Card from "@/components/common/Card";
 import DataTable from "@/components/common/DataTable";
 import ProgressBar from "@/components/common/ProgressBar";
 import TableSection from "@/components/common/TableSection";
-import { IconTarget, IconGauge, IconTrendingUp, IconChartBar } from "@tabler/icons-react";
+import { IconTarget, IconGauge, IconTrendingUp, IconChartBar, IconArrowUp, IconArrowDown } from "@tabler/icons-react";
 
 const monthlyData = [
   { month: "10월", score: 72, target: 80 },
@@ -39,7 +39,7 @@ function ChangeIndicator({ change }: { change: number }) {
   if (change > 0) {
     return (
       <span className="flex items-center gap-0.5 text-primary">
-        <span className="material-symbols-outlined text-[12px]">arrow_upward</span>
+        <IconArrowUp size={12} />
         <span className="text-[10px] font-bold">{change}</span>
       </span>
     );
@@ -47,7 +47,7 @@ function ChangeIndicator({ change }: { change: number }) {
   if (change < 0) {
     return (
       <span className="flex items-center gap-0.5 text-error">
-        <span className="material-symbols-outlined text-[12px]">arrow_downward</span>
+        <IconArrowDown size={12} />
         <span className="text-[10px] font-bold">{Math.abs(change)}</span>
       </span>
     );

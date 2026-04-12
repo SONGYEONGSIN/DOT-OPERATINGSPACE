@@ -2,6 +2,7 @@ import PageHeader from "@/components/common/PageHeader";
 import StatusBadge from "@/components/common/StatusBadge";
 import Card from "@/components/common/Card";
 import ProgressBar from "@/components/common/ProgressBar";
+import { IconBrain, IconWand, IconUsers, IconGauge, IconSchool } from "@tabler/icons-react";
 
 const insights = [
   {
@@ -55,10 +56,10 @@ const insights = [
 ];
 
 const recommendations = [
-  { icon: "auto_fix_high", title: "워크플로우 자동화", description: "반복 승인 프로세스 3건을 자동화하세요." },
-  { icon: "group_add", title: "팀 리밸런싱", description: "디자인팀 리소스 보강을 검토하세요." },
-  { icon: "speed", title: "성능 최적화", description: "API 캐시 레이어를 업데이트하세요." },
-  { icon: "school", title: "스킬 업그레이드", description: "운영팀 대상 신규 도구 교육을 계획하세요." },
+  { icon: IconWand, title: "워크플로우 자동화", description: "반복 승인 프로세스 3건을 자동화하세요." },
+  { icon: IconUsers, title: "팀 리밸런싱", description: "디자인팀 리소스 보강을 검토하세요." },
+  { icon: IconGauge, title: "성능 최적화", description: "API 캐시 레이어를 업데이트하세요." },
+  { icon: IconSchool, title: "스킬 업그레이드", description: "운영팀 대상 신규 도구 교육을 계획하세요." },
 ];
 
 const trendBadgeVariant = {
@@ -97,9 +98,7 @@ export default function InsightsPage() {
 
         <div className="relative flex items-center gap-5">
           <div className="w-14 h-14 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center glow-primary">
-            <span className="material-symbols-outlined text-primary text-[28px]">
-              neurology
-            </span>
+            <IconBrain size={28} className="text-primary" />
           </div>
           <div className="flex-1">
             <h2 className="text-lg font-bold text-on-surface">
@@ -196,9 +195,7 @@ export default function InsightsPage() {
           {recommendations.map((rec) => (
             <Card key={rec.title} hover className="p-4 cursor-pointer group">
               <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-3 group-hover:bg-primary/20 transition-colors">
-                <span className="material-symbols-outlined text-primary text-[22px]">
-                  {rec.icon}
-                </span>
+                <rec.icon size={22} className="text-primary" />
               </div>
               <h3 className="text-sm font-bold text-on-surface mb-1">
                 {rec.title}

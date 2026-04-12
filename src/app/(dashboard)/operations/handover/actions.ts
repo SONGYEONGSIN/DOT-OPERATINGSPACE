@@ -96,7 +96,7 @@ function buildHandoverHtml(
 <body>
   <div class="container">
     <div class="header">
-      <h1>DOT. OperatingSpace</h1>
+      <h1>Orchestrator System</h1>
       <p>인수인계 보고서</p>
     </div>
 
@@ -138,7 +138,7 @@ function buildHandoverHtml(
     </table>
 
     <div class="footer">
-      DOT. OperatingSpace &mdash; 내부운영관리시스템<br/>
+      Orchestrator System &mdash; 내부운영관리시스템<br/>
       이 문서는 자동 생성되었습니다.
     </div>
   </div>
@@ -212,7 +212,7 @@ export async function executeHandover(
           ${memo ? `<p style="font-size:13px;color:#666;background:#f5f5f5;padding:12px;border-radius:8px;margin:16px 0;">메모: ${memo}</p>` : ""}
           <p style="font-size:13px;color:#666;">상세 내용은 첨부된 인수인계 보고서를 확인해주세요.</p>
           <hr style="border:none;border-top:1px solid #eee;margin:24px 0;" />
-          <p style="font-size:11px;color:#aaa;">DOT. OperatingSpace 내부운영관리시스템</p>
+          <p style="font-size:11px;color:#aaa;">Orchestrator System 내부운영관리시스템</p>
         </div>
       `;
 

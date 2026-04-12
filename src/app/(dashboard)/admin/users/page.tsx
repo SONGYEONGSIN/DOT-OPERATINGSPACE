@@ -22,6 +22,7 @@ interface Profile {
   email: string;
   name: string;
   role: "admin" | "operator";
+  position: string | null;
   team: "운영1팀" | "운영2팀";
   avatar_url: string | null;
   status: "active" | "inactive";
@@ -56,6 +57,7 @@ const teamTabs: { label: string; value: TeamFilter }[] = [
 const columns = [
   { key: "name", label: "이름" },
   { key: "email", label: "이메일" },
+  { key: "position", label: "직급", className: "w-20" },
   { key: "role", label: "역할", className: "w-24" },
   { key: "team", label: "팀", className: "w-24" },
   { key: "status", label: "상태", className: "w-24" },
@@ -105,6 +107,11 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
     ),
     email: (
       <span className="text-xs text-on-surface-variant">{profile.email}</span>
+    ),
+    position: (
+      <span className={`text-xs font-bold ${profile.position === "부장" ? "text-primary" : profile.position === "팀장" ? "text-tertiary" : "text-on-surface-variant"}`}>
+        {profile.position ?? "매니저"}
+      </span>
     ),
     role: (
       <StatusBadge variant={profile.role === "admin" ? "error" : "success"}>
