@@ -413,7 +413,7 @@ export default async function DashboardPage() {
           <h3 className="text-sm font-bold text-primary tracking-[0.2em] uppercase mb-5">
             운영자별 담당
           </h3>
-          <div className="space-y-3 max-h-[480px] overflow-y-auto">
+          <div className="space-y-3 max-h-[480px] overflow-y-auto pr-3">
             {operatorStats.map((op) => (
               <div key={op.name} className="space-y-1.5">
                 <div className="flex items-center justify-between text-xs">
