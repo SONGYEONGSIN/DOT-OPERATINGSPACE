@@ -1,32 +1,215 @@
+import Link from "next/link";
 import { Suspense } from "react";
-import {
-  PageHeader,
-  KpiGrid,
-  KpiCard,
-  Card,
-  DataTable,
-  TableSection,
-} from "@/components/common";
+import { PageHeader, KpiGrid, KpiCard, Card } from "@/components/common";
 import {
   IconUsers,
   IconSchool,
   IconNetwork,
   IconBuildingArch,
-  IconSearchOff,
-  IconChevronLeft,
-  IconChevronRight,
+  IconSearch,
+  IconAlertTriangle,
 } from "@tabler/icons-react";
 import { fetchAssignments } from "@/lib/sharepoint";
-import AssignmentFilters from "./AssignmentFilters";
-
-const PAGE_SIZE = 50;
+import AssignmentSearch from "./AssignmentFilters";
 
 interface SearchParams {
-  tab?: string;
   search?: string;
-  region?: string;
+}
+
+interface UniversityData {
+  universityName: string;
   category?: string;
-  page?: string;
+  region?: string;
+  salesperson?: string;
+  changed?: string;
+  remark?: string;
+  main?: {
+    opSusi: string;
+    opJungsi: string;
+    devSusi: string;
+    devJungsi: string;
+    jaewoe?: string;
+    foreigner?: string;
+  };
+  grad?: { operator: string; developer: string };
+  pims?: { operatorFull: string; operatorReception: string };
+  score?: { operator: string; developer: string };
+  app?: { operator: string; developer: string };
+}
+
+/** HUD 라벨 스타일 — `[10px] uppercase tracking-[0.15em]` */
+const HUD_LABEL =
+  "text-[10px] font-bold uppercase tracking-[0.15em] text-on-surface-variant";
+
+/** 터미널 뱃지 — 섹션 분류 라벨 */
+const SECTION_TAG_BASE =
+  "inline-flex items-center shrink-0 px-2 py-0.5 rounded-sm text-[10px] font-bold uppercase tracking-[0.15em] border";
+
+const SECTION_TAGS = {
+  primary: `${SECTION_TAG_BASE} bg-primary/10 text-primary border-primary/30`,
+  tertiary: `${SECTION_TAG_BASE} bg-tertiary/10 text-tertiary border-tertiary/30`,
+  secondary: `${SECTION_TAG_BASE} bg-secondary-container/40 text-on-secondary-container border-outline-variant/40`,
+  error: `${SECTION_TAG_BASE} bg-error/10 text-error border-error/30`,
+  neutral: `${SECTION_TAG_BASE} bg-surface-container-high text-on-surface-variant border-outline-variant/40`,
+} as const;
+
+function hl(text: string, q: string): React.ReactNode {
+  if (!q || !text) return text;
+  const lower = text.toLowerCase();
+  if (!lower.includes(q)) return text;
+  const idx = lower.indexOf(q);
+  return (
+    <>
+      {text.slice(0, idx)}
+      <mark className="bg-primary/25 text-primary rounded-sm px-1 not-italic font-bold">
+        {text.slice(idx, idx + q.length)}
+      </mark>
+      {text.slice(idx + q.length)}
+    </>
+  );
+}
+
+function MiniField({
+  label,
+  value,
+  q,
+}: {
+  label: string;
+  value?: string;
+  q: string;
+}) {
+  const empty = !value || value === "-";
+  return (
+    <div className="flex items-baseline gap-1.5 min-w-0">
+      <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/70 shrink-0">
+        {label}
+      </span>
+      {empty ? (
+        <span className="text-on-surface-variant/40 font-mono">—</span>
+      ) : (
+        <span className="text-on-surface font-medium truncate">
+          {hl(value!, q)}
+        </span>
+      )}
+    </div>
+  );
+}
+
+function UniversityRow({ u, q }: { u: UniversityData; q: string }) {
+  const hasChanged = u.changed?.includes("변경");
+
+  return (
+    <div
+      className={`relative bg-surface-container rounded-md p-4 border transition-all ${
+        hasChanged
+          ? "border-error/40 hover:border-error/70"
+          : "border-outline-variant/30 hover:border-primary/50 hover:shadow-glow"
+      }`}
+    >
+      <div className="flex items-center justify-between gap-3 mb-3 pb-3 border-b border-outline-variant/20">
+        <div className="flex items-center gap-2 min-w-0 flex-wrap">
+          <h3 className="text-base font-black text-on-surface tracking-tight">
+            {hl(u.universityName, q)}
+          </h3>
+          {u.category && (
+            <span className={SECTION_TAGS.neutral}>{u.category}</span>
+          )}
+          {u.region && (
+            <span className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant">
+              {u.region}
+            </span>
+          )}
+          {hasChanged && (
+            <span className={`${SECTION_TAGS.error} gap-1`}>
+              <IconAlertTriangle size={10} />
+              {u.changed}
+            </span>
+          )}
+        </div>
+        {u.salesperson && (
+          <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-on-surface-variant shrink-0">
+            SALES ·{" "}
+            <span className="font-black text-on-surface normal-case tracking-normal">
+              {hl(u.salesperson, q)}
+            </span>
+          </span>
+        )}
+      </div>
+
+      <div className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2.5 text-xs items-center">
+        {u.main &&
+          (u.main.opSusi ||
+            u.main.opJungsi ||
+            u.main.devSusi ||
+            u.main.devJungsi ||
+            u.main.jaewoe ||
+            u.main.foreigner) && (
+            <>
+              <span className={SECTION_TAGS.primary}>수시/정시</span>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-x-3 gap-y-1">
+                <MiniField label="운영·수시" value={u.main.opSusi} q={q} />
+                <MiniField label="운영·정시" value={u.main.opJungsi} q={q} />
+                <MiniField label="개발·수시" value={u.main.devSusi} q={q} />
+                <MiniField label="개발·정시" value={u.main.devJungsi} q={q} />
+                {u.main.jaewoe && (
+                  <MiniField label="재외국민" value={u.main.jaewoe} q={q} />
+                )}
+                {u.main.foreigner && (
+                  <MiniField label="외국인" value={u.main.foreigner} q={q} />
+                )}
+              </div>
+            </>
+          )}
+
+        {u.grad && (u.grad.operator || u.grad.developer) && (
+          <>
+            <span className={SECTION_TAGS.tertiary}>대학원</span>
+            <div className="grid grid-cols-2 gap-x-3">
+              <MiniField label="운영" value={u.grad.operator} q={q} />
+              <MiniField label="개발" value={u.grad.developer} q={q} />
+            </div>
+          </>
+        )}
+
+        {u.pims && (u.pims.operatorFull || u.pims.operatorReception) && (
+          <>
+            <span className={SECTION_TAGS.secondary}>PIMS</span>
+            <div className="grid grid-cols-2 gap-x-3">
+              <MiniField label="Full" value={u.pims.operatorFull} q={q} />
+              <MiniField label="접수" value={u.pims.operatorReception} q={q} />
+            </div>
+          </>
+        )}
+
+        {u.score && (u.score.operator || u.score.developer) && (
+          <>
+            <span className={SECTION_TAGS.neutral}>성적산출</span>
+            <div className="grid grid-cols-2 gap-x-3">
+              <MiniField label="운영" value={u.score.operator} q={q} />
+              <MiniField label="개발" value={u.score.developer} q={q} />
+            </div>
+          </>
+        )}
+
+        {u.app && (u.app.operator || u.app.developer) && (
+          <>
+            <span className={SECTION_TAGS.neutral}>상담앱</span>
+            <div className="grid grid-cols-2 gap-x-3">
+              <MiniField label="운영" value={u.app.operator} q={q} />
+              <MiniField label="개발" value={u.app.developer} q={q} />
+            </div>
+          </>
+        )}
+      </div>
+
+      {u.remark && (
+        <p className="mt-3 pt-3 border-t border-outline-variant/20 text-xs text-on-surface-variant">
+          <span className={HUD_LABEL}>REMARK</span>
+          <span className="ml-2">{u.remark}</span>
+        </p>
+      )}
+    </div>
+  );
 }
 
 export default async function OperatorAssignmentsPage({
@@ -35,11 +218,8 @@ export default async function OperatorAssignmentsPage({
   searchParams: SearchParams;
 }) {
   const params = await searchParams;
-  const activeTab = params.tab ?? "";
-  const search = (params.search ?? "").toLowerCase();
-  const regionFilter = params.region ?? "";
-  const categoryFilter = params.category ?? "";
-  const currentPage = Math.max(1, Number(params.page) || 1);
+  const originalSearch = params.search ?? "";
+  const search = originalSearch.toLowerCase().trim();
 
   const data = await fetchAssignments();
 
@@ -70,610 +250,140 @@ export default async function OperatorAssignmentsPage({
     appAssignments,
   } = data;
 
-  // ── 지역/카테고리 고유값 추출 ──
-  const regions = [
-    ...new Set(
-      [
-        ...assignments.map((a) => a.region),
-        ...pimsAssignments.map((p) => p.region),
-      ].filter(Boolean),
-    ),
-  ].sort();
+  const uniMap = new Map<string, UniversityData>();
 
-  const categories = [
-    ...new Set(
-      [
-        ...assignments.map((a) => a.category),
-        ...pimsAssignments.map((p) => p.category),
-      ].filter(Boolean),
-    ),
-  ].sort();
-
-  // ── 검색/필터 헬퍼 ──
-  const q = search;
-
-  const matchAssignment = (a: (typeof assignments)[0]) =>
-    (!q ||
-      a.universityName.toLowerCase().includes(q) ||
-      a.op2027.susi.toLowerCase().includes(q) ||
-      a.op2027.jungsi.toLowerCase().includes(q) ||
-      a.salesperson.toLowerCase().includes(q)) &&
-    (!regionFilter || a.region === regionFilter) &&
-    (!categoryFilter || a.category === categoryFilter);
-
-  const matchGrad = (g: (typeof gradAssignments)[0]) =>
-    !q ||
-    g.universityName.toLowerCase().includes(q) ||
-    g.operator.toLowerCase().includes(q) ||
-    g.developer.toLowerCase().includes(q);
-
-  const matchPims = (p: (typeof pimsAssignments)[0]) =>
-    (!q ||
-      p.universityName.toLowerCase().includes(q) ||
-      p.operatorFull.toLowerCase().includes(q) ||
-      p.operatorReception.toLowerCase().includes(q)) &&
-    (!regionFilter || p.region === regionFilter) &&
-    (!categoryFilter || p.category === categoryFilter);
-
-  const matchScore = (s: (typeof scoreAssignments)[0]) =>
-    !q ||
-    s.universityName.toLowerCase().includes(q) ||
-    s.operator.toLowerCase().includes(q) ||
-    s.developer.toLowerCase().includes(q);
-
-  const matchApp = (a: (typeof appAssignments)[0]) =>
-    !q ||
-    a.universityName.toLowerCase().includes(q) ||
-    a.operator.toLowerCase().includes(q) ||
-    a.developer.toLowerCase().includes(q);
-
-  const matchSummary = (s: (typeof operatorSummary)[0]) =>
-    !q || s.name.toLowerCase().includes(q);
-
-  // ── 필터링 ──
-  const filteredAssignments = assignments.filter(matchAssignment);
-  const filteredGrad = gradAssignments.filter(matchGrad);
-  const filteredPims = pimsAssignments.filter(matchPims);
-  const filteredScore = scoreAssignments.filter(matchScore);
-  const filteredApp = appAssignments.filter(matchApp);
-  const filteredOpSummary = operatorSummary.filter(matchSummary);
-
-  const totalUniv = assignments.length;
-
-  // ── 페이지네이션 헬퍼 ──
-  function paginate<T>(items: T[]): {
-    paged: T[];
-    total: number;
-    totalPages: number;
-  } {
-    const total = items.length;
-    const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
-    const from = (currentPage - 1) * PAGE_SIZE;
-    const paged = items.slice(from, from + PAGE_SIZE);
-    return { paged, total, totalPages };
+  for (const a of assignments) {
+    uniMap.set(a.universityName, {
+      universityName: a.universityName,
+      category: a.category,
+      region: a.region,
+      salesperson: a.salesperson,
+      changed: a.changed,
+      remark: a.remark,
+      main: {
+        opSusi: a.op2027.susi,
+        opJungsi: a.op2027.jungsi,
+        devSusi: a.dev2027.susi,
+        devJungsi: a.dev2027.jungsi,
+        jaewoe: a.op2027.jaewoe,
+        foreigner: a.op2027.foreigner,
+      },
+    });
   }
 
-  function buildPageUrl(page: number): string {
-    const p = new URLSearchParams();
-    if (activeTab) p.set("tab", activeTab);
-    if (search) p.set("search", search);
-    if (regionFilter) p.set("region", regionFilter);
-    if (categoryFilter) p.set("category", categoryFilter);
-    if (page > 1) p.set("page", String(page));
-    const qs = p.toString();
-    return qs ? `?${qs}` : "?";
+  for (const g of gradAssignments) {
+    const existing = uniMap.get(g.universityName) ?? {
+      universityName: g.universityName,
+    };
+    uniMap.set(g.universityName, {
+      ...existing,
+      changed: g.changed?.includes("변경") ? g.changed : existing.changed,
+      grad: { operator: g.operator, developer: g.developer },
+    });
   }
 
-  // ── 배정현황 (summary) ──
-  const summaryContent = (
-    <div className="space-y-6">
-      <Card className="p-5">
-        <h3 className="text-sm font-bold text-on-surface mb-4">
-          운영자 배정현황
-        </h3>
-        <div className="overflow-x-auto">
-          <table className="w-full text-xs">
-            <thead>
-              <tr className="border-b border-outline-variant/15">
-                <th className="text-left py-2 px-3 font-bold text-on-surface-variant">
-                  운영자
-                </th>
-                <th className="text-center py-2 px-1 font-bold text-on-surface-variant">
-                  수시
-                </th>
-                <th className="text-center py-2 px-1 font-bold text-on-surface-variant">
-                  정시
-                </th>
-                <th className="text-center py-2 px-1 font-bold text-on-surface-variant">
-                  재외
-                </th>
-                <th className="text-center py-2 px-1 font-bold text-on-surface-variant">
-                  외국인
-                </th>
-                <th className="text-center py-2 px-1 font-bold text-on-surface-variant">
-                  초중고
-                </th>
-                <th className="text-center py-2 px-1 font-bold text-on-surface-variant">
-                  대학원
-                </th>
-                <th className="text-center py-2 px-1 font-bold text-on-surface-variant">
-                  PIMS
-                </th>
-                <th className="text-center py-2 px-1 font-bold text-on-surface-variant">
-                  성적
-                </th>
-                <th className="text-center py-2 px-1 font-bold text-on-surface-variant">
-                  합계
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredOpSummary.map((op) => {
-                const total =
-                  op.susiTotal +
-                  op.jungsiTotal +
-                  op.etcJaewoe +
-                  op.etcForeign +
-                  op.etcK12 +
-                  op.etcGrad +
-                  op.etcPimsFull +
-                  op.etcScore;
-                return (
-                  <tr
-                    key={op.name}
-                    className="border-b border-outline-variant/5 hover:bg-surface-container-high/30"
-                  >
-                    <td className="py-2 px-3 font-bold text-on-surface">
-                      {op.name}
-                    </td>
-                    <td className="text-center py-2 px-1 tabular-nums font-bold text-primary">
-                      {op.susiTotal}
-                    </td>
-                    <td className="text-center py-2 px-1 tabular-nums font-bold text-primary">
-                      {op.jungsiTotal}
-                    </td>
-                    <td className="text-center py-2 px-1 tabular-nums">
-                      {op.etcJaewoe || "-"}
-                    </td>
-                    <td className="text-center py-2 px-1 tabular-nums">
-                      {op.etcForeign || "-"}
-                    </td>
-                    <td className="text-center py-2 px-1 tabular-nums">
-                      {op.etcK12 || "-"}
-                    </td>
-                    <td className="text-center py-2 px-1 tabular-nums">
-                      {op.etcGrad || "-"}
-                    </td>
-                    <td className="text-center py-2 px-1 tabular-nums">
-                      {op.etcPimsFull || "-"}
-                    </td>
-                    <td className="text-center py-2 px-1 tabular-nums">
-                      {op.etcScore || "-"}
-                    </td>
-                    <td className="text-center py-2 px-1 tabular-nums font-black text-on-surface">
-                      {total}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      </Card>
-    </div>
+  for (const p of pimsAssignments) {
+    const existing = uniMap.get(p.universityName) ?? {
+      universityName: p.universityName,
+      category: p.category,
+      region: p.region,
+    };
+    uniMap.set(p.universityName, {
+      ...existing,
+      changed: p.changed?.includes("변경") ? p.changed : existing.changed,
+      pims: {
+        operatorFull: p.operatorFull,
+        operatorReception: p.operatorReception,
+      },
+    });
+  }
+
+  for (const s of scoreAssignments) {
+    const existing = uniMap.get(s.universityName) ?? {
+      universityName: s.universityName,
+    };
+    uniMap.set(s.universityName, {
+      ...existing,
+      score: { operator: s.operator, developer: s.developer },
+    });
+  }
+
+  for (const a of appAssignments) {
+    const existing = uniMap.get(a.universityName) ?? {
+      universityName: a.universityName,
+    };
+    uniMap.set(a.universityName, {
+      ...existing,
+      app: { operator: a.operator, developer: a.developer },
+    });
+  }
+
+  const allUniversities = Array.from(uniMap.values()).sort((a, b) =>
+    a.universityName.localeCompare(b.universityName, "ko"),
   );
 
-  // ── 배정리스트 ──
-  const listCols = [
-    { key: "category", label: "대분류", className: "w-[7%]" },
-    { key: "region", label: "지역", className: "w-[5%]" },
-    { key: "university", label: "대학명", className: "w-[16%]" },
-    { key: "salesperson", label: "영업자", className: "w-[7%]" },
-    { key: "changed", label: "변경", className: "w-[7%]" },
-    { key: "opSusi", label: "운영(수시)", className: "w-[8%]" },
-    { key: "opJungsi", label: "운영(정시)", className: "w-[8%]" },
-    { key: "devSusi", label: "개발(수시)", className: "w-[8%]" },
-    { key: "devJungsi", label: "개발(정시)", className: "w-[8%]" },
-    { key: "opJaewoe", label: "운영(재외)", className: "w-[7%]" },
-    { key: "opForeigner", label: "운영(외국인)", className: "w-[7%]" },
-    { key: "remark", label: "특이사항", className: "w-[8%]" },
-  ];
+  const filtered = !search
+    ? []
+    : allUniversities.filter((u) => {
+        const text = [
+          u.universityName,
+          u.main?.opSusi,
+          u.main?.opJungsi,
+          u.main?.devSusi,
+          u.main?.devJungsi,
+          u.main?.jaewoe,
+          u.main?.foreigner,
+          u.grad?.operator,
+          u.grad?.developer,
+          u.pims?.operatorFull,
+          u.pims?.operatorReception,
+          u.score?.operator,
+          u.score?.developer,
+          u.app?.operator,
+          u.app?.developer,
+          u.salesperson,
+        ]
+          .filter(Boolean)
+          .join(" ")
+          .toLowerCase();
+        return text.includes(search);
+      });
 
-  const listPaginated = paginate(filteredAssignments);
-  const listData = listPaginated.paged.map((a) => ({
-    category: (
-      <span
-        className={`text-xs font-bold ${a.category === "4년제" ? "text-primary" : a.category.includes("전문") ? "text-tertiary" : "text-on-surface-variant"}`}
-      >
-        {a.category}
-      </span>
-    ),
-    region: (
-      <span className="text-xs text-on-surface-variant">{a.region || "-"}</span>
-    ),
-    university: (
-      <span className="text-sm font-medium text-on-surface">
-        {a.universityName}
-      </span>
-    ),
-    salesperson: (
-      <span className="text-xs text-on-surface-variant">
-        {a.salesperson || "-"}
-      </span>
-    ),
-    changed: a.changed.includes("변경") ? (
-      <span className="text-xs font-bold text-error">{a.changed}</span>
-    ) : (
-      <span className="text-xs text-on-surface-variant">
-        {a.changed || "-"}
-      </span>
-    ),
-    opSusi: (
-      <span className="text-xs text-on-surface">{a.op2027.susi || "-"}</span>
-    ),
-    opJungsi: (
-      <span className="text-xs text-on-surface">{a.op2027.jungsi || "-"}</span>
-    ),
-    devSusi: (
-      <span className="text-xs text-on-surface-variant">
-        {a.dev2027.susi || "-"}
-      </span>
-    ),
-    devJungsi: (
-      <span className="text-xs text-on-surface-variant">
-        {a.dev2027.jungsi || "-"}
-      </span>
-    ),
-    opJaewoe: (
-      <span className="text-xs text-on-surface">{a.op2027.jaewoe || "-"}</span>
-    ),
-    opForeigner: (
-      <span className="text-xs text-on-surface">
-        {a.op2027.foreigner || "-"}
-      </span>
-    ),
-    remark: a.remark ? (
-      <span
-        className="text-xs text-on-surface-variant truncate block max-w-[100px]"
-        title={a.remark}
-      >
-        {a.remark}
-      </span>
-    ) : (
-      <span className="text-xs text-on-surface-variant">-</span>
-    ),
-  }));
-
-  // ── 대학원 ──
-  const gradCols = [
-    { key: "university", label: "대학명", className: "w-[18%]" },
-    { key: "serviceYn", label: "서비스", className: "w-[6%] text-center" },
-    { key: "count", label: "개수", className: "w-[6%] text-center" },
-    { key: "changed", label: "변경", className: "w-[8%]" },
-    { key: "operator", label: "운영자", className: "w-[10%]" },
-    { key: "developer", label: "개발자", className: "w-[10%]" },
-    { key: "prevOp", label: "前 운영자", className: "w-[10%]" },
-    { key: "prevDev", label: "前 개발자", className: "w-[10%]" },
-    { key: "remark", label: "비고", className: "w-[12%]" },
-  ];
-
-  const gradPaginated = paginate(filteredGrad);
-  const gradData = gradPaginated.paged.map((g) => ({
-    university: (
-      <span className="text-sm font-medium text-on-surface">
-        {g.universityName}
-      </span>
-    ),
-    serviceYn:
-      g.serviceYn === "Y" ? (
-        <span className="text-xs font-bold text-primary">Y</span>
-      ) : (
-        <span className="text-xs text-on-surface-variant">
-          {g.serviceYn || "-"}
-        </span>
-      ),
-    count: (
-      <span className="text-xs tabular-nums">{g.serviceCount || "-"}</span>
-    ),
-    changed: g.changed.includes("변경") ? (
-      <span className="text-xs font-bold text-error">{g.changed}</span>
-    ) : (
-      <span className="text-xs text-on-surface-variant">
-        {g.changed || "-"}
-      </span>
-    ),
-    operator: (
-      <span className="text-xs font-medium text-on-surface">
-        {g.operator || "-"}
-      </span>
-    ),
-    developer: (
-      <span className="text-xs text-on-surface-variant">
-        {g.developer || "-"}
-      </span>
-    ),
-    prevOp: (
-      <span className="text-xs text-on-surface-variant">
-        {g.prevOperator || "-"}
-      </span>
-    ),
-    prevDev: (
-      <span className="text-xs text-on-surface-variant">
-        {g.prevDeveloper || "-"}
-      </span>
-    ),
-    remark: g.remark ? (
-      <span
-        className="text-xs text-on-surface-variant truncate block max-w-[140px]"
-        title={g.remark}
-      >
-        {g.remark}
-      </span>
-    ) : (
-      <span className="text-xs text-on-surface-variant">-</span>
-    ),
-  }));
-
-  // ── PIMS ──
-  const pimsCols = [
-    { key: "category", label: "대분류", className: "w-[8%]" },
-    { key: "region", label: "지역", className: "w-[6%]" },
-    { key: "university", label: "대학명", className: "w-[16%]" },
-    { key: "type", label: "구분", className: "w-[8%]" },
-    { key: "changed", label: "변경", className: "w-[8%]" },
-    { key: "opFull", label: "운영(Full)", className: "w-[10%]" },
-    { key: "opReception", label: "접수운영", className: "w-[10%]" },
-    { key: "prevOp", label: "前 운영자", className: "w-[10%]" },
-    { key: "remark", label: "비고", className: "w-[10%]" },
-  ];
-
-  const pimsPaginated = paginate(filteredPims);
-  const pimsData = pimsPaginated.paged.map((p) => ({
-    category: (
-      <span className="text-xs font-bold text-on-surface-variant">
-        {p.category || "-"}
-      </span>
-    ),
-    region: (
-      <span className="text-xs text-on-surface-variant">{p.region || "-"}</span>
-    ),
-    university: (
-      <span className="text-sm font-medium text-on-surface">
-        {p.universityName}
-      </span>
-    ),
-    type: (
-      <span className="text-xs text-on-surface">{p.serviceType || "-"}</span>
-    ),
-    changed: p.changed.includes("변경") ? (
-      <span className="text-xs font-bold text-error">{p.changed}</span>
-    ) : (
-      <span className="text-xs text-on-surface-variant">
-        {p.changed || "-"}
-      </span>
-    ),
-    opFull: (
-      <span className="text-xs font-medium text-on-surface">
-        {p.operatorFull || "-"}
-      </span>
-    ),
-    opReception: (
-      <span className="text-xs text-on-surface">
-        {p.operatorReception || "-"}
-      </span>
-    ),
-    prevOp: (
-      <span className="text-xs text-on-surface-variant">
-        {p.prevOperator || "-"}
-      </span>
-    ),
-    remark: p.remark ? (
-      <span
-        className="text-xs text-on-surface-variant truncate block max-w-[120px]"
-        title={p.remark}
-      >
-        {p.remark}
-      </span>
-    ) : (
-      <span className="text-xs text-on-surface-variant">-</span>
-    ),
-  }));
-
-  // ── 성적산출 ──
-  const scoreCols = [
-    { key: "university", label: "대학명", className: "w-[18%]" },
-    { key: "serviceYn", label: "서비스", className: "w-[6%] text-center" },
-    { key: "operator", label: "운영자", className: "w-[10%]" },
-    { key: "developer", label: "개발자", className: "w-[10%]" },
-    { key: "susiN", label: "수시내신", className: "w-[7%] text-center" },
-    { key: "jungsiN", label: "정시내신", className: "w-[7%] text-center" },
-    { key: "jungsiS", label: "정시수능", className: "w-[7%] text-center" },
-    { key: "prevOp", label: "前 운영자", className: "w-[10%]" },
-    { key: "prevDev", label: "前 개발자", className: "w-[10%]" },
-  ];
-
-  const scorePaginated = paginate(filteredScore);
-  const scoreData = scorePaginated.paged.map((sc) => ({
-    university: (
-      <span className="text-sm font-medium text-on-surface">
-        {sc.universityName}
-      </span>
-    ),
-    serviceYn:
-      sc.serviceYn === "Y" ? (
-        <span className="text-xs font-bold text-primary">Y</span>
-      ) : (
-        <span className="text-xs text-on-surface-variant">
-          {sc.serviceYn || "-"}
-        </span>
-      ),
-    operator: (
-      <span className="text-xs font-medium text-on-surface">
-        {sc.operator || "-"}
-      </span>
-    ),
-    developer: (
-      <span className="text-xs text-on-surface-variant">
-        {sc.developer || "-"}
-      </span>
-    ),
-    susiN: sc.susiNaesin ? (
-      <span className="text-xs font-bold text-primary">O</span>
-    ) : (
-      <span className="text-xs text-on-surface-variant">-</span>
-    ),
-    jungsiN: sc.jungsiNaesin ? (
-      <span className="text-xs font-bold text-primary">O</span>
-    ) : (
-      <span className="text-xs text-on-surface-variant">-</span>
-    ),
-    jungsiS: sc.jungsiSuneung ? (
-      <span className="text-xs font-bold text-primary">O</span>
-    ) : (
-      <span className="text-xs text-on-surface-variant">-</span>
-    ),
-    prevOp: (
-      <span className="text-xs text-on-surface-variant">
-        {sc.prevOperator || "-"}
-      </span>
-    ),
-    prevDev: (
-      <span className="text-xs text-on-surface-variant">
-        {sc.prevDeveloper || "-"}
-      </span>
-    ),
-  }));
-
-  // ── 상담앱 ──
-  const appCols = [
-    { key: "university", label: "대학명", className: "w-[16%]" },
-    { key: "operator", label: "운영자", className: "w-[9%]" },
-    { key: "developer", label: "개발자", className: "w-[9%]" },
-    { key: "status", label: "현황", className: "w-[14%]" },
-    { key: "device", label: "디바이스", className: "w-[9%]" },
-    { key: "usage", label: "사용", className: "w-[6%] text-center" },
-    { key: "prevOp", label: "前 운영자", className: "w-[9%]" },
-    { key: "prevDev", label: "前 개발자", className: "w-[9%]" },
-    { key: "remark", label: "비고", className: "w-[12%]" },
-  ];
-
-  const appPaginated = paginate(filteredApp);
-  const appData = appPaginated.paged.map((a) => ({
-    university: (
-      <span className="text-sm font-medium text-on-surface">
-        {a.universityName}
-      </span>
-    ),
-    operator: (
-      <span className="text-xs font-medium text-on-surface">
-        {a.operator || "-"}
-      </span>
-    ),
-    developer: (
-      <span className="text-xs text-on-surface-variant">
-        {a.developer || "-"}
-      </span>
-    ),
-    status: a.status ? (
-      <span
-        className="text-xs text-on-surface-variant truncate block max-w-[140px]"
-        title={a.status}
-      >
-        {a.status}
-      </span>
-    ) : (
-      <span className="text-xs text-on-surface-variant">-</span>
-    ),
-    device: (
-      <span className="text-xs text-on-surface-variant">{a.device || "-"}</span>
-    ),
-    usage:
-      a.usage === "사용" ? (
-        <span className="text-xs font-bold text-primary">사용</span>
-      ) : (
-        <span className="text-xs text-on-surface-variant">
-          {a.usage || "-"}
-        </span>
-      ),
-    prevOp: (
-      <span className="text-xs text-on-surface-variant">
-        {a.prevOperator || "-"}
-      </span>
-    ),
-    prevDev: (
-      <span className="text-xs text-on-surface-variant">
-        {a.prevDeveloper || "-"}
-      </span>
-    ),
-    remark: a.remark ? (
-      <span
-        className="text-xs text-on-surface-variant truncate block max-w-[120px]"
-        title={a.remark}
-      >
-        {a.remark}
-      </span>
-    ) : (
-      <span className="text-xs text-on-surface-variant">-</span>
-    ),
-  }));
-
-  // ── 활성 탭별 콘텐츠/페이지네이션 결정 ──
-  type TabConfig = {
-    columns: { key: string; label: string; className?: string }[];
-    data: Record<string, React.ReactNode>[];
-    total: number;
-    totalPages: number;
-  };
-
-  const tabConfigs: Record<string, TabConfig> = {
-    list: {
-      columns: listCols,
-      data: listData,
-      total: listPaginated.total,
-      totalPages: listPaginated.totalPages,
-    },
-    grad: {
-      columns: gradCols,
-      data: gradData,
-      total: gradPaginated.total,
-      totalPages: gradPaginated.totalPages,
-    },
-    pims: {
-      columns: pimsCols,
-      data: pimsData,
-      total: pimsPaginated.total,
-      totalPages: pimsPaginated.totalPages,
-    },
-    score: {
-      columns: scoreCols,
-      data: scoreData,
-      total: scorePaginated.total,
-      totalPages: scorePaginated.totalPages,
-    },
-    app: {
-      columns: appCols,
-      data: appData,
-      total: appPaginated.total,
-      totalPages: appPaginated.totalPages,
-    },
-  };
-
-  // "전체" tab shows summary + all tables stacked
-  const isSummaryTab = activeTab === "";
-  const currentTabConfig = !isSummaryTab ? tabConfigs[activeTab] : undefined;
-
-  const btnBase =
-    "flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold";
-  const btnActive = `${btnBase} bg-surface-container-high text-on-surface-variant hover:bg-surface-bright transition-colors`;
-  const btnDisabled = `${btnBase} bg-surface-container-high text-on-surface-variant/40 cursor-not-allowed`;
+  const totalUniv = assignments.length;
+  const changedCount = allUniversities.filter((u) =>
+    u.changed?.includes("변경"),
+  ).length;
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <PageHeader
         title="담당자배정"
-        description={`2027학년도 운영자/개발자 배정 현황 (총 ${totalUniv}개 대학)`}
+        description={`2027학년도 운영자/개발자 배정 현황 · 총 ${totalUniv}개 대학`}
         breadcrumb={["운영", "담당자배정"]}
       />
+
+      {/* HUD 검색 콘솔 — scan-line 시그니처 적용 */}
+      <div className="relative overflow-hidden rounded-md border border-outline-variant/40 bg-surface-container-low">
+        <div className="kinetic-grid absolute inset-0 pointer-events-none" />
+        <div className="scan-line" />
+        <div className="relative p-5">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="inline-block w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+            <span className={HUD_LABEL}>
+              QUERY · 대학 / 운영자 / 개발자 검색
+            </span>
+          </div>
+          <Suspense>
+            <AssignmentSearch />
+          </Suspense>
+          <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-[10px] font-mono uppercase tracking-wider text-on-surface-variant/70">
+            <span>&gt; 대학명 또는 운영자명을 입력하면</span>
+            <span>
+              수시·정시·대학원·PIMS·성적·상담앱 배정이 한 번에 표시됩니다
+            </span>
+          </div>
+        </div>
+      </div>
 
       <KpiGrid>
         <KpiCard
@@ -701,79 +411,255 @@ export default async function OperatorAssignmentsPage({
           label="대학원"
           value={gradAssignments.length.toString()}
           suffix="개"
+          alert={changedCount > 0}
+          change={changedCount > 0 ? `변경 ${changedCount}건` : undefined}
         />
       </KpiGrid>
 
-      <Card className="p-5">
-        <Suspense>
-          <AssignmentFilters regions={regions} categories={categories} />
-        </Suspense>
-      </Card>
-
-      {/* ── 전체 탭: summary + 모든 테이블 ── */}
-      {isSummaryTab && (
-        <div className="space-y-6">
-          {summaryContent}
-
-          <TableSection totalCount={filteredAssignments.length}>
-            <DataTable columns={listCols} data={listData} />
-          </TableSection>
-        </div>
-      )}
-
-      {/* ── 개별 탭: 해당 테이블만 ── */}
-      {currentTabConfig && (
-        <>
-          <TableSection totalCount={currentTabConfig.total}>
-            <DataTable
-              columns={currentTabConfig.columns}
-              data={currentTabConfig.data}
-            />
-            {currentTabConfig.total === 0 && (
-              <div className="flex flex-col items-center justify-center py-16 text-on-surface-variant">
-                <IconSearchOff size={40} className="mb-2 opacity-30" />
-                <p className="text-sm font-medium">
-                  조건에 맞는 데이터가 없습니다.
-                </p>
-              </div>
-            )}
-          </TableSection>
-
-          {/* 페이지네이션 */}
-          {currentTabConfig.total > PAGE_SIZE && (
-            <div className="flex items-center justify-end">
-              <div className="flex items-center gap-2">
-                {currentPage > 1 ? (
-                  <a href={buildPageUrl(currentPage - 1)} className={btnActive}>
-                    <IconChevronLeft size={16} />
-                    이전
-                  </a>
-                ) : (
-                  <span className={btnDisabled}>
-                    <IconChevronLeft size={16} />
-                    이전
-                  </span>
-                )}
-                <span className="text-xs text-on-surface-variant tabular-nums">
-                  <span className="font-bold text-on-surface">
-                    {currentPage}
-                  </span>{" "}
-                  / {currentTabConfig.totalPages}
+      {search ? (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between gap-3 px-1">
+            <div className="flex items-center gap-2 min-w-0">
+              <span className={HUD_LABEL}>RESULT</span>
+              <span className="text-sm text-on-surface-variant truncate">
+                <span className="font-mono text-primary">
+                  &quot;{originalSearch}&quot;
                 </span>
-                {currentPage < currentTabConfig.totalPages ? (
-                  <a href={buildPageUrl(currentPage + 1)} className={btnActive}>
-                    다음
-                    <IconChevronRight size={16} />
-                  </a>
-                ) : (
-                  <span className={btnDisabled}>
-                    다음
-                    <IconChevronRight size={16} />
-                  </span>
-                )}
-              </div>
+              </span>
+            </div>
+            <span className="shrink-0 inline-flex items-baseline gap-1 font-mono tabular-nums">
+              <span className="text-2xl font-black text-primary leading-none">
+                {filtered.length}
+              </span>
+              <span className="text-[10px] uppercase tracking-[0.15em] text-on-surface-variant">
+                matches
+              </span>
+            </span>
+          </div>
+
+          {filtered.length === 0 ? (
+            <Card className="p-16 flex flex-col items-center text-on-surface-variant">
+              <IconSearch size={40} className="mb-3 opacity-20" />
+              <p className="text-sm font-bold uppercase tracking-[0.15em]">
+                NO MATCH FOUND
+              </p>
+              <p className="text-xs mt-2 opacity-60 font-mono">
+                &gt; 대학명의 일부 또는 운영자명 전체를 입력해 보세요
+              </p>
+            </Card>
+          ) : (
+            <div className="grid gap-3">
+              {filtered.map((u) => (
+                <UniversityRow key={u.universityName} u={u} q={search} />
+              ))}
             </div>
           )}
+        </div>
+      ) : (
+        <>
+          {/* 운영자별 배정현황 — 터미널 테이블 */}
+          <div className="bg-surface-container rounded-md border border-outline-variant/30 overflow-hidden">
+            <div className="flex items-center justify-between p-4 border-b border-outline-variant/30 bg-surface-container-low">
+              <div className="flex items-center gap-2">
+                <span className="inline-block w-1 h-4 bg-primary rounded-sm" />
+                <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-on-surface">
+                  OPERATOR ROSTER
+                </h3>
+                <span className="font-mono tabular-nums text-[10px] text-on-surface-variant">
+                  [{operatorSummary.length}]
+                </span>
+              </div>
+              <span className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant/70">
+                &gt; click name to filter
+              </span>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs">
+                <thead className="bg-surface-container-low">
+                  <tr className="border-b border-outline-variant/30">
+                    <th className="text-left py-2.5 px-4 text-[10px] font-bold uppercase tracking-[0.15em] text-on-surface-variant">
+                      운영자
+                    </th>
+                    <th className="text-center py-2.5 px-2 text-[10px] font-bold uppercase tracking-[0.15em] text-on-surface-variant">
+                      수시
+                    </th>
+                    <th className="text-center py-2.5 px-2 text-[10px] font-bold uppercase tracking-[0.15em] text-on-surface-variant">
+                      정시
+                    </th>
+                    <th className="text-center py-2.5 px-2 text-[10px] font-bold uppercase tracking-[0.15em] text-on-surface-variant">
+                      재외
+                    </th>
+                    <th className="text-center py-2.5 px-2 text-[10px] font-bold uppercase tracking-[0.15em] text-on-surface-variant">
+                      외국인
+                    </th>
+                    <th className="text-center py-2.5 px-2 text-[10px] font-bold uppercase tracking-[0.15em] text-on-surface-variant">
+                      초중고
+                    </th>
+                    <th className="text-center py-2.5 px-2 text-[10px] font-bold uppercase tracking-[0.15em] text-on-surface-variant">
+                      대학원
+                    </th>
+                    <th className="text-center py-2.5 px-2 text-[10px] font-bold uppercase tracking-[0.15em] text-on-surface-variant">
+                      PIMS
+                    </th>
+                    <th className="text-center py-2.5 px-2 text-[10px] font-bold uppercase tracking-[0.15em] text-on-surface-variant">
+                      성적
+                    </th>
+                    <th className="text-center py-2.5 px-3 text-[10px] font-bold uppercase tracking-[0.15em] text-primary">
+                      Σ 합계
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {operatorSummary.map((op) => {
+                    const total =
+                      op.susiTotal +
+                      op.jungsiTotal +
+                      op.etcJaewoe +
+                      op.etcForeign +
+                      op.etcK12 +
+                      op.etcGrad +
+                      op.etcPimsFull +
+                      op.etcScore;
+                    return (
+                      <tr
+                        key={op.name}
+                        className="border-b border-outline-variant/15 last:border-0 hover:bg-surface-container-high/60 hover:outline hover:outline-1 hover:-outline-offset-1 hover:outline-primary/30 transition-colors"
+                      >
+                        <td className="py-2.5 px-4">
+                          <Link
+                            href={`/operations/assignments?search=${encodeURIComponent(op.name)}`}
+                            className="inline-flex items-center gap-2 font-bold text-on-surface hover:text-primary transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary rounded-sm"
+                            aria-label={`${op.name} 배정 검색`}
+                          >
+                            <span className="w-1 h-1 rounded-full bg-primary/60" />
+                            {op.name}
+                          </Link>
+                        </td>
+                        <td className="text-center py-2.5 px-2 font-mono tabular-nums font-bold text-on-surface">
+                          {op.susiTotal || (
+                            <span className="text-on-surface-variant/30">
+                              ·
+                            </span>
+                          )}
+                        </td>
+                        <td className="text-center py-2.5 px-2 font-mono tabular-nums font-bold text-on-surface">
+                          {op.jungsiTotal || (
+                            <span className="text-on-surface-variant/30">
+                              ·
+                            </span>
+                          )}
+                        </td>
+                        <td className="text-center py-2.5 px-2 font-mono tabular-nums text-on-surface-variant">
+                          {op.etcJaewoe || (
+                            <span className="text-on-surface-variant/30">
+                              ·
+                            </span>
+                          )}
+                        </td>
+                        <td className="text-center py-2.5 px-2 font-mono tabular-nums text-on-surface-variant">
+                          {op.etcForeign || (
+                            <span className="text-on-surface-variant/30">
+                              ·
+                            </span>
+                          )}
+                        </td>
+                        <td className="text-center py-2.5 px-2 font-mono tabular-nums text-on-surface-variant">
+                          {op.etcK12 || (
+                            <span className="text-on-surface-variant/30">
+                              ·
+                            </span>
+                          )}
+                        </td>
+                        <td className="text-center py-2.5 px-2 font-mono tabular-nums text-on-surface-variant">
+                          {op.etcGrad || (
+                            <span className="text-on-surface-variant/30">
+                              ·
+                            </span>
+                          )}
+                        </td>
+                        <td className="text-center py-2.5 px-2 font-mono tabular-nums text-on-surface-variant">
+                          {op.etcPimsFull || (
+                            <span className="text-on-surface-variant/30">
+                              ·
+                            </span>
+                          )}
+                        </td>
+                        <td className="text-center py-2.5 px-2 font-mono tabular-nums text-on-surface-variant">
+                          {op.etcScore || (
+                            <span className="text-on-surface-variant/30">
+                              ·
+                            </span>
+                          )}
+                        </td>
+                        <td className="text-center py-2.5 px-3 font-mono tabular-nums font-black text-primary">
+                          {total}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* 전체 대학 그리드 — 터미널 칩 */}
+          <div className="bg-surface-container rounded-md border border-outline-variant/30 overflow-hidden">
+            <div className="flex items-center justify-between p-4 border-b border-outline-variant/30 bg-surface-container-low">
+              <div className="flex items-center gap-2">
+                <span className="inline-block w-1 h-4 bg-primary rounded-sm" />
+                <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-on-surface">
+                  UNIVERSITY INDEX
+                </h3>
+                <span className="font-mono tabular-nums text-[10px] text-on-surface-variant">
+                  [{allUniversities.length}]
+                </span>
+                {changedCount > 0 && (
+                  <span className={`${SECTION_TAGS.error} ml-1`}>
+                    <span className="font-mono tabular-nums mr-1">
+                      {changedCount}
+                    </span>
+                    변경
+                  </span>
+                )}
+              </div>
+              <span className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant/70">
+                &gt; click to expand
+              </span>
+            </div>
+            <div className="p-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2">
+                {allUniversities.map((u) => {
+                  const isChanged = u.changed?.includes("변경");
+                  return (
+                    <Link
+                      key={u.universityName}
+                      href={`/operations/assignments?search=${encodeURIComponent(u.universityName)}`}
+                      aria-label={`${u.universityName} 배정 검색${isChanged ? " (담당자 변경)" : ""}`}
+                      className={`group flex items-center gap-1.5 px-3 py-2 rounded-sm text-xs text-on-surface border transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary ${
+                        isChanged
+                          ? "bg-error/5 border-error/30 hover:border-error/60 hover:bg-error/10"
+                          : "bg-surface-container-low border-outline-variant/20 hover:border-primary/50 hover:bg-primary/5 hover:text-primary"
+                      }`}
+                    >
+                      {isChanged && (
+                        <span className="relative flex h-1.5 w-1.5 shrink-0">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-error opacity-75" />
+                          <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-error" />
+                        </span>
+                      )}
+                      <span className="truncate font-medium group-hover:font-bold">
+                        {u.universityName}
+                      </span>
+                    </Link>
+                  );
+                })}
+              </div>
+              <p className="mt-4 pt-3 border-t border-outline-variant/20 text-[10px] font-mono uppercase tracking-wider text-on-surface-variant/70 flex items-center gap-1.5">
+                <span className="inline-block w-1.5 h-1.5 rounded-full bg-error" />
+                <span>= 담당자 변경이 있는 대학</span>
+              </p>
+            </div>
+          </div>
         </>
       )}
     </div>

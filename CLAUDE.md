@@ -62,7 +62,7 @@ npx tsc --noEmit     # 타입 체크
 
 ## Reference: claude-builds
 
-UI/UX 설계, 디자인 시스템, 에이전트 구성 작업 시 `/Users/yss/개발/claude-builds`를 참고한다:
+UI/UX 설계, 디자인 시스템, 에이전트 구성 작업 시 `C:\Users\ys1114\개발\claude-builds`를 참고한다:
 
 - **디자인 규칙**: `rules/design.md` — 안티-제네릭 가드레일, Phase 0 미학 방향, 쿠키커터 방지
 - **디자이너 에이전트**: `agents/designer.md` — 레퍼런스 분석, 톤 선택, 토큰 결정 프로세스
