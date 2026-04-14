@@ -21,6 +21,9 @@ export interface UniversityData {
     jaewoe?: string;
     foreigner?: string;
     pyeonip?: string;
+    devJaewoe?: string;
+    devForeigner?: string;
+    devPyeonip?: string;
   };
   grad?: { operator: string; developer: string };
   pims?: { operatorFull: string; operatorReception: string };

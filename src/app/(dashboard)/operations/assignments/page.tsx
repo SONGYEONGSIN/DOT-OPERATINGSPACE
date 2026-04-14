@@ -57,6 +57,9 @@ export default async function OperatorAssignmentsPage() {
         jaewoe: a.op2027.jaewoe,
         foreigner: a.op2027.foreigner,
         pyeonip: a.op2027.pyeonip,
+        devJaewoe: a.dev2027.jaewoe,
+        devForeigner: a.dev2027.foreigner,
+        devPyeonip: a.dev2027.pyeonip,
       },
     });
   }
@@ -67,7 +70,7 @@ export default async function OperatorAssignmentsPage() {
     };
     uniMap.set(g.universityName, {
       ...existing,
-      changed: g.changed?.includes("변경") ? g.changed : existing.changed,
+      changed: g.changed?.includes("변경 O") ? g.changed : existing.changed,
       grad: { operator: g.operator, developer: g.developer },
     });
   }
@@ -80,7 +83,7 @@ export default async function OperatorAssignmentsPage() {
     };
     uniMap.set(p.universityName, {
       ...existing,
-      changed: p.changed?.includes("변경") ? p.changed : existing.changed,
+      changed: p.changed?.includes("변경 O") ? p.changed : existing.changed,
       pims: {
         operatorFull: p.operatorFull,
         operatorReception: p.operatorReception,
@@ -113,7 +116,7 @@ export default async function OperatorAssignmentsPage() {
   );
 
   const changedCount = allUniversities.filter((u) =>
-    u.changed?.includes("변경"),
+    u.changed?.includes("변경 O"),
   ).length;
 
   return (

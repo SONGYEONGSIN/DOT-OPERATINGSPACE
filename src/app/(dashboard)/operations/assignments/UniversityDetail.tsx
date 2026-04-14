@@ -84,6 +84,15 @@ export default function UniversityDetail({
       right: [
         { label: "수시", name: u.main.devSusi },
         { label: "정시", name: u.main.devJungsi },
+        ...(u.main.devJaewoe
+          ? [{ label: "재외국민", name: u.main.devJaewoe }]
+          : []),
+        ...(u.main.devForeigner
+          ? [{ label: "외국인", name: u.main.devForeigner }]
+          : []),
+        ...(u.main.devPyeonip
+          ? [{ label: "편입", name: u.main.devPyeonip }]
+          : []),
       ],
     });
   }

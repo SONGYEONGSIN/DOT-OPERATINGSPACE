@@ -38,9 +38,19 @@ const TAG_STYLES = {
 function getDeveloper(u: UniversityData, sectionKey: string): string {
   switch (sectionKey) {
     case "susi":
+    case "k12":
+    case "special":
+    case "etc":
+    case "school":
       return u.main?.devSusi ?? "";
     case "jungsi":
       return u.main?.devJungsi ?? "";
+    case "jaewoe":
+      return u.main?.devJaewoe ?? "";
+    case "foreigner":
+      return u.main?.devForeigner ?? "";
+    case "pyeonip":
+      return u.main?.devPyeonip ?? "";
     case "grad":
       return u.grad?.developer ?? "";
     case "score":
