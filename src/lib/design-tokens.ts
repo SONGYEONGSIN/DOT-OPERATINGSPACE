@@ -98,3 +98,39 @@ export const shadows = {
   glowStrong: "0 0 40px rgba(217, 253, 83, 0.06)",
   ambient: "0 0 40px rgba(0,0,0,0.06)",
 } as const;
+
+/**
+ * Neumorphism tokens (NEUMORPHISM-SPEC).
+ * Coexists with M3 tokens during migration — do not replace existing exports.
+ */
+export const neumorphism = {
+  shadow: {
+    light: "rgba(255, 255, 255, 0.85)",
+    dark: "rgba(166, 164, 163, 0.45)",
+    insetLight: "rgba(255, 255, 255, 0.7)",
+    insetDark: "rgba(166, 164, 163, 0.35)",
+    soft: "-3px -3px 6px rgba(255, 255, 255, 0.85), 3px 3px 6px rgba(166, 164, 163, 0.45)",
+    strong:
+      "-6px -6px 14px rgba(255, 255, 255, 0.85), 6px 6px 14px rgba(166, 164, 163, 0.45)",
+    insetSoft:
+      "inset -3px -3px 6px rgba(255, 255, 255, 0.7), inset 3px 3px 6px rgba(166, 164, 163, 0.35)",
+    insetStrong:
+      "inset -6px -6px 14px rgba(255, 255, 255, 0.7), inset 6px 6px 14px rgba(166, 164, 163, 0.35)",
+  },
+  text: {
+    muted: "#4a5565",
+    faint: "#6b7280",
+  },
+  radius: {
+    sm: "8px",
+    md: "14px",
+    lg: "20px",
+  },
+  motion: {
+    durationPress: "100ms",
+    durationHover: "200ms",
+    durationModal: "300ms",
+    ease: "cubic-bezier(0.4, 0, 0.2, 1)",
+  },
+  fontDisplay: '"Space Mono", "JetBrains Mono", ui-monospace, monospace',
+} as const;
