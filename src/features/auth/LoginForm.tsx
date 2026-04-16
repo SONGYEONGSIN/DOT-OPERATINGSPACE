@@ -38,7 +38,7 @@ export default function LoginForm() {
   return (
     <form action={formAction}>
       {(state.error || oauthError) && (
-        <div className="mb-6 p-3 rounded-lg bg-error-container/20 border border-error/30 text-error text-xs font-medium">
+        <div className="mb-6 p-3 rounded-[14px] bg-[var(--color-danger)]/10 border border-[var(--color-danger)]/30 text-[var(--color-danger)] text-xs font-medium">
           {state.error || OAUTH_ERRORS[oauthError ?? ""] || oauthError}
         </div>
       )}
@@ -49,13 +49,16 @@ export default function LoginForm() {
         onClick={handleMicrosoftLogin}
         disabled={oauthLoading}
         className={cn(
-          "w-full mb-8 py-3.5 bg-white text-black font-bold rounded-lg active:scale-95 transition-transform flex items-center justify-center gap-3 hover:bg-gray-100",
+          "w-full mb-8 py-3.5 bg-[var(--color-surface)] text-[var(--color-text)] font-bold rounded-[14px] shadow-neu-soft active:shadow-neu-inset-soft transition-shadow flex items-center justify-center gap-3",
           oauthLoading && "opacity-60 cursor-not-allowed",
         )}
       >
         {oauthLoading ? (
           <>
-            <IconLoader2 size={16} className="animate-spin text-gray-600" />
+            <IconLoader2
+              size={16}
+              className="animate-spin text-[var(--color-text-muted)]"
+            />
             연결 중...
           </>
         ) : (
@@ -78,9 +81,9 @@ export default function LoginForm() {
       {/* Divider */}
       <div className="relative flex items-center justify-center mb-8">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-outline-variant/20" />
+          <div className="w-full border-t border-black/[0.04]" />
         </div>
-        <span className="relative px-4 bg-surface-container text-[10px] font-bold text-on-surface-variant tracking-widest uppercase">
+        <span className="relative px-4 bg-[var(--color-surface)] text-[10px] font-bold text-[var(--color-text-muted)] tracking-widest uppercase">
           또는 이메일로 로그인
         </span>
       </div>
@@ -88,7 +91,7 @@ export default function LoginForm() {
       {/* Fields */}
       <div className="space-y-4">
         <div>
-          <label className="block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-2">
+          <label className="block text-[10px] font-bold text-[var(--color-text-muted)] tracking-widest uppercase mb-2">
             워크스페이스 이메일
           </label>
           <input
@@ -96,18 +99,21 @@ export default function LoginForm() {
             type="email"
             placeholder="name@company.com"
             className={cn(
-              "w-full bg-surface-container-highest border-none rounded-lg",
-              "px-4 py-3 text-on-surface placeholder:text-outline",
-              "focus:ring-1 focus:ring-primary/50 focus:outline-none transition-all",
-              state.fieldErrors?.email && "ring-1 ring-error/50",
+              "w-full bg-[var(--color-secondary)] border-none rounded-[14px]",
+              "px-4 py-3 text-[var(--color-text)] placeholder:text-[var(--color-text-faint)] shadow-neu-inset-soft",
+              "focus:ring-1 focus:ring-[var(--color-primary)]/50 focus:outline-none transition-all",
+              state.fieldErrors?.email &&
+                "ring-1 ring-[var(--color-danger)]/50",
             )}
           />
           {state.fieldErrors?.email && (
-            <p className="mt-1 text-xs text-error">{state.fieldErrors.email}</p>
+            <p className="mt-1 text-xs text-[var(--color-danger)]">
+              {state.fieldErrors.email}
+            </p>
           )}
         </div>
         <div>
-          <label className="block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-2">
+          <label className="block text-[10px] font-bold text-[var(--color-text-muted)] tracking-widest uppercase mb-2">
             비밀번호
           </label>
           <input
@@ -115,14 +121,15 @@ export default function LoginForm() {
             type="password"
             placeholder="••••••••"
             className={cn(
-              "w-full bg-surface-container-highest border-none rounded-lg",
-              "px-4 py-3 text-on-surface placeholder:text-outline",
-              "focus:ring-1 focus:ring-primary/50 focus:outline-none transition-all",
-              state.fieldErrors?.password && "ring-1 ring-error/50",
+              "w-full bg-[var(--color-secondary)] border-none rounded-[14px]",
+              "px-4 py-3 text-[var(--color-text)] placeholder:text-[var(--color-text-faint)] shadow-neu-inset-soft",
+              "focus:ring-1 focus:ring-[var(--color-primary)]/50 focus:outline-none transition-all",
+              state.fieldErrors?.password &&
+                "ring-1 ring-[var(--color-danger)]/50",
             )}
           />
           {state.fieldErrors?.password && (
-            <p className="mt-1 text-xs text-error">
+            <p className="mt-1 text-xs text-[var(--color-danger)]">
               {state.fieldErrors.password}
             </p>
           )}
@@ -131,13 +138,15 @@ export default function LoginForm() {
           <label className="flex items-center gap-2 cursor-pointer">
             <input
               type="checkbox"
-              className="rounded-sm border-none bg-surface-container-highest text-primary focus:ring-primary focus:ring-offset-0"
+              className="rounded-sm border-none bg-[var(--color-secondary)] text-[var(--color-primary)] focus:ring-[var(--color-primary)] focus:ring-offset-0"
             />
-            <span className="text-xs text-on-surface-variant">로그인 유지</span>
+            <span className="text-xs text-[var(--color-text-muted)]">
+              로그인 유지
+            </span>
           </label>
           <a
             href="/forgot-password"
-            className="text-xs text-primary font-bold hover:underline"
+            className="text-xs text-[var(--color-primary)] font-bold hover:underline"
           >
             비밀번호 찾기
           </a>
