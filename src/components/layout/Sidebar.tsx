@@ -4,10 +4,10 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/cn";
-import { BrandLogo } from "@/components/common";
+import { BrandLogo, Modal } from "@/components/common";
 import { signOut } from "@/features/auth/actions";
 import { updateProfile, resetMyPassword } from "./account-actions";
-import { IconX, IconCircleCheck } from "@tabler/icons-react";
+import { IconCircleCheck } from "@tabler/icons-react";
 import {
   IconLayoutDashboard,
   IconSpeakerphone,
@@ -447,236 +447,216 @@ export default function Sidebar({ profile }: SidebarProps) {
       </div>
 
       {/* 로그아웃 확인 모달 */}
-      {showLogoutConfirm && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center">
-          <div
-            className="absolute inset-0 bg-[rgba(231,229,228,0.72)] backdrop-blur-[4px] transition-opacity duration-[var(--duration-modal)] ease-[var(--ease-neu)]"
-            onClick={() => setShowLogoutConfirm(false)}
-          />
-          <div className="relative w-full max-w-xs bg-[var(--color-surface)] rounded-[20px] shadow-neu-strong transition-all duration-[var(--duration-modal)] ease-[var(--ease-neu)] p-6 text-center">
-            <h2 className="text-lg font-bold text-[var(--color-text)] mb-2">
+      <Modal
+        open={showLogoutConfirm}
+        onClose={() => setShowLogoutConfirm(false)}
+        maxWidth="max-w-xs"
+      >
+        <div className="p-6 text-center">
+          <h2 className="text-lg font-bold text-[var(--color-text)] mb-2">
+            로그아웃
+          </h2>
+          <p className="text-sm text-[var(--color-text-muted)] mb-6">
+            정말 로그아웃 하시겠습니까?
+          </p>
+          <div className="flex gap-3">
+            <button
+              type="button"
+              onClick={() => setShowLogoutConfirm(false)}
+              className="flex-1 py-3 border border-black/[0.06] text-[var(--color-text-muted)] font-bold rounded-[14px] text-sm hover:bg-black/[0.02] transition-colors"
+            >
+              취소
+            </button>
+            <button
+              type="button"
+              onClick={() => signOut()}
+              className="flex-1 py-3 bg-[var(--color-surface)] shadow-neu-soft text-[var(--color-danger)] font-bold rounded-[14px] text-sm active:shadow-neu-inset-soft transition-shadow duration-[var(--duration-press)]"
+            >
               로그아웃
-            </h2>
-            <p className="text-sm text-[var(--color-text-muted)] mb-6">
-              정말 로그아웃 하시겠습니까?
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* 계정정보 수정 모달 */}
+      <Modal
+        open={showEditProfile}
+        onClose={() => setShowEditProfile(false)}
+        title="계정정보 수정"
+      >
+        {editResult?.success ? (
+          <div className="p-8 text-center">
+            <IconCircleCheck
+              size={48}
+              className="text-[var(--color-primary)] mx-auto mb-3"
+            />
+            <p className="font-bold text-[var(--color-text)]">
+              수정되었습니다!
             </p>
-            <div className="flex gap-3">
+          </div>
+        ) : (
+          <div className="p-6 space-y-4">
+            {editResult?.error && (
+              <div className="p-3 rounded-[14px] shadow-neu-inset-soft border-l-4 border-[var(--color-danger)] text-[var(--color-danger)] text-xs font-medium">
+                {editResult.error}
+              </div>
+            )}
+            <div>
+              <label className="block text-[11px] font-semibold text-[var(--color-text-faint)] tracking-[0.08em] uppercase mb-2">
+                이름
+              </label>
+              <input
+                type="text"
+                value={editName}
+                onChange={(e) => setEditName(e.target.value)}
+                className="w-full shadow-neu-inset-soft bg-[var(--color-surface)] border-none rounded-[14px] px-4 py-3 text-sm text-[var(--color-text)] placeholder:text-[var(--color-text-faint)] focus:outline-2 focus:outline-[var(--color-primary)] focus:outline-offset-2 focus:outline-none"
+              />
+            </div>
+            <div>
+              <label className="block text-[11px] font-semibold text-[var(--color-text-faint)] tracking-[0.08em] uppercase mb-2">
+                팀
+              </label>
+              <select
+                value={editTeam}
+                onChange={(e) => setEditTeam(e.target.value)}
+                className="w-full shadow-neu-inset-soft bg-[var(--color-surface)] border-none rounded-[14px] px-4 py-3 text-sm text-[var(--color-text)] focus:outline-2 focus:outline-[var(--color-primary)] focus:outline-offset-2 focus:outline-none appearance-none cursor-pointer"
+              >
+                <option value="운영1팀">운영1팀</option>
+                <option value="운영2팀">운영2팀</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-[11px] font-semibold text-[var(--color-text-faint)] tracking-[0.08em] uppercase mb-2">
+                이메일
+              </label>
+              <p className="px-4 py-3 text-sm text-[var(--color-text-muted)] shadow-neu-inset-soft bg-[var(--color-surface)] rounded-[14px]">
+                {displayEmail}
+              </p>
+            </div>
+            <div className="flex gap-3 pt-2">
               <button
                 type="button"
-                onClick={() => setShowLogoutConfirm(false)}
+                onClick={() => setShowEditProfile(false)}
                 className="flex-1 py-3 border border-black/[0.06] text-[var(--color-text-muted)] font-bold rounded-[14px] text-sm hover:bg-black/[0.02] transition-colors"
               >
                 취소
               </button>
               <button
                 type="button"
-                onClick={() => signOut()}
-                className="flex-1 py-3 bg-[var(--color-surface)] shadow-neu-soft text-[var(--color-danger)] font-bold rounded-[14px] text-sm active:shadow-neu-inset-soft transition-shadow duration-[var(--duration-press)]"
-              >
-                로그아웃
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* 계정정보 수정 모달 */}
-      {showEditProfile && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center">
-          <div
-            className="absolute inset-0 bg-[rgba(231,229,228,0.72)] backdrop-blur-[4px] transition-opacity duration-[var(--duration-modal)] ease-[var(--ease-neu)]"
-            onClick={() => setShowEditProfile(false)}
-          />
-          <div className="relative w-full max-w-sm bg-[var(--color-surface)] rounded-[20px] shadow-neu-strong transition-all duration-[var(--duration-modal)] ease-[var(--ease-neu)]">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-black/[0.04]">
-              <h2 className="text-lg font-bold text-[var(--color-text)]">
-                계정정보 수정
-              </h2>
-              <button
-                onClick={() => setShowEditProfile(false)}
-                className="p-1 text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors rounded-[14px]"
-              >
-                <IconX size={20} />
-              </button>
-            </div>
-            {editResult?.success ? (
-              <div className="p-8 text-center">
-                <IconCircleCheck
-                  size={48}
-                  className="text-[var(--color-primary)] mx-auto mb-3"
-                />
-                <p className="font-bold text-[var(--color-text)]">
-                  수정되었습니다!
-                </p>
-              </div>
-            ) : (
-              <div className="p-6 space-y-4">
-                {editResult?.error && (
-                  <div className="p-3 rounded-[14px] shadow-neu-inset-soft border-l-4 border-[var(--color-danger)] text-[var(--color-danger)] text-xs font-medium">
-                    {editResult.error}
-                  </div>
+                disabled={editPending}
+                onClick={async () => {
+                  setEditPending(true);
+                  const result = await updateProfile(editName, editTeam);
+                  setEditResult(result);
+                  setEditPending(false);
+                  if (result.success) {
+                    setTimeout(() => {
+                      setShowEditProfile(false);
+                      window.location.reload();
+                    }, 1000);
+                  }
+                }}
+                className={cn(
+                  "flex-1 py-3 bg-[var(--color-surface)] shadow-neu-soft text-[var(--color-primary)] font-bold rounded-[14px] text-sm active:shadow-neu-inset-soft transition-shadow duration-[var(--duration-press)]",
+                  editPending && "opacity-60",
                 )}
-                <div>
-                  <label className="block text-[11px] font-semibold text-[var(--color-text-faint)] tracking-[0.08em] uppercase mb-2">
-                    이름
-                  </label>
-                  <input
-                    type="text"
-                    value={editName}
-                    onChange={(e) => setEditName(e.target.value)}
-                    className="w-full shadow-neu-inset-soft bg-[var(--color-surface)] border-none rounded-[14px] px-4 py-3 text-sm text-[var(--color-text)] placeholder:text-[var(--color-text-faint)] focus:outline-2 focus:outline-[var(--color-primary)] focus:outline-offset-2 focus:outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block text-[11px] font-semibold text-[var(--color-text-faint)] tracking-[0.08em] uppercase mb-2">
-                    팀
-                  </label>
-                  <select
-                    value={editTeam}
-                    onChange={(e) => setEditTeam(e.target.value)}
-                    className="w-full shadow-neu-inset-soft bg-[var(--color-surface)] border-none rounded-[14px] px-4 py-3 text-sm text-[var(--color-text)] focus:outline-2 focus:outline-[var(--color-primary)] focus:outline-offset-2 focus:outline-none appearance-none cursor-pointer"
-                  >
-                    <option value="운영1팀">운영1팀</option>
-                    <option value="운영2팀">운영2팀</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-[11px] font-semibold text-[var(--color-text-faint)] tracking-[0.08em] uppercase mb-2">
-                    이메일
-                  </label>
-                  <p className="px-4 py-3 text-sm text-[var(--color-text-muted)] shadow-neu-inset-soft bg-[var(--color-surface)] rounded-[14px]">
-                    {displayEmail}
-                  </p>
-                </div>
-                <div className="flex gap-3 pt-2">
-                  <button
-                    type="button"
-                    onClick={() => setShowEditProfile(false)}
-                    className="flex-1 py-3 border border-black/[0.06] text-[var(--color-text-muted)] font-bold rounded-[14px] text-sm hover:bg-black/[0.02] transition-colors"
-                  >
-                    취소
-                  </button>
-                  <button
-                    type="button"
-                    disabled={editPending}
-                    onClick={async () => {
-                      setEditPending(true);
-                      const result = await updateProfile(editName, editTeam);
-                      setEditResult(result);
-                      setEditPending(false);
-                      if (result.success) {
-                        setTimeout(() => {
-                          setShowEditProfile(false);
-                          window.location.reload();
-                        }, 1000);
-                      }
-                    }}
-                    className={cn(
-                      "flex-1 py-3 bg-[var(--color-surface)] shadow-neu-soft text-[var(--color-primary)] font-bold rounded-[14px] text-sm active:shadow-neu-inset-soft transition-shadow duration-[var(--duration-press)]",
-                      editPending && "opacity-60",
-                    )}
-                  >
-                    {editPending ? "저장 중..." : "저장"}
-                  </button>
-                </div>
-              </div>
-            )}
+              >
+                {editPending ? "저장 중..." : "저장"}
+              </button>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </Modal>
 
       {/* 비밀번호 초기화 모달 */}
-      {showPasswordReset && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center">
-          <div
-            className="absolute inset-0 bg-[rgba(231,229,228,0.72)] backdrop-blur-[4px] transition-opacity duration-[var(--duration-modal)] ease-[var(--ease-neu)]"
-            onClick={() => setShowPasswordReset(false)}
-          />
-          <div className="relative w-full max-w-sm bg-[var(--color-surface)] rounded-[20px] shadow-neu-strong transition-all duration-[var(--duration-modal)] ease-[var(--ease-neu)] p-6 text-center">
-            {resetResult?.success ? (
-              <>
-                <IconCircleCheck
-                  size={48}
-                  className="text-[var(--color-primary)] mx-auto mb-3"
-                />
-                <h2 className="text-lg font-bold text-[var(--color-text)] mb-2">
-                  메일 발송 완료
-                </h2>
-                <p className="text-sm text-[var(--color-text-muted)] mb-6">
-                  <span className="font-bold text-[var(--color-text)]">
-                    {displayEmail}
-                  </span>
-                  으로
-                  <br />
-                  비밀번호 초기화 링크를 발송했습니다.
-                </p>
+      <Modal
+        open={showPasswordReset}
+        onClose={() => setShowPasswordReset(false)}
+      >
+        <div className="p-6 text-center">
+          {resetResult?.success ? (
+            <>
+              <IconCircleCheck
+                size={48}
+                className="text-[var(--color-primary)] mx-auto mb-3"
+              />
+              <h2 className="text-lg font-bold text-[var(--color-text)] mb-2">
+                메일 발송 완료
+              </h2>
+              <p className="text-sm text-[var(--color-text-muted)] mb-6">
+                <span className="font-bold text-[var(--color-text)]">
+                  {displayEmail}
+                </span>
+                으로
+                <br />
+                비밀번호 초기화 링크를 발송했습니다.
+              </p>
+              <button
+                type="button"
+                onClick={() => setShowPasswordReset(false)}
+                className="w-full py-3 bg-[var(--color-surface)] shadow-neu-soft text-[var(--color-primary)] font-bold rounded-[14px] text-sm active:shadow-neu-inset-soft transition-shadow duration-[var(--duration-press)]"
+              >
+                확인
+              </button>
+            </>
+          ) : resetResult?.error ? (
+            <>
+              <h2 className="text-lg font-bold text-[var(--color-text)] mb-2">
+                오류
+              </h2>
+              <p className="text-sm text-[var(--color-danger)] mb-6">
+                {resetResult.error}
+              </p>
+              <button
+                type="button"
+                onClick={() => setShowPasswordReset(false)}
+                className="w-full py-3 border border-black/[0.06] text-[var(--color-text-muted)] font-bold rounded-[14px] text-sm hover:bg-black/[0.02] transition-colors"
+              >
+                닫기
+              </button>
+            </>
+          ) : (
+            <>
+              <h2 className="text-lg font-bold text-[var(--color-text)] mb-2">
+                비밀번호 초기화
+              </h2>
+              <p className="text-sm text-[var(--color-text-muted)] mb-1">
+                <span className="font-bold text-[var(--color-text)]">
+                  {displayEmail}
+                </span>
+              </p>
+              <p className="text-sm text-[var(--color-text-muted)] mb-6">
+                위 이메일로 비밀번호 초기화 링크를 발송합니다.
+              </p>
+              <div className="flex gap-3">
                 <button
                   type="button"
                   onClick={() => setShowPasswordReset(false)}
-                  className="w-full py-3 bg-[var(--color-surface)] shadow-neu-soft text-[var(--color-primary)] font-bold rounded-[14px] text-sm active:shadow-neu-inset-soft transition-shadow duration-[var(--duration-press)]"
+                  className="flex-1 py-3 border border-black/[0.06] text-[var(--color-text-muted)] font-bold rounded-[14px] text-sm hover:bg-black/[0.02] transition-colors"
                 >
-                  확인
+                  취소
                 </button>
-              </>
-            ) : resetResult?.error ? (
-              <>
-                <h2 className="text-lg font-bold text-[var(--color-text)] mb-2">
-                  오류
-                </h2>
-                <p className="text-sm text-[var(--color-danger)] mb-6">
-                  {resetResult.error}
-                </p>
                 <button
                   type="button"
-                  onClick={() => setShowPasswordReset(false)}
-                  className="w-full py-3 border border-black/[0.06] text-[var(--color-text-muted)] font-bold rounded-[14px] text-sm hover:bg-black/[0.02] transition-colors"
+                  disabled={resetPending}
+                  onClick={async () => {
+                    setResetPending(true);
+                    const result = await resetMyPassword();
+                    setResetResult(result);
+                    setResetPending(false);
+                  }}
+                  className={cn(
+                    "flex-1 py-3 bg-[var(--color-surface)] shadow-neu-soft text-[var(--color-primary)] font-bold rounded-[14px] text-sm active:shadow-neu-inset-soft transition-shadow duration-[var(--duration-press)]",
+                    resetPending && "opacity-60",
+                  )}
                 >
-                  닫기
+                  {resetPending ? "발송 중..." : "발송"}
                 </button>
-              </>
-            ) : (
-              <>
-                <h2 className="text-lg font-bold text-[var(--color-text)] mb-2">
-                  비밀번호 초기화
-                </h2>
-                <p className="text-sm text-[var(--color-text-muted)] mb-1">
-                  <span className="font-bold text-[var(--color-text)]">
-                    {displayEmail}
-                  </span>
-                </p>
-                <p className="text-sm text-[var(--color-text-muted)] mb-6">
-                  위 이메일로 비밀번호 초기화 링크를 발송합니다.
-                </p>
-                <div className="flex gap-3">
-                  <button
-                    type="button"
-                    onClick={() => setShowPasswordReset(false)}
-                    className="flex-1 py-3 border border-black/[0.06] text-[var(--color-text-muted)] font-bold rounded-[14px] text-sm hover:bg-black/[0.02] transition-colors"
-                  >
-                    취소
-                  </button>
-                  <button
-                    type="button"
-                    disabled={resetPending}
-                    onClick={async () => {
-                      setResetPending(true);
-                      const result = await resetMyPassword();
-                      setResetResult(result);
-                      setResetPending(false);
-                    }}
-                    className={cn(
-                      "flex-1 py-3 bg-[var(--color-surface)] shadow-neu-soft text-[var(--color-primary)] font-bold rounded-[14px] text-sm active:shadow-neu-inset-soft transition-shadow duration-[var(--duration-press)]",
-                      resetPending && "opacity-60",
-                    )}
-                  >
-                    {resetPending ? "발송 중..." : "발송"}
-                  </button>
-                </div>
-              </>
-            )}
-          </div>
+              </div>
+            </>
+          )}
         </div>
-      )}
+      </Modal>
     </aside>
   );
 }

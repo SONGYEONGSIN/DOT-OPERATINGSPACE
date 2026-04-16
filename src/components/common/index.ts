@@ -15,3 +15,5 @@ export { default as MetricBar } from "./MetricBar";
 export { default as UserAvatar } from "./UserAvatar";
 export { default as DatePicker } from "./DatePicker";
 export { default as DateRangePicker } from "./DateRangePicker";
+export { default as Modal } from "./Modal";
+export { default as Toast } from "./Toast";
