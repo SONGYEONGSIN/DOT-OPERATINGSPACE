@@ -45,22 +45,25 @@
 
 ## 다음 단계 (재개 시 여기서 시작)
 
-사용자가 A/B1/B2/C 중 선택 요청받은 상태. 선택 대기 항목:
+### ✅ A — 새 DESIGN.md 리뷰 (완료)
+### ✅ B1 — NEUMORPHISM-SPEC 작성 (완료, 커밋 `0be09f2`)
 
-### B1 — DESIGN.md 보강 (권장 시작점)
-- 뉴모피즘 shadow 토큰 2레벨 추가 (light/dark)
-- 의도 충돌 해소 (뉴모피즘 우선 / matrix 보조 결정)
-- sidebar/card/button 최소 3개 컴포넌트 anatomy 작성
-- 예상 소요: 30분
+- 브랜치: `feat/neumorphism-redesign`
+- 산출물: `design-ref/NEUMORPHISM-SPEC.md` (12섹션 ~290줄)
+- 확정 결정 6개: 뉴모피즘 우위 / light-only v1 / Pretendard 유지 + Space Mono 숫자 한정 / Modal backdrop surface 동색조 / Toast extruded-strong / Motion duration hover 200·press 100·modal 300ms
+- 미정: Chart 색 팔레트(구현 시점까지), Form 복잡 패턴
 
-### B2 — design-audit 스킬 실행
-- 현재 코드베이스와 새 DESIGN.md의 gap 정량 측정
-- `/design-audit` 호출
-- B1 전에 돌리면 부실한 기준으로 측정되므로 B1 후 권장
+### ⏭️ B2 — design-audit 스킬 실행 (다음 작업)
 
-### C — 단계적 적용 플랜
-- B1 + B2 결과로 우선순위 매긴 `/pair` 큐 작성
-- 예: Sidebar → Card → Button → Table 순
+- `feat/neumorphism-redesign` 브랜치에서 `/design-audit` 호출
+- 현재 M3 light theme 코드베이스 vs NEUMORPHISM-SPEC gap 정량 측정
+- 산출물 기대: 하드코딩 색/shadow 위치, 토큰 커버리지, 컴포넌트별 위반 카운트
+- 예상 소요: 10~15분
+
+### C — 단계적 적용 플랜 (B2 후)
+
+- B2 결과로 우선순위 매긴 `/pair` 큐 작성
+- 권장 순서: (1) globals.css + design-tokens.ts 뉴모피즘 토큰 이식 → (2) Button/Card common 원자 컴포넌트 → (3) Sidebar → (4) 테이블/폼 → (5) 페이지 단위 검증
 
 ## 재개 방법
 
@@ -68,14 +71,18 @@
 
 ```bash
 cd <프로젝트 경로>
-git pull origin main
+git fetch origin
+git checkout feat/neumorphism-redesign
+git pull
 ```
 
-그 후 Claude Code 세션에서:
-> "HANDOFF.md 읽고 이어서 해줘. B1부터 시작할까?"
+(main 브랜치가 아니라 **feat/neumorphism-redesign** 체크아웃 필수 — NEUMORPHISM-SPEC은 이 브랜치에만 있음)
 
-또는 사용자가 다른 방향을 원하면:
-> "HANDOFF.md 읽고, DESIGN.md는 폐기하고 대신 X 레퍼런스 기반으로 다시 시작하자"
+그 후 Claude Code 세션에서:
+> **"HANDOFF.md 읽고 B2 design-audit 진행해줘"**
+
+또는 SPEC 먼저 검토하고 싶으면:
+> "NEUMORPHISM-SPEC.md 리뷰해줘. 수정할 거 있으면 같이 보자"
 
 ## 주의사항
 
