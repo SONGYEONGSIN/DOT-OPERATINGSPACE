@@ -268,7 +268,7 @@ export default function Sidebar({ profile }: SidebarProps) {
   }
 
   return (
-    <aside className="fixed top-0 left-0 z-40 h-full w-64 bg-surface-container-low flex flex-col">
+    <aside className="fixed top-0 left-0 z-40 h-full w-64 bg-[var(--color-surface)] flex flex-col">
       {/* Logo */}
       <Link
         href="/dashboard"
@@ -289,18 +289,18 @@ export default function Sidebar({ profile }: SidebarProps) {
               <div
                 key={item.href}
                 className={cn(
-                  index > 0 && "mt-4 pt-3 border-t border-outline-variant/10",
+                  index > 0 && "mt-4 pt-3 border-t border-black/[0.04]",
                 )}
               >
                 {/* 대메뉴 카테고리 라벨 */}
                 <div className="flex items-center justify-between px-3 mb-1.5">
-                  <span className="text-[10px] font-bold text-outline-variant uppercase tracking-[0.15em]">
+                  <span className="text-[11px] font-semibold text-[var(--color-text-faint)] uppercase tracking-[0.08em]">
                     {item.label}
                   </span>
                   {isCollapsible && (
                     <button
                       onClick={() => toggleCollapse(item.href)}
-                      className="p-0.5 text-outline-variant hover:text-on-surface-variant transition-colors rounded"
+                      className="p-0.5 text-[var(--color-text-faint)] hover:text-[var(--color-text-muted)] transition-colors rounded-[14px]"
                     >
                       <IconChevronDown
                         size={14}
@@ -330,10 +330,10 @@ export default function Sidebar({ profile }: SidebarProps) {
                         key={child.href}
                         href={child.href}
                         className={cn(
-                          "flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200",
+                          "flex items-center gap-2.5 px-3 py-2 rounded-[14px] text-[13px] font-medium transition-all duration-200",
                           active
-                            ? "bg-primary/10 text-primary border-l-2 border-primary pl-[10px]"
-                            : "text-on-surface-variant hover:bg-surface-container hover:text-on-surface",
+                            ? "shadow-neu-inset-soft text-[var(--color-primary)] font-semibold"
+                            : "text-[var(--color-text-muted)] hover:bg-black/[0.02]",
                         )}
                       >
                         <ChildIcon
@@ -341,7 +341,9 @@ export default function Sidebar({ profile }: SidebarProps) {
                           stroke={active ? 2 : 1.5}
                           className={cn(
                             "shrink-0",
-                            active ? "text-primary" : "text-outline",
+                            active
+                              ? "text-[var(--color-primary)]"
+                              : "text-[var(--color-text-faint)]",
                           )}
                         />
                         <span>{child.label}</span>
@@ -357,12 +359,12 @@ export default function Sidebar({ profile }: SidebarProps) {
       {/* Bottom - Account */}
       <div
         ref={accountRef}
-        className="relative p-4 border-t border-outline-variant/10 shrink-0"
+        className="relative p-4 border-t border-black/[0.04] shrink-0"
       >
         <button
           type="button"
           onClick={() => setShowAccountMenu((prev) => !prev)}
-          className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-surface-container transition-colors"
+          className="w-full flex items-center gap-3 px-3 py-2 rounded-[14px] shadow-neu-soft hover:shadow-neu-strong active:shadow-neu-inset-soft transition-shadow duration-[var(--duration-press)]"
         >
           {profile?.avatarUrl ? (
             <img
@@ -371,34 +373,34 @@ export default function Sidebar({ profile }: SidebarProps) {
               className="w-8 h-8 rounded-full object-cover"
             />
           ) : (
-            <div className="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center">
-              <span className="text-xs font-black text-on-primary-container">
+            <div className="w-8 h-8 rounded-full bg-[var(--color-primary)] flex items-center justify-center">
+              <span className="text-xs font-black text-white">
                 {avatarInitial}
               </span>
             </div>
           )}
           <div className="flex-1 min-w-0 text-left">
-            <p className="text-xs font-bold text-on-surface truncate">
+            <p className="text-xs font-bold text-[var(--color-text)] truncate">
               {displayName}
             </p>
-            <p className="text-[10px] text-on-surface-variant truncate">
+            <p className="text-[10px] text-[var(--color-text-muted)] truncate">
               {displayEmail}
             </p>
           </div>
         </button>
 
         {showAccountMenu && (
-          <div className="absolute left-4 right-4 bottom-full mb-2 bg-surface-container-high rounded-xl border border-outline-variant/15 shadow-elevated overflow-hidden">
+          <div className="absolute left-4 right-4 bottom-full mb-2 bg-[var(--color-surface)] rounded-[20px] border border-black/[0.03] shadow-neu-strong overflow-hidden">
             {/* 계정 정보 */}
-            <div className="px-4 py-3 border-b border-outline-variant/10">
-              <p className="text-xs text-on-surface-variant truncate">
+            <div className="px-4 py-3 border-b border-black/[0.04]">
+              <p className="text-xs text-[var(--color-text-muted)] truncate">
                 {displayEmail}
               </p>
-              <p className="text-sm font-bold text-on-surface mt-1">
+              <p className="text-sm font-bold text-[var(--color-text)] mt-1">
                 {profile?.position ?? displayRole}
               </p>
               {profile?.team && (
-                <p className="text-xs text-on-surface-variant">
+                <p className="text-xs text-[var(--color-text-muted)]">
                   {profile.team}
                 </p>
               )}
@@ -414,7 +416,7 @@ export default function Sidebar({ profile }: SidebarProps) {
                   setEditResult(null);
                   setShowEditProfile(true);
                 }}
-                className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-on-surface hover:bg-surface-bright transition-colors"
+                className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-[var(--color-text)] hover:bg-black/[0.02] transition-colors"
               >
                 계정정보 수정
               </button>
@@ -425,7 +427,7 @@ export default function Sidebar({ profile }: SidebarProps) {
                   setResetResult(null);
                   setShowPasswordReset(true);
                 }}
-                className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-on-surface hover:bg-surface-bright transition-colors"
+                className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-[var(--color-text)] hover:bg-black/[0.02] transition-colors"
               >
                 비밀번호 초기화
               </button>
@@ -435,7 +437,7 @@ export default function Sidebar({ profile }: SidebarProps) {
                   setShowAccountMenu(false);
                   setShowLogoutConfirm(true);
                 }}
-                className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-error hover:bg-surface-bright transition-colors"
+                className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-[var(--color-danger)] hover:bg-black/[0.02] transition-colors"
               >
                 로그아웃
               </button>
@@ -448,26 +450,28 @@ export default function Sidebar({ profile }: SidebarProps) {
       {showLogoutConfirm && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center">
           <div
-            className="absolute inset-0 bg-surface-container-lowest/80 backdrop-blur-sm"
+            className="absolute inset-0 bg-[rgba(231,229,228,0.72)] backdrop-blur-[4px] transition-opacity duration-[var(--duration-modal)] ease-[var(--ease-neu)]"
             onClick={() => setShowLogoutConfirm(false)}
           />
-          <div className="relative w-full max-w-xs bg-surface-container rounded-2xl border border-outline-variant/15 shadow-2xl animate-slide-up p-6 text-center">
-            <h2 className="text-lg font-bold text-on-surface mb-2">로그아웃</h2>
-            <p className="text-sm text-on-surface-variant mb-6">
+          <div className="relative w-full max-w-xs bg-[var(--color-surface)] rounded-[20px] shadow-neu-strong transition-all duration-[var(--duration-modal)] ease-[var(--ease-neu)] p-6 text-center">
+            <h2 className="text-lg font-bold text-[var(--color-text)] mb-2">
+              로그아웃
+            </h2>
+            <p className="text-sm text-[var(--color-text-muted)] mb-6">
               정말 로그아웃 하시겠습니까?
             </p>
             <div className="flex gap-3">
               <button
                 type="button"
                 onClick={() => setShowLogoutConfirm(false)}
-                className="flex-1 py-3 bg-surface-container-high text-on-surface-variant font-bold rounded-lg text-sm hover:bg-surface-container-highest transition-colors"
+                className="flex-1 py-3 border border-black/[0.06] text-[var(--color-text-muted)] font-bold rounded-[14px] text-sm hover:bg-black/[0.02] transition-colors"
               >
                 취소
               </button>
               <button
                 type="button"
                 onClick={() => signOut()}
-                className="flex-1 py-3 bg-error text-on-primary font-bold rounded-lg text-sm hover:bg-error/90 transition-colors"
+                className="flex-1 py-3 bg-[var(--color-surface)] shadow-neu-soft text-[var(--color-danger)] font-bold rounded-[14px] text-sm active:shadow-neu-inset-soft transition-shadow duration-[var(--duration-press)]"
               >
                 로그아웃
               </button>
@@ -480,17 +484,17 @@ export default function Sidebar({ profile }: SidebarProps) {
       {showEditProfile && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center">
           <div
-            className="absolute inset-0 bg-surface-container-lowest/80 backdrop-blur-sm"
+            className="absolute inset-0 bg-[rgba(231,229,228,0.72)] backdrop-blur-[4px] transition-opacity duration-[var(--duration-modal)] ease-[var(--ease-neu)]"
             onClick={() => setShowEditProfile(false)}
           />
-          <div className="relative w-full max-w-sm bg-surface-container rounded-2xl border border-outline-variant/15 shadow-2xl animate-slide-up">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-outline-variant/10">
-              <h2 className="text-lg font-bold text-on-surface">
+          <div className="relative w-full max-w-sm bg-[var(--color-surface)] rounded-[20px] shadow-neu-strong transition-all duration-[var(--duration-modal)] ease-[var(--ease-neu)]">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-black/[0.04]">
+              <h2 className="text-lg font-bold text-[var(--color-text)]">
                 계정정보 수정
               </h2>
               <button
                 onClick={() => setShowEditProfile(false)}
-                className="p-1 text-on-surface-variant hover:text-on-surface transition-colors rounded-lg"
+                className="p-1 text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors rounded-[14px]"
               >
                 <IconX size={20} />
               </button>
@@ -499,46 +503,48 @@ export default function Sidebar({ profile }: SidebarProps) {
               <div className="p-8 text-center">
                 <IconCircleCheck
                   size={48}
-                  className="text-primary mx-auto mb-3"
+                  className="text-[var(--color-primary)] mx-auto mb-3"
                 />
-                <p className="font-bold text-on-surface">수정되었습니다!</p>
+                <p className="font-bold text-[var(--color-text)]">
+                  수정되었습니다!
+                </p>
               </div>
             ) : (
               <div className="p-6 space-y-4">
                 {editResult?.error && (
-                  <div className="p-3 rounded-lg bg-error-container/20 border border-error/30 text-error text-xs font-medium">
+                  <div className="p-3 rounded-[14px] shadow-neu-inset-soft border-l-4 border-[var(--color-danger)] text-[var(--color-danger)] text-xs font-medium">
                     {editResult.error}
                   </div>
                 )}
                 <div>
-                  <label className="block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-2">
+                  <label className="block text-[11px] font-semibold text-[var(--color-text-faint)] tracking-[0.08em] uppercase mb-2">
                     이름
                   </label>
                   <input
                     type="text"
                     value={editName}
                     onChange={(e) => setEditName(e.target.value)}
-                    className="w-full bg-surface-container-highest border-none rounded-lg px-4 py-3 text-sm text-on-surface placeholder:text-outline focus:ring-1 focus:ring-primary/50 focus:outline-none"
+                    className="w-full shadow-neu-inset-soft bg-[var(--color-surface)] border-none rounded-[14px] px-4 py-3 text-sm text-[var(--color-text)] placeholder:text-[var(--color-text-faint)] focus:outline-2 focus:outline-[var(--color-primary)] focus:outline-offset-2 focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-2">
+                  <label className="block text-[11px] font-semibold text-[var(--color-text-faint)] tracking-[0.08em] uppercase mb-2">
                     팀
                   </label>
                   <select
                     value={editTeam}
                     onChange={(e) => setEditTeam(e.target.value)}
-                    className="w-full bg-surface-container-highest border-none rounded-lg px-4 py-3 text-sm text-on-surface focus:ring-1 focus:ring-primary/50 focus:outline-none appearance-none cursor-pointer"
+                    className="w-full shadow-neu-inset-soft bg-[var(--color-surface)] border-none rounded-[14px] px-4 py-3 text-sm text-[var(--color-text)] focus:outline-2 focus:outline-[var(--color-primary)] focus:outline-offset-2 focus:outline-none appearance-none cursor-pointer"
                   >
                     <option value="운영1팀">운영1팀</option>
                     <option value="운영2팀">운영2팀</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-2">
+                  <label className="block text-[11px] font-semibold text-[var(--color-text-faint)] tracking-[0.08em] uppercase mb-2">
                     이메일
                   </label>
-                  <p className="px-4 py-3 text-sm text-on-surface-variant bg-surface-container-highest/50 rounded-lg">
+                  <p className="px-4 py-3 text-sm text-[var(--color-text-muted)] shadow-neu-inset-soft bg-[var(--color-surface)] rounded-[14px]">
                     {displayEmail}
                   </p>
                 </div>
@@ -546,7 +552,7 @@ export default function Sidebar({ profile }: SidebarProps) {
                   <button
                     type="button"
                     onClick={() => setShowEditProfile(false)}
-                    className="flex-1 py-3 bg-surface-container-high text-on-surface-variant font-bold rounded-lg text-sm"
+                    className="flex-1 py-3 border border-black/[0.06] text-[var(--color-text-muted)] font-bold rounded-[14px] text-sm hover:bg-black/[0.02] transition-colors"
                   >
                     취소
                   </button>
@@ -566,7 +572,7 @@ export default function Sidebar({ profile }: SidebarProps) {
                       }
                     }}
                     className={cn(
-                      "flex-1 py-3 bg-primary text-on-primary font-bold rounded-lg text-sm",
+                      "flex-1 py-3 bg-[var(--color-surface)] shadow-neu-soft text-[var(--color-primary)] font-bold rounded-[14px] text-sm active:shadow-neu-inset-soft transition-shadow duration-[var(--duration-press)]",
                       editPending && "opacity-60",
                     )}
                   >
@@ -583,21 +589,21 @@ export default function Sidebar({ profile }: SidebarProps) {
       {showPasswordReset && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center">
           <div
-            className="absolute inset-0 bg-surface-container-lowest/80 backdrop-blur-sm"
+            className="absolute inset-0 bg-[rgba(231,229,228,0.72)] backdrop-blur-[4px] transition-opacity duration-[var(--duration-modal)] ease-[var(--ease-neu)]"
             onClick={() => setShowPasswordReset(false)}
           />
-          <div className="relative w-full max-w-sm bg-surface-container rounded-2xl border border-outline-variant/15 shadow-2xl animate-slide-up p-6 text-center">
+          <div className="relative w-full max-w-sm bg-[var(--color-surface)] rounded-[20px] shadow-neu-strong transition-all duration-[var(--duration-modal)] ease-[var(--ease-neu)] p-6 text-center">
             {resetResult?.success ? (
               <>
                 <IconCircleCheck
                   size={48}
-                  className="text-primary mx-auto mb-3"
+                  className="text-[var(--color-primary)] mx-auto mb-3"
                 />
-                <h2 className="text-lg font-bold text-on-surface mb-2">
+                <h2 className="text-lg font-bold text-[var(--color-text)] mb-2">
                   메일 발송 완료
                 </h2>
-                <p className="text-sm text-on-surface-variant mb-6">
-                  <span className="font-bold text-on-surface">
+                <p className="text-sm text-[var(--color-text-muted)] mb-6">
+                  <span className="font-bold text-[var(--color-text)]">
                     {displayEmail}
                   </span>
                   으로
@@ -607,41 +613,45 @@ export default function Sidebar({ profile }: SidebarProps) {
                 <button
                   type="button"
                   onClick={() => setShowPasswordReset(false)}
-                  className="w-full py-3 bg-primary text-on-primary font-bold rounded-lg text-sm"
+                  className="w-full py-3 bg-[var(--color-surface)] shadow-neu-soft text-[var(--color-primary)] font-bold rounded-[14px] text-sm active:shadow-neu-inset-soft transition-shadow duration-[var(--duration-press)]"
                 >
                   확인
                 </button>
               </>
             ) : resetResult?.error ? (
               <>
-                <h2 className="text-lg font-bold text-on-surface mb-2">오류</h2>
-                <p className="text-sm text-error mb-6">{resetResult.error}</p>
+                <h2 className="text-lg font-bold text-[var(--color-text)] mb-2">
+                  오류
+                </h2>
+                <p className="text-sm text-[var(--color-danger)] mb-6">
+                  {resetResult.error}
+                </p>
                 <button
                   type="button"
                   onClick={() => setShowPasswordReset(false)}
-                  className="w-full py-3 bg-surface-container-high text-on-surface-variant font-bold rounded-lg text-sm"
+                  className="w-full py-3 border border-black/[0.06] text-[var(--color-text-muted)] font-bold rounded-[14px] text-sm hover:bg-black/[0.02] transition-colors"
                 >
                   닫기
                 </button>
               </>
             ) : (
               <>
-                <h2 className="text-lg font-bold text-on-surface mb-2">
+                <h2 className="text-lg font-bold text-[var(--color-text)] mb-2">
                   비밀번호 초기화
                 </h2>
-                <p className="text-sm text-on-surface-variant mb-1">
-                  <span className="font-bold text-on-surface">
+                <p className="text-sm text-[var(--color-text-muted)] mb-1">
+                  <span className="font-bold text-[var(--color-text)]">
                     {displayEmail}
                   </span>
                 </p>
-                <p className="text-sm text-on-surface-variant mb-6">
+                <p className="text-sm text-[var(--color-text-muted)] mb-6">
                   위 이메일로 비밀번호 초기화 링크를 발송합니다.
                 </p>
                 <div className="flex gap-3">
                   <button
                     type="button"
                     onClick={() => setShowPasswordReset(false)}
-                    className="flex-1 py-3 bg-surface-container-high text-on-surface-variant font-bold rounded-lg text-sm"
+                    className="flex-1 py-3 border border-black/[0.06] text-[var(--color-text-muted)] font-bold rounded-[14px] text-sm hover:bg-black/[0.02] transition-colors"
                   >
                     취소
                   </button>
@@ -655,7 +665,7 @@ export default function Sidebar({ profile }: SidebarProps) {
                       setResetPending(false);
                     }}
                     className={cn(
-                      "flex-1 py-3 bg-primary text-on-primary font-bold rounded-lg text-sm",
+                      "flex-1 py-3 bg-[var(--color-surface)] shadow-neu-soft text-[var(--color-primary)] font-bold rounded-[14px] text-sm active:shadow-neu-inset-soft transition-shadow duration-[var(--duration-press)]",
                       resetPending && "opacity-60",
                     )}
                   >
