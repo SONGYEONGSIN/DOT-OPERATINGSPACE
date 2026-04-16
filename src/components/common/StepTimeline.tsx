@@ -27,12 +27,11 @@ export default function StepTimeline({ steps }: StepTimelineProps) {
               <div
                 className={cn(
                   "flex items-center justify-center w-7 h-7 rounded-full text-xs font-bold transition-all",
-                  step.status === "completed" &&
-                    "bg-primary text-on-primary",
+                  step.status === "completed" && "bg-primary text-on-primary",
                   step.status === "active" &&
                     "bg-primary text-on-primary ring-4 ring-primary/20",
                   step.status === "pending" &&
-                    "bg-[var(--color-surface)] text-[var(--color-text-muted)] border border-black/[0.04]/30",
+                    "bg-[var(--color-surface)] text-[var(--color-text-muted)] shadow-neu-inset-soft",
                 )}
               >
                 {step.status === "completed" ? (

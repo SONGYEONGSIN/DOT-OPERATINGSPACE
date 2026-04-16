@@ -11,7 +11,7 @@ interface MetricBarProps {
 
 export default function MetricBar({ items }: MetricBarProps) {
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-40 bg-[var(--color-surface)] border-t border-black/[0.04]/10">
+    <div className="fixed bottom-0 left-0 right-0 z-40 bg-[var(--color-surface)]">
       <div className="flex justify-around items-center px-4 py-3">
         {items.map((item, index) => (
           <div key={index} className="flex items-center gap-2">

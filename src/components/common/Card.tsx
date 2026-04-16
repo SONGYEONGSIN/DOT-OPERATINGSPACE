@@ -8,10 +8,8 @@ interface CardProps {
 }
 
 const variantStyles = {
-  default:
-    "bg-[var(--color-surface)] rounded-[20px] shadow-neu-soft border border-black/[0.03]",
-  elevated:
-    "bg-[var(--color-surface)] rounded-[20px] shadow-neu-strong border border-black/[0.03]",
+  default: "bg-[var(--color-surface)] rounded-[20px] shadow-neu-soft",
+  elevated: "bg-[var(--color-surface)] rounded-[20px] shadow-neu-strong",
   sunken: "bg-[var(--color-surface)] rounded-[20px] shadow-neu-inset-soft",
 } as const;
 

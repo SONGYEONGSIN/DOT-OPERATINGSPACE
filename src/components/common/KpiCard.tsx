@@ -40,7 +40,7 @@ export default function KpiCard({
   hoverChange,
 }: KpiCardProps) {
   return (
-    <div className="group relative bg-[var(--color-surface)] rounded-[20px] shadow-neu-soft border border-black/[0.03] p-5 transition-shadow duration-[var(--duration-hover)] ease-[var(--ease-neu)] hover:shadow-neu-strong">
+    <div className="group relative bg-[var(--color-surface)] rounded-[20px] shadow-neu-soft p-5 transition-shadow duration-[var(--duration-hover)] ease-[var(--ease-neu)] hover:shadow-neu-strong">
       {alert && (
         <span className="absolute top-4 right-4 flex h-2.5 w-2.5">
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-danger)] opacity-75" />
