@@ -335,7 +335,13 @@ Default + color danger (#FF2157) 텍스트 (배경은 surface 유지)
 
 ## 12. 미정 항목 (나중에 결정)
 
-- [ ] **Chart 색 팔레트** — Recharts/Visx 등 실제 차트 컴포넌트 도입 시점에 결정. primary teal 단독은 2+ 시리즈에서 표현력 부족. 후보: teal shade gradient, 또는 보조 축으로 muted 3~4색 필요.
+- [x] **Chart 색 팔레트** — 확정. `globals.css` @theme에 6색 토큰 추가 완료:
+  - `--color-chart-primary: #006666` (처리완료 — SPEC primary)
+  - `--color-chart-warning: #FE9900` (할 일 — SPEC warning)
+  - `--color-chart-danger: #FF2157` (보류 — SPEC danger)
+  - `--color-chart-blue: #4A90D9` (진행 중 — muted blue 보조)
+  - `--color-chart-purple: #7C6BA0` (처리예정 — muted purple 보조)
+  - `--color-chart-muted: #6B7280` (fallback — SPEC text-faint)
 - [ ] **Form 복잡 패턴** — multi-step wizard, conditional 필드 anatomy는 구현 시 추가 스펙.
 
 ---

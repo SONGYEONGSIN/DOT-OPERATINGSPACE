@@ -98,6 +98,12 @@
    * Coexists with M3 tokens during migration.
    */
 
+  /* Core text & status (NEUMORPHISM-SPEC §2) */
+  --color-text: #1e2938;
+  --color-success: #00a63d;
+  --color-warning: #fe9900;
+  --color-danger: #ff2157;
+
   /* Text hierarchy 확장 — surface #E7E5E4 대비 AA 이상 */
   --color-text-muted: #4a5565;
   --color-text-faint: #6b7280;
@@ -126,6 +132,14 @@
   --radius-neu-sm: 8px;
   --radius-neu-md: 14px;
   --radius-neu-lg: 20px;
+
+  /* ── Chart Palette (NEUMORPHISM-SPEC §12 해소) ── */
+  --color-chart-primary: #006666;
+  --color-chart-warning: #fe9900;
+  --color-chart-danger: #ff2157;
+  --color-chart-blue: #4a90d9;
+  --color-chart-purple: #7c6ba0;
+  --color-chart-muted: #6b7280;
 
   /* Display font (Space Mono for stat numbers / 라틴 only) */
   --font-display: "Space Mono", "JetBrains Mono", ui-monospace, monospace;
