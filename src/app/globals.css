@@ -5,72 +5,72 @@
 
 /* ── Design Tokens: Tailwind CSS 4 @theme ── */
 @theme {
-  /* Surface hierarchy */
-  --color-surface: #0c0e10;
-  --color-surface-dim: #0c0e10;
-  --color-surface-bright: #292c30;
-  --color-surface-container-lowest: #000000;
-  --color-surface-container-low: #111416;
-  --color-surface-container: #171a1c;
-  --color-surface-container-high: #1d2023;
-  --color-surface-container-highest: #232629;
-  --color-surface-tint: #d9fd53;
-  --color-surface-variant: #232629;
+  /* Surface hierarchy — Neumorphism light (SPEC §2) */
+  --color-surface: #e7e5e4;
+  --color-surface-dim: #d6d4d3;
+  --color-surface-bright: #f5f3f2;
+  --color-surface-container-lowest: #dddbd9;
+  --color-surface-container-low: #e2e0de;
+  --color-surface-container: #e7e5e4;
+  --color-surface-container-high: #edebea;
+  --color-surface-container-highest: #f3f1f0;
+  --color-surface-tint: #006666;
+  --color-surface-variant: #e0dedc;
 
-  /* Primary */
-  --color-primary: #d9fd53;
-  --color-primary-dim: #cbee45;
-  --color-primary-container: #9fc00f;
-  --color-primary-fixed: #d6fa50;
-  --color-primary-fixed-dim: #c8eb42;
-  --color-on-primary: #4e5f00;
-  --color-on-primary-container: #2c3700;
-  --color-on-primary-fixed: #3c4a00;
-  --color-on-primary-fixed-variant: #556800;
-  --color-inverse-primary: #536600;
+  /* Primary — Teal (SPEC §2) */
+  --color-primary: #006666;
+  --color-primary-dim: #005555;
+  --color-primary-container: #b2dfdb;
+  --color-primary-fixed: #b2dfdb;
+  --color-primary-fixed-dim: #80cbc4;
+  --color-on-primary: #ffffff;
+  --color-on-primary-container: #004d4d;
+  --color-on-primary-fixed: #004d4d;
+  --color-on-primary-fixed-variant: #005555;
+  --color-inverse-primary: #80cbc4;
 
-  /* Secondary */
-  --color-secondary: #e1e3e5;
-  --color-secondary-dim: #d3d4d7;
-  --color-secondary-container: #444749;
-  --color-secondary-fixed: #e1e3e5;
-  --color-secondary-fixed-dim: #d3d4d7;
-  --color-on-secondary: #4f5254;
-  --color-on-secondary-container: #cfd0d3;
-  --color-on-secondary-fixed: #3d4042;
-  --color-on-secondary-fixed-variant: #595c5e;
+  /* Secondary — Neutral (SPEC §2: F1F2F5 보조 표면) */
+  --color-secondary: #f1f2f5;
+  --color-secondary-dim: #e2e3e6;
+  --color-secondary-container: #e7e5e4;
+  --color-secondary-fixed: #f1f2f5;
+  --color-secondary-fixed-dim: #e2e3e6;
+  --color-on-secondary: #4a5565;
+  --color-on-secondary-container: #1e2938;
+  --color-on-secondary-fixed: #4a5565;
+  --color-on-secondary-fixed-variant: #6b7280;
 
-  /* Tertiary */
-  --color-tertiary: #ffeead;
-  --color-tertiary-dim: #f0d038;
-  --color-tertiary-container: #ffdf46;
-  --color-tertiary-fixed: #ffdf46;
-  --color-tertiary-fixed-dim: #f0d038;
-  --color-on-tertiary: #675800;
-  --color-on-tertiary-container: #5e4f00;
-  --color-on-tertiary-fixed: #493d00;
-  --color-on-tertiary-fixed-variant: #695900;
+  /* Tertiary — Neutral warm (뉴모피즘 중립) */
+  --color-tertiary: #d6d4d3;
+  --color-tertiary-dim: #c5c3c2;
+  --color-tertiary-container: #e0dedc;
+  --color-tertiary-fixed: #e0dedc;
+  --color-tertiary-fixed-dim: #d6d4d3;
+  --color-on-tertiary: #4a5565;
+  --color-on-tertiary-container: #1e2938;
+  --color-on-tertiary-fixed: #4a5565;
+  --color-on-tertiary-fixed-variant: #6b7280;
 
-  /* Error */
-  --color-error: #ff7351;
-  --color-error-dim: #d53d18;
-  --color-error-container: #b92902;
-  --color-on-error: #450900;
-  --color-on-error-container: #ffd2c8;
+  /* Error — Neumorphism danger (SPEC §2) */
+  --color-error: #ff2157;
+  --color-error-dim: #e01e4e;
+  --color-error-container: #ffd6d6;
+  --color-on-error: #ffffff;
+  --color-on-error-container: #520002;
 
-  /* On Surface */
-  --color-on-surface: #eeeef0;
-  --color-on-surface-variant: #aaabad;
-  --color-on-background: #eeeef0;
-  --color-background: #0c0e10;
+  /* On Surface — Neumorphism text hierarchy (SPEC §2) */
+  --color-on-surface: #1e2938;
+  --color-on-surface-variant: #4a5565;
+  --color-on-background: #1e2938;
+  --color-background: #e7e5e4;
 
-  /* Outline */
-  --color-outline: #747578;
-  --color-outline-variant: #46484a;
+  /* Outline — Neumorphism (SPEC §2 대비 보정) */
+  --color-outline: #8b9098;
+  --color-outline-variant: #c5c8cc;
 
   /* Inverse */
-  --color-inverse-surface: #f9f9fc;
-  --color-inverse-on-surface: #545557;
+  --color-inverse-surface: #2c2f31;
+  --color-inverse-on-surface: #f5f3f2;
 
   /* Font families */
   --font-sans:
@@ -78,11 +78,15 @@
     sans-serif;
   --font-mono: "JetBrains Mono", "Fira Code", monospace;
 
-  /* Shadows */
-  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3);
-  --shadow-elevated: 0 4px 12px rgba(0, 0, 0, 0.4);
-  --shadow-glow: 0 0 20px -5px rgba(217, 253, 83, 0.2);
-  --shadow-glow-strong: 0 0 40px rgba(217, 253, 83, 0.06);
+  /* Shadows — Neumorphism (SPEC §4) */
+  --shadow-card:
+    -3px -3px 6px rgba(255, 255, 255, 0.85),
+    3px 3px 6px rgba(166, 164, 163, 0.45);
+  --shadow-elevated:
+    -6px -6px 14px rgba(255, 255, 255, 0.85),
+    6px 6px 14px rgba(166, 164, 163, 0.45);
+  --shadow-glow: 0 0 20px -5px rgba(0, 102, 102, 0.2);
+  --shadow-glow-strong: 0 0 40px rgba(0, 102, 102, 0.06);
   --shadow-ambient: 0 0 40px rgba(0, 0, 0, 0.06);
 
   /* Animations */
@@ -151,89 +155,8 @@
   --ease-neu: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ── Light Mode Overrides ── */
-html.light {
-  color-scheme: light;
-
-  /* Surface — 계층 간 대비 강화 */
-  --color-surface: #f8f9fa;
-  --color-surface-dim: #e2e3e5;
-  --color-surface-bright: #ffffff;
-  --color-surface-container-lowest: #ffffff;
-  --color-surface-container-low: #f1f2f4;
-  --color-surface-container: #e6e7e9;
-  --color-surface-container-high: #d8dade;
-  --color-surface-container-highest: #cbced2;
-  --color-surface-tint: #3d7a00;
-  --color-surface-variant: #dce1e6;
-  --color-on-surface: #111315;
-  --color-on-surface-variant: #32363a;
-  --color-background: #f8f9fa;
-  --color-on-background: #141618;
-
-  /* Primary — 선명한 그린 */
-  --color-primary: #3d7a00;
-  --color-primary-dim: #326600;
-  --color-primary-container: #b8e86a;
-  --color-primary-fixed: #c4f44e;
-  --color-primary-fixed-dim: #a6d63a;
-  --color-on-primary: #ffffff;
-  --color-on-primary-container: #0f2000;
-  --color-on-primary-fixed: #0f2000;
-  --color-on-primary-fixed-variant: #2c5200;
-  --color-inverse-primary: #b8e040;
-
-  /* Secondary */
-  --color-secondary: #4a4e51;
-  --color-secondary-dim: #3d4143;
-  --color-secondary-container: #cdd1d4;
-  --color-secondary-fixed: #dde0e3;
-  --color-secondary-fixed-dim: #c1c4c7;
-  --color-on-secondary: #ffffff;
-  --color-on-secondary-container: #2a2e30;
-  --color-on-secondary-fixed: #171b1d;
-  --color-on-secondary-fixed-variant: #393d40;
-
-  /* Tertiary */
-  --color-tertiary: #7a6400;
-  --color-tertiary-dim: #635200;
-  --color-tertiary-container: #ffe070;
-  --color-tertiary-fixed: #ffe680;
-  --color-tertiary-fixed-dim: #dcc200;
-  --color-on-tertiary: #ffffff;
-  --color-on-tertiary-container: #261e00;
-  --color-on-tertiary-fixed: #261e00;
-  --color-on-tertiary-fixed-variant: #594a00;
-
-  /* Error */
-  --color-error: #c41e1e;
-  --color-error-dim: #a81212;
-  --color-error-container: #ffd6d6;
-  --color-on-error: #ffffff;
-  --color-on-error-container: #520002;
-
-  /* Outline */
-  --color-outline: #5c5f63;
-  --color-outline-variant: #8e9296;
-
-  /* Inverse */
-  --color-inverse-surface: #2c2f31;
-  --color-inverse-on-surface: #eff0f3;
-
-  /* Shadows — 실제 그림자감 */
-  --shadow-card: 0 1px 4px rgba(0, 0, 0, 0.1);
-  --shadow-elevated: 0 4px 16px rgba(0, 0, 0, 0.12);
-  --shadow-glow: 0 2px 12px rgba(61, 122, 0, 0.15);
-  --shadow-glow-strong: 0 4px 24px rgba(61, 122, 0, 0.08);
-  --shadow-ambient: 0 2px 20px rgba(0, 0, 0, 0.06);
-}
-
 /* ── Global Styles ── */
 html {
-  color-scheme: dark;
-}
-
-html.light {
   color-scheme: light;
 }
 
@@ -407,11 +330,7 @@ body {
 }
 
 .brand-logo-glow {
-  filter: drop-shadow(0 0 8px rgba(217, 253, 83, 0.6));
-}
-
-html.light .brand-logo-glow {
-  filter: drop-shadow(0 0 6px rgba(61, 122, 0, 0.4));
+  filter: drop-shadow(0 0 6px rgba(0, 102, 102, 0.4));
 }
 
 /* ── Ghost Border Utility ── */
@@ -428,32 +347,18 @@ html.light .brand-logo-glow {
   box-shadow: var(--shadow-glow-strong);
 }
 
-/* ── Search/Filter 밝은 배경 (다크 모드) ── */
+/* ── Search/Filter (Neumorphism light) ── */
 .search-input {
-  background: rgba(255, 255, 255, 0.14);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.search-input:focus {
-  background: rgba(255, 255, 255, 0.18);
-  border-color: rgba(217, 253, 83, 0.4);
-}
-
-.search-input::placeholder {
-  color: rgba(255, 255, 255, 0.4);
-}
-
-html.light .search-input {
   background: rgba(0, 0, 0, 0.04);
   border: 1px solid rgba(0, 0, 0, 0.08);
 }
 
-html.light .search-input:focus {
+.search-input:focus {
   background: rgba(0, 0, 0, 0.06);
-  border-color: rgba(61, 122, 0, 0.3);
+  border-color: rgba(0, 102, 102, 0.3);
 }
 
-html.light .search-input::placeholder {
+.search-input::placeholder {
   color: rgba(0, 0, 0, 0.35);
 }
 

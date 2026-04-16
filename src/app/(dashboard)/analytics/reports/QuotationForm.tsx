@@ -7,8 +7,8 @@ import { Card } from "@/components/common";
 import { Document, Packer, Paragraph, TextRun, AlignmentType, BorderStyle, Table, TableRow, TableCell, WidthType } from "docx";
 import { saveAs } from "file-saver";
 
-const inputClass = "w-full bg-surface-container-highest border-none rounded-lg px-4 py-3 text-sm text-on-surface placeholder:text-outline focus:ring-1 focus:ring-primary/50 focus:outline-none";
-const labelClass = "block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-2";
+const inputClass = "w-full bg-[var(--color-surface)] border-none rounded-[14px] px-4 py-3 text-sm text-[var(--color-text)] placeholder:text-outline focus:ring-1 focus:ring-primary/50 focus:outline-none";
+const labelClass = "block text-[10px] font-bold text-[var(--color-text-muted)] tracking-widest uppercase mb-2";
 
 interface QuotationItem {
   category: string;
@@ -121,7 +121,7 @@ export default function QuotationForm() {
 
   return (
     <Card className="p-6 space-y-5">
-      <h3 className="text-base font-bold text-on-surface">견적서 작성</h3>
+      <h3 className="text-base font-bold text-[var(--color-text)]">견적서 작성</h3>
 
       <div className="grid grid-cols-2 gap-4">
         <div>
@@ -160,7 +160,7 @@ export default function QuotationForm() {
           </button>
         </div>
         <div className="space-y-2">
-          <div className="grid grid-cols-12 gap-2 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest px-1">
+          <div className="grid grid-cols-12 gap-2 text-[10px] font-bold text-[var(--color-text-muted)] uppercase tracking-widest px-1">
             <span className="col-span-2">구분</span>
             <span className="col-span-3">상세내역</span>
             <span className="col-span-4">비고</span>
@@ -173,20 +173,20 @@ export default function QuotationForm() {
               <input type="text" value={item.detail} onChange={(e) => updateItem(idx, "detail", e.target.value)} placeholder="상세내역" className={cn(inputClass, "col-span-3 text-xs")} />
               <input type="text" value={item.note} onChange={(e) => updateItem(idx, "note", e.target.value)} placeholder="비고" className={cn(inputClass, "col-span-4 text-xs")} />
               <input type="text" value={item.amount} onChange={(e) => updateItem(idx, "amount", e.target.value)} placeholder="0" className={cn(inputClass, "col-span-2 text-xs text-right tabular-nums")} />
-              <button type="button" onClick={() => removeItem(idx)} className="col-span-1 flex items-center justify-center text-on-surface-variant hover:text-error transition-colors">
+              <button type="button" onClick={() => removeItem(idx)} className="col-span-1 flex items-center justify-center text-[var(--color-text-muted)] hover:text-error transition-colors">
                 <IconTrash size={14} />
               </button>
             </div>
           ))}
-          <div className="flex items-center justify-end gap-2 px-1 pt-2 border-t border-outline-variant/10">
-            <span className="text-xs font-bold text-on-surface-variant">총계</span>
-            <span className="text-sm font-black text-on-surface tabular-nums">{totalAmount.toLocaleString()}원</span>
+          <div className="flex items-center justify-end gap-2 px-1 pt-2 border-t border-black/[0.04]/10">
+            <span className="text-xs font-bold text-[var(--color-text-muted)]">총계</span>
+            <span className="text-sm font-black text-[var(--color-text)] tabular-nums">{totalAmount.toLocaleString()}원</span>
           </div>
         </div>
       </div>
 
       <div className="flex justify-end gap-3 pt-2">
-        <button type="button" onClick={generateDocx} className="flex items-center gap-2 px-5 py-3 rounded-lg bg-primary text-on-primary text-sm font-bold hover:bg-primary/90 transition-colors">
+        <button type="button" onClick={generateDocx} className="flex items-center gap-2 px-5 py-3 rounded-[14px] bg-primary text-on-primary text-sm font-bold hover:bg-primary/90 transition-colors">
           <IconDownload size={16} />
           Word 다운로드
         </button>

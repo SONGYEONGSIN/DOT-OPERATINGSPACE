@@ -27,15 +27,15 @@ export default function HandoverPageTabs({
   return (
     <div className="space-y-6">
       {/* 탭 전환 */}
-      <div className="flex items-center gap-1 bg-surface-container-high rounded-xl p-1 w-fit">
+      <div className="flex items-center gap-1 bg-[var(--color-surface)] rounded-[20px] p-1 w-fit">
         <button
           type="button"
           onClick={() => setTab("dashboard")}
           className={cn(
-            "px-5 py-2 rounded-lg text-xs font-bold transition-all",
+            "px-5 py-2 rounded-[14px] text-xs font-bold transition-all",
             tab === "dashboard"
-              ? "bg-primary text-on-primary shadow-sm"
-              : "text-on-surface-variant hover:text-on-surface",
+              ? "bg-primary text-on-primary shadow-neu-soft"
+              : "text-[var(--color-text-muted)] hover:text-[var(--color-text)]",
           )}
         >
           담당자 현황
@@ -44,10 +44,10 @@ export default function HandoverPageTabs({
           type="button"
           onClick={() => setTab("execute")}
           className={cn(
-            "px-5 py-2 rounded-lg text-xs font-bold transition-all",
+            "px-5 py-2 rounded-[14px] text-xs font-bold transition-all",
             tab === "execute"
-              ? "bg-primary text-on-primary shadow-sm"
-              : "text-on-surface-variant hover:text-on-surface",
+              ? "bg-primary text-on-primary shadow-neu-soft"
+              : "text-[var(--color-text-muted)] hover:text-[var(--color-text)]",
           )}
         >
           인수인계 실행
@@ -56,10 +56,10 @@ export default function HandoverPageTabs({
           type="button"
           onClick={() => setTab("history")}
           className={cn(
-            "px-5 py-2 rounded-lg text-xs font-bold transition-all",
+            "px-5 py-2 rounded-[14px] text-xs font-bold transition-all",
             tab === "history"
-              ? "bg-primary text-on-primary shadow-sm"
-              : "text-on-surface-variant hover:text-on-surface",
+              ? "bg-primary text-on-primary shadow-neu-soft"
+              : "text-[var(--color-text-muted)] hover:text-[var(--color-text)]",
           )}
         >
           인수인계 확인

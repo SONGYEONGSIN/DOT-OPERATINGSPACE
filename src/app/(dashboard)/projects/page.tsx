@@ -84,25 +84,25 @@ export default async function ProjectsOverviewPage() {
 
       <KpiGrid>
         <KpiCard
-          icon={<IconLayoutKanban size={18} className="text-on-surface-variant" />}
+          icon={<IconLayoutKanban size={18} className="text-[var(--color-text-muted)]" />}
           label="활성 프로젝트"
           value={activeProjects.toString()}
           suffix={`/ ${PROJECT_KEYS.length}`}
         />
         <KpiCard
-          icon={<IconListCheck size={18} className="text-on-surface-variant" />}
+          icon={<IconListCheck size={18} className="text-[var(--color-text-muted)]" />}
           label="전체 작업"
           value={totalTasks.toString()}
           suffix="건"
         />
         <KpiCard
-          icon={<IconProgress size={18} className="text-on-surface-variant" />}
+          icon={<IconProgress size={18} className="text-[var(--color-text-muted)]" />}
           label="진행 중"
           value={totalInProgress.toString()}
           suffix="건"
         />
         <KpiCard
-          icon={<IconCircleCheck size={18} className="text-on-surface-variant" />}
+          icon={<IconCircleCheck size={18} className="text-[var(--color-text-muted)]" />}
           label="전체 달성률"
           value={`${totalPct}`}
           suffix="%"
@@ -112,14 +112,14 @@ export default async function ProjectsOverviewPage() {
       {/* 전체 진행률 */}
       <Card className="p-5">
         <div className="flex items-center justify-between mb-3">
-          <span className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">전체 진행률</span>
-          <span className="text-sm font-black text-on-surface tabular-nums">{totalPct}%</span>
+          <span className="text-xs font-bold text-[var(--color-text-muted)] uppercase tracking-widest">전체 진행률</span>
+          <span className="text-sm font-black text-[var(--color-text)] tabular-nums">{totalPct}%</span>
         </div>
         <ProgressBar value={totalPct} size="md" color={getProgressColor(totalPct)} />
-        <div className="flex items-center gap-6 mt-3 text-[10px] text-on-surface-variant">
-          <span>완료 <strong className="text-on-surface">{totalDone}</strong></span>
-          <span>진행 중 <strong className="text-on-surface">{totalInProgress}</strong></span>
-          <span>대기 <strong className="text-on-surface">{totalTasks - totalDone - totalInProgress}</strong></span>
+        <div className="flex items-center gap-6 mt-3 text-[10px] text-[var(--color-text-muted)]">
+          <span>완료 <strong className="text-[var(--color-text)]">{totalDone}</strong></span>
+          <span>진행 중 <strong className="text-[var(--color-text)]">{totalInProgress}</strong></span>
+          <span>대기 <strong className="text-[var(--color-text)]">{totalTasks - totalDone - totalInProgress}</strong></span>
         </div>
       </Card>
 
@@ -132,8 +132,8 @@ export default async function ProjectsOverviewPage() {
               <Card hover className="p-5 space-y-4 h-full">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="text-sm font-bold text-on-surface">{proj.name}</h3>
-                    <p className="text-[10px] text-on-surface-variant mt-0.5">{(PROJECT_OWNERS[proj.key] ?? []).join(", ")}</p>
+                    <h3 className="text-sm font-bold text-[var(--color-text)]">{proj.name}</h3>
+                    <p className="text-[10px] text-[var(--color-text-muted)] mt-0.5">{(PROJECT_OWNERS[proj.key] ?? []).join(", ")}</p>
                   </div>
                   {proj.urgentCount > 0 && (
                     <StatusBadge variant="error">{proj.urgentCount}건 마감 임박</StatusBadge>
@@ -141,22 +141,22 @@ export default async function ProjectsOverviewPage() {
                 </div>
 
                 {proj.total === 0 ? (
-                  <p className="text-xs text-on-surface-variant py-2">등록된 작업이 없습니다.</p>
+                  <p className="text-xs text-[var(--color-text-muted)] py-2">등록된 작업이 없습니다.</p>
                 ) : (
                   <>
                     <div className="space-y-2">
                       <div className="flex items-center justify-between text-xs">
-                        <span className="text-on-surface-variant">진행률</span>
-                        <span className="font-black text-on-surface tabular-nums">{proj.pct}%</span>
+                        <span className="text-[var(--color-text-muted)]">진행률</span>
+                        <span className="font-black text-[var(--color-text)] tabular-nums">{proj.pct}%</span>
                       </div>
                       <ProgressBar value={proj.pct} size="sm" color={getProgressColor(proj.pct)} />
                     </div>
 
-                    <div className="flex items-center gap-4 text-[10px] text-on-surface-variant">
-                      <span>전체 <strong className="text-on-surface">{proj.total}</strong></span>
-                      <span>진행 <strong className="text-on-surface">{proj.inProgress}</strong></span>
-                      <span>완료 <strong className="text-on-surface">{proj.done}</strong></span>
-                      <span>요청 <strong className="text-on-surface">{proj.request}</strong></span>
+                    <div className="flex items-center gap-4 text-[10px] text-[var(--color-text-muted)]">
+                      <span>전체 <strong className="text-[var(--color-text)]">{proj.total}</strong></span>
+                      <span>진행 <strong className="text-[var(--color-text)]">{proj.inProgress}</strong></span>
+                      <span>완료 <strong className="text-[var(--color-text)]">{proj.done}</strong></span>
+                      <span>요청 <strong className="text-[var(--color-text)]">{proj.request}</strong></span>
                     </div>
                   </>
                 )}
@@ -175,13 +175,13 @@ export default async function ProjectsOverviewPage() {
               .sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime())
               .slice(0, 10)
               .map((task) => (
-                <div key={task.id} className="px-5 py-3.5 flex items-center gap-4 hover:bg-surface-container-high/50 transition-colors">
+                <div key={task.id} className="px-5 py-3.5 flex items-center gap-4 hover:bg-[var(--color-surface)]/50 transition-colors">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <span className="text-[10px] font-bold text-primary uppercase tracking-wider">
                         {PROJECT_NAMES[task.project] ?? task.project}
                       </span>
-                      <span className="text-sm font-semibold text-on-surface truncate">{task.title}</span>
+                      <span className="text-sm font-semibold text-[var(--color-text)] truncate">{task.title}</span>
                     </div>
                     <div className="flex items-center gap-2 mt-1">
                       <StatusBadge variant={PRIORITY_CONFIG[task.priority].variant}>
@@ -205,11 +205,11 @@ export default async function ProjectsOverviewPage() {
                         {task.status === "request" ? "요청" : task.status === "planning" ? "기획" : task.status === "development" ? "개발" : task.status === "testing" ? "테스트" : task.status === "hold" ? "보류" : "완료"}
                       </StatusBadge>
                       {task.assignee && (
-                        <span className="text-[10px] text-on-surface-variant">{task.assignee}</span>
+                        <span className="text-[10px] text-[var(--color-text-muted)]">{task.assignee}</span>
                       )}
                     </div>
                   </div>
-                  <span className="text-[10px] text-on-surface-variant tabular-nums whitespace-nowrap">
+                  <span className="text-[10px] text-[var(--color-text-muted)] tabular-nums whitespace-nowrap">
                     {new Date(task.updated_at).toLocaleDateString("ko-KR")}
                   </span>
                 </div>

@@ -20,7 +20,7 @@ export default async function OperatorAssignmentsPage() {
           breadcrumb={["운영", "담당자배정"]}
         />
         <Card className="p-16 text-center">
-          <p className="text-sm text-on-surface-variant">
+          <p className="text-sm text-[var(--color-text-muted)]">
             데이터를 불러올 수 없습니다.
           </p>
         </Card>
@@ -129,26 +129,26 @@ export default async function OperatorAssignmentsPage() {
 
       <KpiGrid>
         <KpiCard
-          icon={<IconSchool size={18} className="text-on-surface-variant" />}
+          icon={<IconSchool size={18} className="text-[var(--color-text-muted)]" />}
           label="배정 대학"
           value={assignments.length.toString()}
           suffix="개"
         />
         <KpiCard
-          icon={<IconUsers size={18} className="text-on-surface-variant" />}
+          icon={<IconUsers size={18} className="text-[var(--color-text-muted)]" />}
           label="운영자"
           value={operatorSummary.length.toString()}
           suffix="명"
         />
         <KpiCard
-          icon={<IconNetwork size={18} className="text-on-surface-variant" />}
+          icon={<IconNetwork size={18} className="text-[var(--color-text-muted)]" />}
           label="개발자"
           value={developerSummary.length.toString()}
           suffix="명"
         />
         <KpiCard
           icon={
-            <IconAlertTriangle size={18} className="text-on-surface-variant" />
+            <IconAlertTriangle size={18} className="text-[var(--color-text-muted)]" />
           }
           label="변경"
           value={changedCount.toString()}

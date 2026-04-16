@@ -52,7 +52,7 @@ function ChangeIndicator({ change }: { change: number }) {
       </span>
     );
   }
-  return <span className="text-[10px] text-on-surface-variant font-bold">-</span>;
+  return <span className="text-[10px] text-[var(--color-text-muted)] font-bold">-</span>;
 }
 
 export default function PerformancePage() {
@@ -64,7 +64,7 @@ export default function PerformancePage() {
             ? "bg-primary text-on-primary"
             : team.rank === 2
               ? "bg-primary/20 text-primary"
-              : "bg-surface-container-high text-on-surface-variant"
+              : "bg-[var(--color-surface)] text-[var(--color-text-muted)]"
         }`}
       >
         {team.rank}
@@ -72,17 +72,17 @@ export default function PerformancePage() {
     ),
     team: (
       <div>
-        <span className="text-sm font-semibold text-on-surface">{team.team}</span>
-        <span className="text-[10px] text-on-surface-variant ml-2">{team.members}명</span>
+        <span className="text-sm font-semibold text-[var(--color-text)]">{team.team}</span>
+        <span className="text-[10px] text-[var(--color-text-muted)] ml-2">{team.members}명</span>
       </div>
     ),
-    score: <span className="text-sm font-black text-on-surface">{team.score}</span>,
+    score: <span className="text-sm font-black text-[var(--color-text)]">{team.score}</span>,
     progress: (
       <div className="flex items-center gap-2">
         <div className="flex-1">
           <ProgressBar value={team.completion} />
         </div>
-        <span className="text-[10px] text-on-surface-variant font-medium w-8 text-right">
+        <span className="text-[10px] text-[var(--color-text-muted)] font-medium w-8 text-right">
           {team.completion}%
         </span>
       </div>
@@ -100,7 +100,7 @@ export default function PerformancePage() {
 
       <KpiGrid>
         <KpiCard
-          icon={<IconTarget size={18} className="text-on-surface-variant" />}
+          icon={<IconTarget size={18} className="text-[var(--color-text-muted)]" />}
           label="목표달성률"
           value="87.4"
           suffix="%"
@@ -108,7 +108,7 @@ export default function PerformancePage() {
           trend="up"
         />
         <KpiCard
-          icon={<IconGauge size={18} className="text-on-surface-variant" />}
+          icon={<IconGauge size={18} className="text-[var(--color-text-muted)]" />}
           label="KPI 점수"
           value="92"
           suffix="점"
@@ -116,7 +116,7 @@ export default function PerformancePage() {
           trend="up"
         />
         <KpiCard
-          icon={<IconTrendingUp size={18} className="text-on-surface-variant" />}
+          icon={<IconTrendingUp size={18} className="text-[var(--color-text-muted)]" />}
           label="전월대비"
           value="+12.8"
           suffix="%"
@@ -124,7 +124,7 @@ export default function PerformancePage() {
           trend="up"
         />
         <KpiCard
-          icon={<IconChartBar size={18} className="text-on-surface-variant" />}
+          icon={<IconChartBar size={18} className="text-[var(--color-text-muted)]" />}
           label="팀 순위"
           value="2"
           suffix="위"
@@ -138,25 +138,25 @@ export default function PerformancePage() {
         <Card className="lg:col-span-3 p-6">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h2 className="text-base font-bold text-on-surface">월별 성과 추이</h2>
-              <p className="text-xs text-on-surface-variant mt-0.5">
+              <h2 className="text-base font-bold text-[var(--color-text)]">월별 성과 추이</h2>
+              <p className="text-xs text-[var(--color-text-muted)] mt-0.5">
                 최근 6개월 KPI 점수와 목표치 비교
               </p>
             </div>
             <div className="flex items-center gap-4 text-xs">
               <div className="flex items-center gap-1.5">
                 <div className="w-3 h-3 rounded-sm bg-primary" />
-                <span className="text-on-surface-variant">실적</span>
+                <span className="text-[var(--color-text-muted)]">실적</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <div className="w-3 h-3 rounded-sm bg-outline-variant border border-outline-variant" />
-                <span className="text-on-surface-variant">목표</span>
+                <div className="w-3 h-3 rounded-sm bg-outline-variant border border-black/[0.04]" />
+                <span className="text-[var(--color-text-muted)]">목표</span>
               </div>
             </div>
           </div>
 
           <div className="relative h-56">
-            <div className="absolute left-0 top-0 bottom-6 w-8 flex flex-col justify-between text-[10px] text-on-surface-variant">
+            <div className="absolute left-0 top-0 bottom-6 w-8 flex flex-col justify-between text-[10px] text-[var(--color-text-muted)]">
               <span>100</span>
               <span>80</span>
               <span>60</span>
@@ -174,11 +174,11 @@ export default function PerformancePage() {
                       </div>
                     </div>
                     <div
-                      className="w-5 bg-outline-variant/40 rounded-t-md border border-outline-variant/30"
+                      className="w-5 bg-outline-variant/40 rounded-t-md border border-black/[0.04]/30"
                       style={{ height: `${(d.target / maxScore) * 100}%` }}
                     />
                   </div>
-                  <span className="text-[10px] text-on-surface-variant font-medium">
+                  <span className="text-[10px] text-[var(--color-text-muted)] font-medium">
                     {d.month}
                   </span>
                 </div>
@@ -190,9 +190,9 @@ export default function PerformancePage() {
         {/* Team Ranking */}
         <div className="lg:col-span-2">
           <TableSection totalCount={teamRanking.length}>
-            <div className="px-5 py-4 border-b border-outline-variant/10">
-              <h2 className="text-base font-bold text-on-surface">팀 순위</h2>
-              <p className="text-xs text-on-surface-variant mt-0.5">
+            <div className="px-5 py-4 border-b border-black/[0.04]/10">
+              <h2 className="text-base font-bold text-[var(--color-text)]">팀 순위</h2>
+              <p className="text-xs text-[var(--color-text-muted)] mt-0.5">
                 이번 분기 팀별 성과 순위
               </p>
             </div>

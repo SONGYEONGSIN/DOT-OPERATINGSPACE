@@ -279,7 +279,7 @@ export default function AssignmentWizard({
   return (
     <div className="space-y-6">
       {/* Step indicator */}
-      <div className="bg-surface-container rounded-xl border border-outline-variant/15 p-4">
+      <div className="bg-[var(--color-surface)] rounded-[20px] border border-black/[0.04]/15 p-4">
         <div className="flex items-center justify-between relative">
           <div className="absolute top-4 left-[10%] right-[10%] h-px bg-outline-variant/20" />
 
@@ -297,12 +297,12 @@ export default function AssignmentWizard({
                   className={cn(
                     "w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold mb-2 transition-all",
                     isSkipped
-                      ? "bg-surface-container-highest text-on-surface-variant/30"
+                      ? "bg-[var(--color-surface)] text-[var(--color-text-muted)]/30"
                       : isDone
                         ? "bg-primary text-on-primary"
                         : isActive
                           ? "bg-primary text-on-primary shadow-glow"
-                          : "bg-surface-container-highest text-on-surface-variant",
+                          : "bg-[var(--color-surface)] text-[var(--color-text-muted)]",
                   )}
                 >
                   {isDone || isSkipped ? <IconCheck size={14} /> : stepNum}
@@ -311,12 +311,12 @@ export default function AssignmentWizard({
                   className={cn(
                     "text-[10px] font-bold uppercase tracking-widest",
                     isSkipped
-                      ? "text-on-surface-variant/30"
+                      ? "text-[var(--color-text-muted)]/30"
                       : isActive
                         ? "text-primary"
                         : isDone
-                          ? "text-on-surface"
-                          : "text-on-surface-variant",
+                          ? "text-[var(--color-text)]"
+                          : "text-[var(--color-text-muted)]",
                   )}
                 >
                   {label}

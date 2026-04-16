@@ -24,13 +24,13 @@ export default function UserSearch() {
 
   return (
     <div className="relative">
-      <IconSearch size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" />
+      <IconSearch size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]" />
       <input
         type="text"
         value={value}
         onChange={(e) => handleSearch(e.target.value)}
         placeholder="이름 또는 이메일 검색..."
-        className="w-64 bg-surface-container-high border-none rounded-lg pl-9 pr-4 py-2 text-sm text-on-surface placeholder:text-outline focus:ring-1 focus:ring-primary/50 focus:outline-none transition-all"
+        className="w-64 bg-[var(--color-surface)] border-none rounded-[14px] pl-9 pr-4 py-2 text-sm text-[var(--color-text)] placeholder:text-outline focus:ring-1 focus:ring-primary/50 focus:outline-none transition-all"
       />
     </div>
   );

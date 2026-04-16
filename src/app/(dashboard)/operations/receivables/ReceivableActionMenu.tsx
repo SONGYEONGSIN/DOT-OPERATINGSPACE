@@ -20,8 +20,8 @@ interface ReceivableActionMenuProps {
   daysElapsed: number;
 }
 
-const inputReadonly = "w-full bg-surface-container-highest/60 border-none rounded-lg px-4 py-3 text-sm text-on-surface-variant cursor-not-allowed";
-const inputEditable = "w-full bg-surface-container-highest border-none rounded-lg px-4 py-3 text-sm text-on-surface placeholder:text-outline focus:ring-1 focus:ring-primary/50 focus:outline-none";
+const inputReadonly = "w-full bg-[var(--color-surface)]/60 border-none rounded-[14px] px-4 py-3 text-sm text-[var(--color-text-muted)] cursor-not-allowed";
+const inputEditable = "w-full bg-[var(--color-surface)] border-none rounded-[14px] px-4 py-3 text-sm text-[var(--color-text)] placeholder:text-outline focus:ring-1 focus:ring-primary/50 focus:outline-none";
 
 export default function ReceivableActionMenu({
   university,
@@ -82,22 +82,22 @@ export default function ReceivableActionMenu({
           type="button"
           onClick={() => setIsOpen((prev) => !prev)}
           className={cn(
-            "w-8 h-8 rounded-lg flex items-center justify-center",
-            "text-on-surface-variant hover:text-on-surface",
-            "hover:bg-surface-container-high transition-colors",
+            "w-8 h-8 rounded-[14px] flex items-center justify-center",
+            "text-[var(--color-text-muted)] hover:text-[var(--color-text)]",
+            "hover:bg-[var(--color-surface)] transition-colors",
           )}
         >
           <IconDotsVertical size={16} />
         </button>
 
         {isOpen && (
-          <div className="absolute right-0 top-full mt-1 z-10 min-w-[140px] bg-surface-container-high rounded-lg border border-outline-variant/15 shadow-elevated">
+          <div className="absolute right-0 top-full mt-1 z-10 min-w-[140px] bg-[var(--color-surface)] rounded-[14px] border border-black/[0.04]/15 shadow-neu-strong">
             <button
               type="button"
               onClick={() => { setIsOpen(false); setShowEdit(true); setError(""); }}
-              className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-on-surface hover:bg-surface-bright transition-colors rounded-t-lg"
+              className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-[var(--color-text)] hover:bg-surface-bright transition-colors rounded-t-lg"
             >
-              <IconEdit size={16} className="text-on-surface-variant" />
+              <IconEdit size={16} className="text-[var(--color-text-muted)]" />
               수정
             </button>
             <button
@@ -106,10 +106,10 @@ export default function ReceivableActionMenu({
               disabled={!schoolContact}
               className={cn(
                 "w-full flex items-center gap-2.5 px-4 py-2.5 text-sm hover:bg-surface-bright transition-colors rounded-b-lg",
-                schoolContact ? "text-on-surface" : "text-on-surface-variant/40 cursor-not-allowed",
+                schoolContact ? "text-[var(--color-text)]" : "text-[var(--color-text-muted)]/40 cursor-not-allowed",
               )}
             >
-              <IconMail size={16} className={schoolContact ? "text-on-surface-variant" : "text-on-surface-variant/40"} />
+              <IconMail size={16} className={schoolContact ? "text-[var(--color-text-muted)]" : "text-[var(--color-text-muted)]/40"} />
               독촉메일
               {!schoolContact && <span className="text-[10px] ml-auto">이메일 없음</span>}
             </button>
@@ -120,12 +120,12 @@ export default function ReceivableActionMenu({
       {/* 수정 모달 */}
       {showEdit && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div className="absolute inset-0 bg-surface-container-lowest/80 backdrop-blur-sm" onClick={() => setShowEdit(false)} />
+          <div className="absolute inset-0 bg-[var(--color-surface)]est/80 backdrop-blur-sm" onClick={() => setShowEdit(false)} />
 
-          <div className="relative w-full max-w-lg bg-surface-container rounded-2xl border border-outline-variant/15 shadow-2xl animate-slide-up">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-outline-variant/10">
-              <h2 className="text-lg font-bold text-on-surface">미수채권 수정</h2>
-              <button onClick={() => setShowEdit(false)} className="p-1 text-on-surface-variant hover:text-on-surface transition-colors rounded-lg">
+          <div className="relative w-full max-w-lg bg-[var(--color-surface)] rounded-[20px] border border-black/[0.04]/15 shadow-neu-strong animate-slide-up">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-black/[0.04]/10">
+              <h2 className="text-lg font-bold text-[var(--color-text)]">미수채권 수정</h2>
+              <button onClick={() => setShowEdit(false)} className="p-1 text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors rounded-[14px]">
                 <IconX size={20} />
               </button>
             </div>
@@ -133,63 +133,63 @@ export default function ReceivableActionMenu({
             {success ? (
               <div className="p-8 text-center">
                 <IconCircleCheck size={48} className="text-primary mx-auto mb-3" />
-                <p className="font-bold text-on-surface">수정되었습니다!</p>
+                <p className="font-bold text-[var(--color-text)]">수정되었습니다!</p>
               </div>
             ) : (
               <div className="p-6 space-y-4">
                 {error && (
-                  <div className="p-3 rounded-lg bg-error-container/20 border border-error/30 text-error text-xs font-medium">{error}</div>
+                  <div className="p-3 rounded-[14px] bg-error-container/20 border border-error/30 text-error text-xs font-medium">{error}</div>
                 )}
 
                 {/* 읽기 전용 필드 */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-2">청구일자</label>
+                    <label className="block text-[10px] font-bold text-[var(--color-text-muted)] tracking-widest uppercase mb-2">청구일자</label>
                     <input type="text" value={invoiceDate ?? "-"} readOnly className={inputReadonly} />
                   </div>
                   <div>
-                    <label className="block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-2">거래처명</label>
+                    <label className="block text-[10px] font-bold text-[var(--color-text-muted)] tracking-widest uppercase mb-2">거래처명</label>
                     <input type="text" value={university} readOnly className={inputReadonly} />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-2">거래내역</label>
+                  <label className="block text-[10px] font-bold text-[var(--color-text-muted)] tracking-widest uppercase mb-2">거래내역</label>
                   <input type="text" value={detail} readOnly className={inputReadonly} />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-2">운영자</label>
+                    <label className="block text-[10px] font-bold text-[var(--color-text-muted)] tracking-widest uppercase mb-2">운영자</label>
                     <input type="text" value={operator} readOnly className={inputReadonly} />
                   </div>
                   <div>
-                    <label className="block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-2">청구금액</label>
+                    <label className="block text-[10px] font-bold text-[var(--color-text-muted)] tracking-widest uppercase mb-2">청구금액</label>
                     <input type="text" value={`${amount.toLocaleString()}원`} readOnly className={inputReadonly} />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-2">메일발송일자</label>
+                    <label className="block text-[10px] font-bold text-[var(--color-text-muted)] tracking-widest uppercase mb-2">메일발송일자</label>
                     <input type="text" value={mailSentDate ?? "-"} readOnly className={inputReadonly} />
                   </div>
                   <div>
-                    <label className="block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-2">입금예정일</label>
+                    <label className="block text-[10px] font-bold text-[var(--color-text-muted)] tracking-widest uppercase mb-2">입금예정일</label>
                     <input type="text" value={expectedPayDate ?? "-"} readOnly className={inputReadonly} />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-2">경과일</label>
+                  <label className="block text-[10px] font-bold text-[var(--color-text-muted)] tracking-widest uppercase mb-2">경과일</label>
                   <input type="text" value={`${daysElapsed}일`} readOnly className={inputReadonly} />
                 </div>
 
-                <hr className="border-outline-variant/10" />
+                <hr className="border-black/[0.04]/10" />
 
                 {/* 수정 가능 필드 */}
                 <div>
-                  <label className="block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-2">학교담당자 이메일</label>
+                  <label className="block text-[10px] font-bold text-[var(--color-text-muted)] tracking-widest uppercase mb-2">학교담당자 이메일</label>
                   <input
                     type="email"
                     value={editContactEmail}
@@ -200,7 +200,7 @@ export default function ReceivableActionMenu({
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-2">입금여부</label>
+                  <label className="block text-[10px] font-bold text-[var(--color-text-muted)] tracking-widest uppercase mb-2">입금여부</label>
                   <input
                     type="text"
                     value={editMemo}
@@ -214,7 +214,7 @@ export default function ReceivableActionMenu({
                   <button
                     type="button"
                     onClick={() => setShowEdit(false)}
-                    className="flex-1 py-3 bg-surface-container-high text-on-surface-variant font-bold rounded-lg active:scale-95 transition-transform text-sm"
+                    className="flex-1 py-3 bg-[var(--color-surface)] text-[var(--color-text-muted)] font-bold rounded-[14px] active:scale-95 transition-transform text-sm"
                   >
                     취소
                   </button>
@@ -223,7 +223,7 @@ export default function ReceivableActionMenu({
                     onClick={handleSave}
                     disabled={isPending}
                     className={cn(
-                      "flex-1 py-3 bg-primary text-on-primary font-bold rounded-lg active:scale-95 transition-transform text-sm",
+                      "flex-1 py-3 bg-primary text-on-primary font-bold rounded-[14px] active:scale-95 transition-transform text-sm",
                       isPending && "opacity-60 cursor-not-allowed",
                     )}
                   >
@@ -238,12 +238,12 @@ export default function ReceivableActionMenu({
       {/* 독촉메일 확인 모달 */}
       {showDunning && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div className="absolute inset-0 bg-surface-container-lowest/80 backdrop-blur-sm" onClick={() => setShowDunning(false)} />
+          <div className="absolute inset-0 bg-[var(--color-surface)]est/80 backdrop-blur-sm" onClick={() => setShowDunning(false)} />
 
-          <div className="relative w-full max-w-md bg-surface-container rounded-2xl border border-outline-variant/15 shadow-2xl animate-slide-up">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-outline-variant/10">
-              <h2 className="text-lg font-bold text-on-surface">독촉메일 발송</h2>
-              <button onClick={() => setShowDunning(false)} className="p-1 text-on-surface-variant hover:text-on-surface transition-colors rounded-lg">
+          <div className="relative w-full max-w-md bg-[var(--color-surface)] rounded-[20px] border border-black/[0.04]/15 shadow-neu-strong animate-slide-up">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-black/[0.04]/10">
+              <h2 className="text-lg font-bold text-[var(--color-text)]">독촉메일 발송</h2>
+              <button onClick={() => setShowDunning(false)} className="p-1 text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors rounded-[14px]">
                 <IconX size={20} />
               </button>
             </div>
@@ -251,30 +251,30 @@ export default function ReceivableActionMenu({
             {dunningSuccess ? (
               <div className="p-8 text-center">
                 <IconCircleCheck size={48} className="text-primary mx-auto mb-3" />
-                <p className="font-bold text-on-surface">발송 완료!</p>
-                <p className="text-xs text-on-surface-variant mt-1">{schoolContact}로 발송되었습니다.</p>
+                <p className="font-bold text-[var(--color-text)]">발송 완료!</p>
+                <p className="text-xs text-[var(--color-text-muted)] mt-1">{schoolContact}로 발송되었습니다.</p>
               </div>
             ) : (
               <div className="p-6 space-y-4">
                 {error && (
-                  <div className="p-3 rounded-lg bg-error-container/20 border border-error/30 text-error text-xs font-medium">{error}</div>
+                  <div className="p-3 rounded-[14px] bg-error-container/20 border border-error/30 text-error text-xs font-medium">{error}</div>
                 )}
 
                 <div className="space-y-3 text-sm">
-                  <div className="flex items-center justify-between p-3 rounded-lg bg-surface-container-high/50">
-                    <span className="text-on-surface-variant">거래처</span>
-                    <span className="font-semibold text-on-surface">{university}</span>
+                  <div className="flex items-center justify-between p-3 rounded-[14px] bg-[var(--color-surface)]/50">
+                    <span className="text-[var(--color-text-muted)]">거래처</span>
+                    <span className="font-semibold text-[var(--color-text)]">{university}</span>
                   </div>
-                  <div className="flex items-center justify-between p-3 rounded-lg bg-surface-container-high/50">
-                    <span className="text-on-surface-variant">청구금액</span>
+                  <div className="flex items-center justify-between p-3 rounded-[14px] bg-[var(--color-surface)]/50">
+                    <span className="text-[var(--color-text-muted)]">청구금액</span>
                     <span className="font-bold text-error">{amount.toLocaleString()}원</span>
                   </div>
-                  <div className="flex items-center justify-between p-3 rounded-lg bg-surface-container-high/50">
-                    <span className="text-on-surface-variant">경과일</span>
-                    <span className="font-semibold text-on-surface">{daysElapsed}일</span>
+                  <div className="flex items-center justify-between p-3 rounded-[14px] bg-[var(--color-surface)]/50">
+                    <span className="text-[var(--color-text-muted)]">경과일</span>
+                    <span className="font-semibold text-[var(--color-text)]">{daysElapsed}일</span>
                   </div>
-                  <div className="flex items-center justify-between p-3 rounded-lg bg-surface-container-high/50">
-                    <span className="text-on-surface-variant">발송 대상</span>
+                  <div className="flex items-center justify-between p-3 rounded-[14px] bg-[var(--color-surface)]/50">
+                    <span className="text-[var(--color-text-muted)]">발송 대상</span>
                     <span className="font-semibold text-primary">{schoolContact}</span>
                   </div>
                 </div>
@@ -283,7 +283,7 @@ export default function ReceivableActionMenu({
                   <button
                     type="button"
                     onClick={() => setShowDunning(false)}
-                    className="flex-1 py-3 bg-surface-container-high text-on-surface-variant font-bold rounded-lg active:scale-95 transition-transform text-sm"
+                    className="flex-1 py-3 bg-[var(--color-surface)] text-[var(--color-text-muted)] font-bold rounded-[14px] active:scale-95 transition-transform text-sm"
                   >
                     취소
                   </button>
@@ -314,7 +314,7 @@ export default function ReceivableActionMenu({
                       });
                     }}
                     className={cn(
-                      "flex-1 py-3 bg-error text-white font-bold rounded-lg active:scale-95 transition-transform text-sm",
+                      "flex-1 py-3 bg-error text-white font-bold rounded-[14px] active:scale-95 transition-transform text-sm",
                       isPending && "opacity-60 cursor-not-allowed",
                     )}
                   >

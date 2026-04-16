@@ -32,7 +32,7 @@ export default function StepTimeline({ steps }: StepTimelineProps) {
                   step.status === "active" &&
                     "bg-primary text-on-primary ring-4 ring-primary/20",
                   step.status === "pending" &&
-                    "bg-surface-container-highest text-on-surface-variant border border-outline-variant/30",
+                    "bg-[var(--color-surface)] text-[var(--color-text-muted)] border border-black/[0.04]/30",
                 )}
               >
                 {step.status === "completed" ? (
@@ -50,7 +50,7 @@ export default function StepTimeline({ steps }: StepTimelineProps) {
                 "text-[10px] font-bold tracking-wide whitespace-nowrap",
                 step.status === "completed" && "text-primary",
                 step.status === "active" && "text-primary",
-                step.status === "pending" && "text-on-surface-variant",
+                step.status === "pending" && "text-[var(--color-text-muted)]",
               )}
             >
               {step.label}

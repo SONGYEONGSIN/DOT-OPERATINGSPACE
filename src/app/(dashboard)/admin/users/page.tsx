@@ -100,16 +100,16 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
     name: (
       <div className="flex items-center gap-3">
         <UserAvatar name={profile.name} size="sm" />
-        <span className="text-sm font-semibold text-on-surface">
+        <span className="text-sm font-semibold text-[var(--color-text)]">
           {profile.name}
         </span>
       </div>
     ),
     email: (
-      <span className="text-xs text-on-surface-variant">{profile.email}</span>
+      <span className="text-xs text-[var(--color-text-muted)]">{profile.email}</span>
     ),
     position: (
-      <span className={`text-xs font-bold ${profile.position === "부장" ? "text-primary" : profile.position === "팀장" ? "text-tertiary" : "text-on-surface-variant"}`}>
+      <span className={`text-xs font-bold ${profile.position === "부장" ? "text-primary" : profile.position === "팀장" ? "text-tertiary" : "text-[var(--color-text-muted)]"}`}>
         {profile.position ?? "매니저"}
       </span>
     ),
@@ -119,7 +119,7 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
       </StatusBadge>
     ),
     team: (
-      <span className="text-xs text-on-surface">{profile.team}</span>
+      <span className="text-xs text-[var(--color-text)]">{profile.team}</span>
     ),
     status: (
       <div className="flex items-center gap-1.5">
@@ -136,7 +136,7 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
             "text-xs font-medium",
             profile.status === "active"
               ? "text-primary"
-              : "text-on-surface-variant",
+              : "text-[var(--color-text-muted)]",
           )}
         >
           {profile.status === "active" ? "활성" : "비활성"}
@@ -144,7 +144,7 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
       </div>
     ),
     lastSignIn: (
-      <span className="text-xs text-on-surface-variant">
+      <span className="text-xs text-[var(--color-text-muted)]">
         {formatLastSignIn(profile.last_sign_in)}
       </span>
     ),
@@ -167,25 +167,25 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
 
       <KpiGrid>
         <KpiCard
-          icon={<IconUsers size={18} className="text-on-surface-variant" />}
+          icon={<IconUsers size={18} className="text-[var(--color-text-muted)]" />}
           label="전체 사용자"
           value={String(totalCount)}
           suffix="명"
         />
         <KpiCard
-          icon={<IconShieldCog size={18} className="text-on-surface-variant" />}
+          icon={<IconShieldCog size={18} className="text-[var(--color-text-muted)]" />}
           label="관리자"
           value={String(adminCount)}
           suffix="명"
         />
         <KpiCard
-          icon={<IconUsersGroup size={18} className="text-on-surface-variant" />}
+          icon={<IconUsersGroup size={18} className="text-[var(--color-text-muted)]" />}
           label="운영1팀"
           value={String(team1Count)}
           suffix="명"
         />
         <KpiCard
-          icon={<IconUsersGroup size={18} className="text-on-surface-variant" />}
+          icon={<IconUsersGroup size={18} className="text-[var(--color-text-muted)]" />}
           label="운영2팀"
           value={String(team2Count)}
           suffix="명"

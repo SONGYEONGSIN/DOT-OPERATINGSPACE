@@ -12,7 +12,7 @@ import dynamic from "next/dynamic";
 
 const TiptapEditor = dynamic(
   () => import("@/app/(dashboard)/operations/services/[id]/TiptapEditor"),
-  { ssr: false, loading: () => <div className="min-h-[120px] rounded-lg bg-surface-container-highest animate-pulse" /> },
+  { ssr: false, loading: () => <div className="min-h-[120px] rounded-[14px] bg-[var(--color-surface)] animate-pulse" /> },
 );
 
 export default function BackupActionMenu({ request }: { request: BackupRequest }) {
@@ -58,19 +58,19 @@ export default function BackupActionMenu({ request }: { request: BackupRequest }
         <button
           type="button"
           onClick={() => setIsOpen((prev) => !prev)}
-          className="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors"
+          className="w-8 h-8 rounded-[14px] flex items-center justify-center text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-surface)] transition-colors"
         >
           <IconDotsVertical size={16} />
         </button>
 
         {isOpen && (
-          <div className="absolute right-0 top-full mt-1 z-10 min-w-[120px] bg-surface-container-high rounded-lg border border-outline-variant/15 shadow-elevated">
+          <div className="absolute right-0 top-full mt-1 z-10 min-w-[120px] bg-[var(--color-surface)] rounded-[14px] border border-black/[0.04]/15 shadow-neu-strong">
             <button
               type="button"
               onClick={() => { setIsOpen(false); setShowDetail(true); setSuccess(""); }}
-              className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-on-surface hover:bg-surface-bright transition-colors rounded-t-lg"
+              className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-[var(--color-text)] hover:bg-surface-bright transition-colors rounded-t-lg"
             >
-              <IconEye size={16} className="text-on-surface-variant" />
+              <IconEye size={16} className="text-[var(--color-text-muted)]" />
               상세보기
             </button>
             <button
@@ -88,17 +88,17 @@ export default function BackupActionMenu({ request }: { request: BackupRequest }
       {/* 상세/편집 모달 */}
       {showDetail && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div className="absolute inset-0 bg-surface-container-lowest/80 backdrop-blur-sm" onClick={() => setShowDetail(false)} />
+          <div className="absolute inset-0 bg-[var(--color-surface)]est/80 backdrop-blur-sm" onClick={() => setShowDetail(false)} />
 
-          <div className="relative w-full max-w-2xl max-h-[90vh] bg-surface-container rounded-2xl border border-outline-variant/15 shadow-2xl animate-slide-up flex flex-col">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-outline-variant/10 shrink-0">
+          <div className="relative w-full max-w-2xl max-h-[90vh] bg-[var(--color-surface)] rounded-[20px] border border-black/[0.04]/15 shadow-neu-strong animate-slide-up flex flex-col">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-black/[0.04]/10 shrink-0">
               <div className="flex items-center gap-3">
-                <h2 className="text-lg font-bold text-on-surface">백업 요청 상세</h2>
+                <h2 className="text-lg font-bold text-[var(--color-text)]">백업 요청 상세</h2>
                 <StatusBadge variant={request.status === "작성 완료" ? "success" : "warning"}>
                   {request.status}
                 </StatusBadge>
               </div>
-              <button onClick={() => setShowDetail(false)} className="p-1 text-on-surface-variant hover:text-on-surface transition-colors rounded-lg">
+              <button onClick={() => setShowDetail(false)} className="p-1 text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors rounded-[14px]">
                 <IconX size={20} />
               </button>
             </div>
@@ -106,42 +106,42 @@ export default function BackupActionMenu({ request }: { request: BackupRequest }
             {success ? (
               <div className="p-8 text-center">
                 <IconCircleCheck size={48} className="text-primary mx-auto mb-3" />
-                <p className="font-bold text-on-surface">{success}</p>
+                <p className="font-bold text-[var(--color-text)]">{success}</p>
               </div>
             ) : (
               <div className="flex-1 overflow-y-auto p-6 space-y-4">
                 {/* 기본 정보 (읽기 전용) */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-1">요청자</label>
-                    <p className="text-sm font-medium text-on-surface">{request.operator_name} ({request.operator_team})</p>
+                    <label className="block text-[10px] font-bold text-[var(--color-text-muted)] tracking-widest uppercase mb-1">요청자</label>
+                    <p className="text-sm font-medium text-[var(--color-text)]">{request.operator_name} ({request.operator_team})</p>
                   </div>
                   <div>
-                    <label className="block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-1">휴가 유형</label>
+                    <label className="block text-[10px] font-bold text-[var(--color-text-muted)] tracking-widest uppercase mb-1">휴가 유형</label>
                     <StatusBadge variant={getLeaveColor(request.leave_type) as any}>{request.leave_type}</StatusBadge>
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-1">기간</label>
-                  <p className="text-sm text-on-surface tabular-nums">{request.start_date} ~ {request.end_date}</p>
+                  <label className="block text-[10px] font-bold text-[var(--color-text-muted)] tracking-widest uppercase mb-1">기간</label>
+                  <p className="text-sm text-[var(--color-text)] tabular-nums">{request.start_date} ~ {request.end_date}</p>
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-1">백업자</label>
-                  <p className="text-sm text-on-surface">{request.ops_backup_name}</p>
+                  <label className="block text-[10px] font-bold text-[var(--color-text-muted)] tracking-widest uppercase mb-1">백업자</label>
+                  <p className="text-sm text-[var(--color-text)]">{request.ops_backup_name}</p>
                 </div>
 
-                <hr className="border-outline-variant/10" />
+                <hr className="border-black/[0.04]/10" />
 
                 {/* 편집 가능 영역 */}
                 <div>
-                  <label className="block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-2">백업 내용</label>
+                  <label className="block text-[10px] font-bold text-[var(--color-text-muted)] tracking-widest uppercase mb-2">백업 내용</label>
                   <TiptapEditor key={`ops-${request.id}`} content={opsContent} onUpdate={setOpsContent} disabled={isPending} />
                 </div>
 
                 {request.last_notified_at && (
-                  <p className="text-xs text-on-surface-variant">
+                  <p className="text-xs text-[var(--color-text-muted)]">
                     최종 알림: {new Date(request.last_notified_at).toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" })}
                   </p>
                 )}
@@ -151,7 +151,7 @@ export default function BackupActionMenu({ request }: { request: BackupRequest }
                     type="button"
                     onClick={() => handleSave("작성 전")}
                     disabled={isPending}
-                    className="flex-1 py-3 bg-surface-container-high text-on-surface-variant font-bold rounded-lg active:scale-95 transition-transform text-sm disabled:opacity-50"
+                    className="flex-1 py-3 bg-[var(--color-surface)] text-[var(--color-text-muted)] font-bold rounded-[14px] active:scale-95 transition-transform text-sm disabled:opacity-50"
                   >
                     임시저장
                   </button>
@@ -160,7 +160,7 @@ export default function BackupActionMenu({ request }: { request: BackupRequest }
                     onClick={() => handleSave("작성 완료")}
                     disabled={isPending}
                     className={cn(
-                      "flex-1 py-3 bg-primary text-on-primary font-bold rounded-lg active:scale-95 transition-transform text-sm",
+                      "flex-1 py-3 bg-primary text-on-primary font-bold rounded-[14px] active:scale-95 transition-transform text-sm",
                       isPending && "opacity-60 cursor-not-allowed",
                     )}
                   >

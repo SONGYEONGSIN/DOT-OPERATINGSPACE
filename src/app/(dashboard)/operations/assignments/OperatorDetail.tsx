@@ -25,14 +25,14 @@ const COLOR_STYLES = {
   primary: "border-l-primary/60 bg-primary/[0.03]",
   tertiary: "border-l-tertiary/60 bg-tertiary/[0.03]",
   secondary: "border-l-secondary/60 bg-secondary-container/[0.03]",
-  neutral: "border-l-outline-variant/40 bg-surface-container-high/30",
+  neutral: "border-l-outline-variant/40 bg-[var(--color-surface)]/30",
 } as const;
 
 const TAG_STYLES = {
   primary: "text-primary",
   tertiary: "text-tertiary",
   secondary: "text-on-secondary-container",
-  neutral: "text-on-surface-variant",
+  neutral: "text-[var(--color-text-muted)]",
 } as const;
 
 function getDeveloper(u: UniversityData, sectionKey: string): string {
@@ -199,8 +199,8 @@ export default function OperatorDetail({
     <div className="p-6 space-y-5">
       {/* Profile Header */}
       <div className="flex items-baseline gap-3">
-        <h2 className="text-lg font-black text-on-surface">{operatorName}</h2>
-        <span className="text-xs text-on-surface-variant">
+        <h2 className="text-lg font-black text-[var(--color-text)]">{operatorName}</h2>
+        <span className="text-xs text-[var(--color-text-muted)]">
           총 <b className="text-primary">{totalCount}</b>건
         </span>
       </div>
@@ -211,12 +211,12 @@ export default function OperatorDetail({
           {kpis.map((kpi) => (
             <div
               key={kpi.label}
-              className="py-2 rounded-lg bg-surface-container-high border border-outline-variant/10 text-center"
+              className="py-2 rounded-[14px] bg-[var(--color-surface)] border border-black/[0.04]/10 text-center"
             >
-              <div className="text-base font-black tabular-nums text-on-surface">
+              <div className="text-base font-black tabular-nums text-[var(--color-text)]">
                 {kpi.value}
               </div>
-              <div className="text-[7px] font-bold uppercase tracking-widest text-on-surface-variant">
+              <div className="text-[7px] font-bold uppercase tracking-widest text-[var(--color-text-muted)]">
                 {kpi.label}
               </div>
             </div>
@@ -230,7 +230,7 @@ export default function OperatorDetail({
           <div
             key={section.key}
             className={cn(
-              "rounded-lg border-l-[3px] p-3",
+              "rounded-[14px] border-l-[3px] p-3",
               COLOR_STYLES[section.color],
             )}
           >
@@ -244,7 +244,7 @@ export default function OperatorDetail({
               >
                 {section.label}
               </span>
-              <span className="text-[10px] tabular-nums text-on-surface-variant">
+              <span className="text-[10px] tabular-nums text-[var(--color-text-muted)]">
                 {section.items.length}
               </span>
             </div>
@@ -263,11 +263,11 @@ export default function OperatorDetail({
                       type="button"
                       onClick={() => onSelectUniversity(u.universityName)}
                       title={dev ? `개발: ${dev}` : undefined}
-                      className="group/chip relative px-2 py-1 rounded text-[11px] font-medium text-on-surface bg-surface-container border border-outline-variant/10 hover:border-primary/40 hover:text-primary transition-all"
+                      className="group/chip relative px-2 py-1 rounded text-[11px] font-medium text-[var(--color-text)] bg-[var(--color-surface)] border border-black/[0.04]/10 hover:border-primary/40 hover:text-primary transition-all"
                     >
                       {u.universityName}
                       {dev && (
-                        <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 rounded bg-surface-bright border border-outline-variant/20 shadow-elevated text-[9px] font-bold text-on-surface whitespace-nowrap opacity-0 invisible group-hover/chip:opacity-100 group-hover/chip:visible transition-all pointer-events-none z-20">
+                        <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 rounded bg-surface-bright border border-black/[0.04]/20 shadow-neu-strong text-[9px] font-bold text-[var(--color-text)] whitespace-nowrap opacity-0 invisible group-hover/chip:opacity-100 group-hover/chip:visible transition-all pointer-events-none z-20">
                           개발 · {dev}
                         </span>
                       )}
@@ -280,7 +280,7 @@ export default function OperatorDetail({
       </div>
 
       {sections.length === 0 && (
-        <div className="text-xs text-on-surface-variant py-8 text-center">
+        <div className="text-xs text-[var(--color-text-muted)] py-8 text-center">
           배정된 대학이 없습니다.
         </div>
       )}

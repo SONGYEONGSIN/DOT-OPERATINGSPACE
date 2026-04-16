@@ -39,7 +39,7 @@ function stripYear(name: string) {
 const typeConfig = {
   handover: { icon: IconArrowsExchange, color: "text-primary", bg: "bg-primary/10" },
   deadline: { icon: IconCalendarEvent, color: "text-tertiary", bg: "bg-tertiary/10" },
-  system: { icon: IconClock, color: "text-on-surface-variant", bg: "bg-surface-container-highest" },
+  system: { icon: IconClock, color: "text-[var(--color-text-muted)]", bg: "bg-[var(--color-surface)]" },
 };
 
 export default function NotificationDropdown() {
@@ -145,7 +145,7 @@ export default function NotificationDropdown() {
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className="relative p-2 text-on-surface-variant hover:bg-surface-bright hover:text-primary transition-all duration-200 rounded-lg active:scale-95"
+        className="relative p-2 text-[var(--color-text-muted)] hover:bg-surface-bright hover:text-primary transition-all duration-200 rounded-[14px] active:scale-95"
       >
         <IconBell size={20} />
         {unreadCount > 0 && (
@@ -156,10 +156,10 @@ export default function NotificationDropdown() {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-2 w-[380px] bg-surface-container rounded-xl border border-outline-variant/15 shadow-2xl overflow-hidden z-50">
+        <div className="absolute right-0 top-full mt-2 w-[380px] bg-[var(--color-surface)] rounded-[20px] border border-black/[0.04]/15 shadow-neu-strong overflow-hidden z-50">
           {/* 헤더 */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-outline-variant/10">
-            <h3 className="text-sm font-bold text-on-surface">알림</h3>
+          <div className="flex items-center justify-between px-4 py-3 border-b border-black/[0.04]/10">
+            <h3 className="text-sm font-bold text-[var(--color-text)]">알림</h3>
             <div className="flex items-center gap-2">
               {unreadCount > 0 && (
                 <button
@@ -171,7 +171,7 @@ export default function NotificationDropdown() {
               )}
               <button
                 onClick={() => setOpen(false)}
-                className="p-0.5 text-on-surface-variant hover:text-on-surface transition-colors rounded"
+                className="p-0.5 text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors rounded"
               >
                 <IconX size={16} />
               </button>
@@ -181,7 +181,7 @@ export default function NotificationDropdown() {
           {/* 알림 목록 */}
           <div className="max-h-[400px] overflow-y-auto">
             {loading ? (
-              <div className="flex items-center justify-center py-12 text-on-surface-variant">
+              <div className="flex items-center justify-center py-12 text-[var(--color-text-muted)]">
                 <div className="w-5 h-5 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
               </div>
             ) : notifications.length > 0 ? (
@@ -195,28 +195,28 @@ export default function NotificationDropdown() {
                     key={n.id}
                     onClick={() => setReadIds((prev) => new Set(prev).add(n.id))}
                     className={cn(
-                      "flex items-start gap-3 px-4 py-3 border-b border-outline-variant/5 cursor-pointer transition-colors hover:bg-surface-container-high/50",
+                      "flex items-start gap-3 px-4 py-3 border-b border-black/[0.04]/5 cursor-pointer transition-colors hover:bg-[var(--color-surface)]/50",
                       !isRead && "bg-primary/[0.03]",
                     )}
                   >
-                    <div className={cn("shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mt-0.5", cfg.bg)}>
+                    <div className={cn("shrink-0 w-8 h-8 rounded-[14px] flex items-center justify-center mt-0.5", cfg.bg)}>
                       <Icon size={16} className={cfg.color} />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <p className={cn("text-xs font-semibold truncate", isRead ? "text-on-surface-variant" : "text-on-surface")}>
+                        <p className={cn("text-xs font-semibold truncate", isRead ? "text-[var(--color-text-muted)]" : "text-[var(--color-text)]")}>
                           {n.title}
                         </p>
                         {!isRead && <span className="shrink-0 w-1.5 h-1.5 rounded-full bg-primary" />}
                       </div>
-                      <p className="text-[11px] text-on-surface-variant truncate mt-0.5">{n.description}</p>
-                      <p className="text-[10px] text-on-surface-variant/60 mt-1">{formatRelative(n.time)}</p>
+                      <p className="text-[11px] text-[var(--color-text-muted)] truncate mt-0.5">{n.description}</p>
+                      <p className="text-[10px] text-[var(--color-text-muted)]/60 mt-1">{formatRelative(n.time)}</p>
                     </div>
                   </div>
                 );
               })
             ) : (
-              <div className="flex flex-col items-center justify-center py-12 text-on-surface-variant">
+              <div className="flex flex-col items-center justify-center py-12 text-[var(--color-text-muted)]">
                 <IconCheck size={32} className="opacity-30 mb-2" />
                 <p className="text-xs font-medium">새로운 알림이 없습니다</p>
               </div>

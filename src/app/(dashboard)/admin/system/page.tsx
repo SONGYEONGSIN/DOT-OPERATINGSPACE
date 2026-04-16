@@ -139,8 +139,8 @@ export default async function SystemPage() {
   ];
 
   const userData = allProfiles.map((p) => ({
-    name: <span className="text-sm font-medium text-on-surface">{p.name}</span>,
-    team: <span className="text-xs text-on-surface-variant">{p.team}</span>,
+    name: <span className="text-sm font-medium text-[var(--color-text)]">{p.name}</span>,
+    team: <span className="text-xs text-[var(--color-text-muted)]">{p.team}</span>,
     role: <StatusBadge variant={p.role === "admin" ? "warning" : "neutral"}>{p.role === "admin" ? "관리자" : "운영자"}</StatusBadge>,
     status: <StatusBadge variant={p.status === "active" ? "success" : "error"}>{p.status === "active" ? "활성" : "비활성"}</StatusBadge>,
   }));
@@ -161,21 +161,21 @@ export default async function SystemPage() {
 
       <KpiGrid>
         <KpiCard
-          icon={<IconDatabase size={18} className="text-on-surface-variant" />}
+          icon={<IconDatabase size={18} className="text-[var(--color-text-muted)]" />}
           label="전체 레코드"
           value={totalRecords.toLocaleString()}
           suffix="건"
           change={`${dbTables.length}개 테이블`}
         />
         <KpiCard
-          icon={<IconUsers size={18} className="text-on-surface-variant" />}
+          icon={<IconUsers size={18} className="text-[var(--color-text-muted)]" />}
           label="등록 사용자"
           value={(profileCount ?? 0).toString()}
           suffix="명"
           change={`활성 ${activeUsers}명`}
         />
         <KpiCard
-          icon={<IconLink size={18} className="text-on-surface-variant" />}
+          icon={<IconLink size={18} className="text-[var(--color-text-muted)]" />}
           label="외부 연동"
           value={integrations.length.toString()}
           suffix="개"
@@ -183,7 +183,7 @@ export default async function SystemPage() {
           trend="up"
         />
         <KpiCard
-          icon={<IconMail size={18} className="text-on-surface-variant" />}
+          icon={<IconMail size={18} className="text-[var(--color-text-muted)]" />}
           label="메일 발송 기능"
           value={mailFeatures.length.toString()}
           suffix="개"
@@ -197,25 +197,25 @@ export default async function SystemPage() {
           {integrations.map((item) => (
             <Card key={item.name} className="p-5">
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 text-primary">
+                <div className="w-10 h-10 rounded-[14px] bg-primary/10 flex items-center justify-center shrink-0 text-primary">
                   {item.icon}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <h4 className="text-sm font-bold text-on-surface">{item.name}</h4>
+                    <h4 className="text-sm font-bold text-[var(--color-text)]">{item.name}</h4>
                     <StatusBadge variant="success">
                       <span className="flex items-center gap-1"><IconCircleCheck size={10} /> 연결됨</span>
                     </StatusBadge>
                   </div>
-                  <p className="text-xs text-on-surface-variant">{item.description}</p>
-                  <p className="text-xs text-on-surface mt-1">{item.details}</p>
+                  <p className="text-xs text-[var(--color-text-muted)]">{item.description}</p>
+                  <p className="text-xs text-[var(--color-text)] mt-1">{item.details}</p>
                   {"env" in item && (
-                    <p className="text-[10px] font-mono text-on-surface-variant/60 mt-1">{item.env}</p>
+                    <p className="text-[10px] font-mono text-[var(--color-text-muted)]/60 mt-1">{item.env}</p>
                   )}
                   {"tables" in item && item.tables && (
                     <div className="flex flex-wrap gap-1 mt-2">
                       {item.tables.map((t: string) => (
-                        <span key={t} className="text-[9px] font-mono bg-surface-container-high rounded px-1.5 py-0.5 text-on-surface-variant">{t}</span>
+                        <span key={t} className="text-[9px] font-mono bg-[var(--color-surface)] rounded px-1.5 py-0.5 text-[var(--color-text-muted)]">{t}</span>
                       ))}
                     </div>
                   )}
@@ -232,24 +232,24 @@ export default async function SystemPage() {
         <Card className="overflow-hidden">
           <table className="w-full">
             <thead>
-              <tr className="bg-surface-container-high/50">
-                <th className="text-left text-xs font-bold text-on-surface-variant uppercase tracking-wider px-5 py-3">트리거</th>
-                <th className="text-left text-xs font-bold text-on-surface-variant uppercase tracking-wider px-5 py-3">수신 대상</th>
-                <th className="text-left text-xs font-bold text-on-surface-variant uppercase tracking-wider px-5 py-3">메일 내용</th>
-                <th className="text-left text-xs font-bold text-on-surface-variant uppercase tracking-wider px-5 py-3 w-[140px]">모듈</th>
+              <tr className="bg-[var(--color-surface)]/50">
+                <th className="text-left text-xs font-bold text-[var(--color-text-muted)] uppercase tracking-wider px-5 py-3">트리거</th>
+                <th className="text-left text-xs font-bold text-[var(--color-text-muted)] uppercase tracking-wider px-5 py-3">수신 대상</th>
+                <th className="text-left text-xs font-bold text-[var(--color-text-muted)] uppercase tracking-wider px-5 py-3">메일 내용</th>
+                <th className="text-left text-xs font-bold text-[var(--color-text-muted)] uppercase tracking-wider px-5 py-3 w-[140px]">모듈</th>
               </tr>
             </thead>
             <tbody>
               {mailFeatures.map((mail) => (
-                <tr key={mail.trigger} className="border-t border-outline-variant/5">
+                <tr key={mail.trigger} className="border-t border-black/[0.04]/5">
                   <td className="px-5 py-3">
-                    <span className="text-sm font-semibold text-on-surface">{mail.trigger}</span>
+                    <span className="text-sm font-semibold text-[var(--color-text)]">{mail.trigger}</span>
                   </td>
                   <td className="px-5 py-3">
-                    <span className="text-xs text-on-surface-variant">{mail.recipient}</span>
+                    <span className="text-xs text-[var(--color-text-muted)]">{mail.recipient}</span>
                   </td>
                   <td className="px-5 py-3">
-                    <span className="text-xs text-on-surface-variant">{mail.content}</span>
+                    <span className="text-xs text-[var(--color-text-muted)]">{mail.content}</span>
                   </td>
                   <td className="px-5 py-3">
                     <StatusBadge variant="info">{mail.module}</StatusBadge>
@@ -268,12 +268,12 @@ export default async function SystemPage() {
             <h3 className="text-sm font-bold text-primary tracking-[0.2em] uppercase mb-5">데이터베이스 테이블</h3>
             <div className="space-y-3">
               {dbTables.map((table) => (
-                <div key={table.name} className="flex items-center justify-between p-3 rounded-lg bg-surface-container-low/50">
+                <div key={table.name} className="flex items-center justify-between p-3 rounded-[14px] bg-[var(--color-surface)]/50">
                   <div>
-                    <p className="text-sm font-medium text-on-surface">{table.label}</p>
-                    <p className="text-[10px] font-mono text-on-surface-variant">{table.name}</p>
+                    <p className="text-sm font-medium text-[var(--color-text)]">{table.label}</p>
+                    <p className="text-[10px] font-mono text-[var(--color-text-muted)]">{table.name}</p>
                   </div>
-                  <span className="text-sm font-black text-on-surface tabular-nums">{table.count.toLocaleString()}</span>
+                  <span className="text-sm font-black text-[var(--color-text)] tabular-nums">{table.count.toLocaleString()}</span>
                 </div>
               ))}
             </div>
@@ -286,24 +286,24 @@ export default async function SystemPage() {
           <div className="space-y-3">
             {allLogs.length > 0 ? (
               allLogs.map((log) => (
-                <div key={log.id} className="flex gap-3 p-3 rounded-lg hover:bg-surface-container-high/50 transition-colors">
-                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <div key={log.id} className="flex gap-3 p-3 rounded-[14px] hover:bg-[var(--color-surface)]/50 transition-colors">
+                  <div className="w-8 h-8 rounded-[14px] bg-primary/10 flex items-center justify-center flex-shrink-0">
                     <IconActivity size={14} className="text-primary" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs text-on-surface leading-snug">{log.detail ?? log.action}</p>
+                    <p className="text-xs text-[var(--color-text)] leading-snug">{log.detail ?? log.action}</p>
                     <div className="flex items-center gap-2 mt-1">
-                      <span className="text-[10px] text-on-surface-variant">{log.actor}</span>
+                      <span className="text-[10px] text-[var(--color-text-muted)]">{log.actor}</span>
                       <span className="text-[10px] text-primary font-bold">{PROJECT_NAMES[log.project] ?? log.project}</span>
                     </div>
-                    <span className="text-[10px] text-on-surface-variant tabular-nums">
+                    <span className="text-[10px] text-[var(--color-text-muted)] tabular-nums">
                       {new Date(log.created_at).toLocaleString("ko-KR", { month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" })}
                     </span>
                   </div>
                 </div>
               ))
             ) : (
-              <p className="text-xs text-on-surface-variant text-center py-6">활동 기록이 없습니다.</p>
+              <p className="text-xs text-[var(--color-text-muted)] text-center py-6">활동 기록이 없습니다.</p>
             )}
           </div>
         </Card>

@@ -45,27 +45,27 @@ export default function WizardStep4({
         {/* Success accent strip */}
         <div className="h-1 bg-primary" />
         <div className="flex flex-col items-center justify-center py-16 px-6">
-          <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-5">
+          <div className="w-16 h-16 rounded-[20px] bg-primary/10 flex items-center justify-center mb-5">
             <IconCheck size={32} className="text-primary" />
           </div>
-          <h3 className="text-lg font-black text-on-surface mb-2">
+          <h3 className="text-lg font-black text-[var(--color-text)] mb-2">
             배정이 적용되었습니다
           </h3>
-          <p className="text-sm text-on-surface-variant mb-2">
+          <p className="text-sm text-[var(--color-text-muted)] mb-2">
             {typeLabel} {assignedCount}건 배정 완료
           </p>
-          <div className="flex items-center gap-4 text-xs text-on-surface-variant mb-8">
+          <div className="flex items-center gap-4 text-xs text-[var(--color-text-muted)] mb-8">
             <span>
               신규 <span className="font-bold text-tertiary">{newCount}</span>
             </span>
-            <span className="text-outline-variant">|</span>
+            <span className="text-[var(--color-text-faint)]">|</span>
             <span>
               수동 조정{" "}
-              <span className="font-bold text-on-surface">
+              <span className="font-bold text-[var(--color-text)]">
                 {manualChangeCount}
               </span>
             </span>
-            <span className="text-outline-variant">|</span>
+            <span className="text-[var(--color-text-faint)]">|</span>
             <span>
               배정률{" "}
               <span className="font-bold text-primary">{assignRate}%</span>
@@ -74,7 +74,7 @@ export default function WizardStep4({
           <button
             type="button"
             onClick={onDone}
-            className="px-6 py-2.5 rounded-lg bg-primary text-on-primary text-xs font-bold hover:bg-primary-dim transition-colors"
+            className="px-6 py-2.5 rounded-[14px] bg-primary text-on-primary text-xs font-bold hover:bg-primary-dim transition-colors"
           >
             대시보드로 돌아가기
           </button>
@@ -86,10 +86,10 @@ export default function WizardStep4({
   return (
     <div className="space-y-5">
       <div>
-        <h3 className="text-sm font-bold text-on-surface">
+        <h3 className="text-sm font-bold text-[var(--color-text)]">
           최종 확인 — <span className="text-primary">{typeLabel}</span>
         </h3>
-        <p className="text-xs text-on-surface-variant mt-1">
+        <p className="text-xs text-[var(--color-text-muted)] mt-1">
           배정 결과를 확인하고 적용합니다.
         </p>
       </div>
@@ -109,7 +109,7 @@ export default function WizardStep4({
       {/* Assignment rate */}
       <Card className="p-4">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-xs font-bold text-on-surface">배정률</span>
+          <span className="text-xs font-bold text-[var(--color-text)]">배정률</span>
           <span className="text-sm font-black text-primary tabular-nums">
             {assignRate}%
           </span>
@@ -130,14 +130,14 @@ export default function WizardStep4({
 
       {/* Operator final heatmap */}
       <Card className="p-5">
-        <h4 className="text-xs font-bold text-on-surface mb-4">
+        <h4 className="text-xs font-bold text-[var(--color-text)] mb-4">
           운영자별 최종 배정
         </h4>
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
           {OPERATOR_GROUPS.map((group) => (
             <div
               key={group.group}
-              className="bg-surface-container-low rounded-xl p-3"
+              className="bg-[var(--color-surface)] rounded-[20px] p-3"
             >
               <p className="text-[9px] font-bold text-primary uppercase tracking-widest mb-3">
                 {group.label}
@@ -152,22 +152,22 @@ export default function WizardStep4({
                   return (
                     <div key={op} className="space-y-1">
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-medium text-on-surface">
+                        <span className="text-xs font-medium text-[var(--color-text)]">
                           {op}
                         </span>
                         <span
                           className={cn(
                             "text-xs font-bold tabular-nums",
-                            isOver ? "text-error" : "text-on-surface",
+                            isOver ? "text-error" : "text-[var(--color-text)]",
                           )}
                         >
                           {load}
-                          <span className="text-on-surface-variant font-normal">
+                          <span className="text-[var(--color-text-muted)] font-normal">
                             /{max}
                           </span>
                         </span>
                       </div>
-                      <div className="h-1 bg-surface-container-highest rounded-full overflow-hidden">
+                      <div className="h-1 bg-[var(--color-surface)] rounded-full overflow-hidden">
                         <div
                           className={cn(
                             "h-full rounded-full transition-all duration-300",
@@ -196,7 +196,7 @@ export default function WizardStep4({
         <button
           type="button"
           onClick={onBack}
-          className="px-5 py-2.5 rounded-lg bg-surface-container-high text-on-surface-variant text-xs font-bold hover:bg-surface-bright transition-colors"
+          className="px-5 py-2.5 rounded-[14px] bg-[var(--color-surface)] text-[var(--color-text-muted)] text-xs font-bold hover:bg-surface-bright transition-colors"
         >
           수정하기
         </button>
@@ -205,7 +205,7 @@ export default function WizardStep4({
           onClick={onApply}
           disabled={isApplying}
           className={cn(
-            "flex items-center gap-2 px-6 py-2.5 rounded-lg",
+            "flex items-center gap-2 px-6 py-2.5 rounded-[14px]",
             "bg-primary text-on-primary text-xs font-bold",
             "hover:bg-primary-dim transition-colors",
             isApplying && "opacity-60",
@@ -229,7 +229,7 @@ function SummaryTile({
   variant?: "default" | "primary" | "tertiary";
 }) {
   const valueColors = {
-    default: "text-on-surface",
+    default: "text-[var(--color-text)]",
     primary: "text-primary",
     tertiary: "text-tertiary",
   } as const;
@@ -244,7 +244,7 @@ function SummaryTile({
       >
         {value}
       </div>
-      <div className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mt-1">
+      <div className="text-[10px] font-bold text-[var(--color-text-muted)] uppercase tracking-widest mt-1">
         {label}
       </div>
     </Card>

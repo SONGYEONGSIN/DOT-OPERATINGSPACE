@@ -141,19 +141,19 @@ export default function HandoverFlow({
         <div className="space-y-4">
           <div className="flex items-center gap-3 flex-wrap">
             <div className="flex-1 relative min-w-[200px]">
-              <IconSearch size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" />
+              <IconSearch size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]" />
               <input
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="대학명 또는 서비스명 검색..."
-                className="search-input w-full pl-9 pr-4 py-2.5 rounded-lg text-sm text-on-surface focus:outline-none"
+                className="search-input w-full pl-9 pr-4 py-2.5 rounded-[14px] text-sm text-[var(--color-text)] focus:outline-none"
               />
             </div>
             <select
               value={fromFilter}
               onChange={(e) => setFromFilter(e.target.value)}
-              className="search-input rounded-lg px-4 py-2.5 text-sm text-on-surface focus:outline-none appearance-none min-w-[120px]"
+              className="search-input rounded-[14px] px-4 py-2.5 text-sm text-[var(--color-text)] focus:outline-none appearance-none min-w-[120px]"
             >
               <option value="">전체 운영자</option>
               {uniqueOperators.map((p) => (
@@ -163,7 +163,7 @@ export default function HandoverFlow({
             <select
               value={receptionFilter}
               onChange={(e) => setReceptionFilter(e.target.value)}
-              className="search-input rounded-lg px-4 py-2.5 text-sm text-on-surface focus:outline-none appearance-none min-w-[120px]"
+              className="search-input rounded-[14px] px-4 py-2.5 text-sm text-[var(--color-text)] focus:outline-none appearance-none min-w-[120px]"
             >
               <option value="">전체 접수구분</option>
               {uniqueReceptionTypes.map((t) => (
@@ -173,7 +173,7 @@ export default function HandoverFlow({
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="search-input rounded-lg px-4 py-2.5 text-sm text-on-surface focus:outline-none appearance-none min-w-[100px]"
+              className="search-input rounded-[14px] px-4 py-2.5 text-sm text-[var(--color-text)] focus:outline-none appearance-none min-w-[100px]"
             >
               <option value="">전체 카테고리</option>
               {uniqueCategories.map((c) => (
@@ -183,9 +183,9 @@ export default function HandoverFlow({
           </div>
 
           <div className="space-y-2">
-            <div className="text-xs text-on-surface-variant tabular-nums">
+            <div className="text-xs text-[var(--color-text-muted)] tabular-nums">
               총{" "}
-              <span className="font-bold text-on-surface">{filteredServices.length.toLocaleString()}</span>
+              <span className="font-bold text-[var(--color-text)]">{filteredServices.length.toLocaleString()}</span>
               건{selectedIds.size > 0 && (
                 <> · <span className="font-bold text-primary">{selectedIds.size}</span>건 선택됨</>
               )}
@@ -193,15 +193,15 @@ export default function HandoverFlow({
             <Card className="overflow-hidden">
             <table className="w-full">
               <thead>
-                <tr className="bg-surface-container-high/50">
+                <tr className="bg-[var(--color-surface)]/50">
                   <th className="w-10 px-3 py-2.5">
                     <input type="checkbox" checked={allFilteredSelected} onChange={toggleAll} className="accent-primary w-4 h-4" />
                   </th>
-                  <th className="text-left text-xs font-bold text-on-surface-variant uppercase tracking-wider px-4 py-3">대학명</th>
-                  <th className="text-left text-xs font-bold text-on-surface-variant uppercase tracking-wider px-4 py-3">서비스명</th>
-                  <th className="text-left text-xs font-bold text-on-surface-variant uppercase tracking-wider px-4 py-3 w-[100px]">현재 운영자</th>
-                  <th className="text-left text-xs font-bold text-on-surface-variant uppercase tracking-wider px-4 py-3 w-[90px]">접수구분</th>
-                  <th className="text-left text-xs font-bold text-on-surface-variant uppercase tracking-wider px-4 py-3 w-[80px]">카테고리</th>
+                  <th className="text-left text-xs font-bold text-[var(--color-text-muted)] uppercase tracking-wider px-4 py-3">대학명</th>
+                  <th className="text-left text-xs font-bold text-[var(--color-text-muted)] uppercase tracking-wider px-4 py-3">서비스명</th>
+                  <th className="text-left text-xs font-bold text-[var(--color-text-muted)] uppercase tracking-wider px-4 py-3 w-[100px]">현재 운영자</th>
+                  <th className="text-left text-xs font-bold text-[var(--color-text-muted)] uppercase tracking-wider px-4 py-3 w-[90px]">접수구분</th>
+                  <th className="text-left text-xs font-bold text-[var(--color-text-muted)] uppercase tracking-wider px-4 py-3 w-[80px]">카테고리</th>
                 </tr>
               </thead>
               <tbody>
@@ -210,29 +210,29 @@ export default function HandoverFlow({
                     key={s.id}
                     onClick={() => toggleService(s.id)}
                     className={cn(
-                      "border-t border-outline-variant/5 cursor-pointer transition-colors",
-                      selectedIds.has(s.id) ? "bg-primary/5" : "hover:bg-surface-container-high/30",
+                      "border-t border-black/[0.04]/5 cursor-pointer transition-colors",
+                      selectedIds.has(s.id) ? "bg-primary/5" : "hover:bg-[var(--color-surface)]/30",
                     )}
                   >
                     <td className="px-3 py-2">
                       <input type="checkbox" checked={selectedIds.has(s.id)} onChange={() => toggleService(s.id)} className="accent-primary w-4 h-4" />
                     </td>
-                    <td className="px-3 py-2 text-sm text-on-surface">{s.university_name ?? "-"}</td>
-                    <td className="px-3 py-2 text-sm text-on-surface-variant">{stripYear(s.service_name ?? "-")}</td>
-                    <td className="px-3 py-2 text-xs text-on-surface-variant">{s.operator ?? "미배정"}</td>
-                    <td className="px-3 py-2 text-xs text-on-surface-variant">{s.reception_type ?? "-"}</td>
-                    <td className="px-3 py-2 text-xs text-on-surface-variant">{s.category ?? "-"}</td>
+                    <td className="px-3 py-2 text-sm text-[var(--color-text)]">{s.university_name ?? "-"}</td>
+                    <td className="px-3 py-2 text-sm text-[var(--color-text-muted)]">{stripYear(s.service_name ?? "-")}</td>
+                    <td className="px-3 py-2 text-xs text-[var(--color-text-muted)]">{s.operator ?? "미배정"}</td>
+                    <td className="px-3 py-2 text-xs text-[var(--color-text-muted)]">{s.reception_type ?? "-"}</td>
+                    <td className="px-3 py-2 text-xs text-[var(--color-text-muted)]">{s.category ?? "-"}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
             {filteredServices.length > 100 && (
-              <div className="px-4 py-2 text-xs text-on-surface-variant bg-surface-container-high/30 text-center">
+              <div className="px-4 py-2 text-xs text-[var(--color-text-muted)] bg-[var(--color-surface)]/30 text-center">
                 검색/필터를 사용하여 범위를 좁혀주세요 (총 {filteredServices.length}건)
               </div>
             )}
             {filteredServices.length === 0 && (
-              <div className="px-4 py-8 text-sm text-on-surface-variant text-center">
+              <div className="px-4 py-8 text-sm text-[var(--color-text-muted)] text-center">
                 조건에 맞는 서비스가 없습니다.
               </div>
             )}
@@ -245,13 +245,13 @@ export default function HandoverFlow({
       {step === 1 && (
         <div className="space-y-4">
           <div className="relative">
-            <IconSearch size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" />
+            <IconSearch size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]" />
             <input
               type="text"
               value={profileSearch}
               onChange={(e) => setProfileSearch(e.target.value)}
               placeholder="이름 또는 팀 검색..."
-              className="search-input w-full pl-9 pr-4 py-2.5 rounded-lg text-sm text-on-surface focus:outline-none"
+              className="search-input w-full pl-9 pr-4 py-2.5 rounded-[14px] text-sm text-[var(--color-text)] focus:outline-none"
             />
           </div>
 
@@ -266,20 +266,20 @@ export default function HandoverFlow({
                   type="button"
                   onClick={() => setToPerson(p.name)}
                   className={cn(
-                    "flex items-center gap-3 p-4 rounded-xl border-2 transition-all text-left",
+                    "flex items-center gap-3 p-4 rounded-[20px] border-2 transition-all text-left",
                     isSelected
                       ? "border-primary bg-primary/5 ring-2 ring-primary/20"
-                      : "border-outline-variant/10 bg-surface-container-high/30 hover:border-outline-variant/30",
+                      : "border-black/[0.04]/10 bg-[var(--color-surface)]/30 hover:border-black/[0.04]/30",
                   )}
                 >
                   <UserAvatar name={p.name} size="sm" />
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-bold text-on-surface truncate">{p.name}</p>
-                    <p className="text-[10px] text-on-surface-variant">{p.team} · {p.role === "admin" ? "관리자" : "운영자"}</p>
+                    <p className="text-sm font-bold text-[var(--color-text)] truncate">{p.name}</p>
+                    <p className="text-[10px] text-[var(--color-text-muted)]">{p.team} · {p.role === "admin" ? "관리자" : "운영자"}</p>
                   </div>
                   <div className="text-right shrink-0">
-                    <p className="text-lg font-bold text-on-surface tabular-nums">{currentCount}</p>
-                    <p className="text-[10px] text-on-surface-variant">현재 담당</p>
+                    <p className="text-lg font-bold text-[var(--color-text)] tabular-nums">{currentCount}</p>
+                    <p className="text-[10px] text-[var(--color-text-muted)]">현재 담당</p>
                   </div>
                 </button>
               );
@@ -294,38 +294,38 @@ export default function HandoverFlow({
           <div className="grid grid-cols-3 gap-4">
             <Card className="p-4 text-center">
               <p className="text-2xl font-bold text-primary tabular-nums">{selectedIds.size}</p>
-              <p className="text-xs text-on-surface-variant mt-1">선택 서비스</p>
+              <p className="text-xs text-[var(--color-text-muted)] mt-1">선택 서비스</p>
             </Card>
             <Card className="p-4 text-center">
-              <p className="text-sm font-bold text-on-surface">운영자</p>
-              <p className="text-xs text-on-surface-variant mt-1">인수인계 유형</p>
+              <p className="text-sm font-bold text-[var(--color-text)]">운영자</p>
+              <p className="text-xs text-[var(--color-text-muted)] mt-1">인수인계 유형</p>
             </Card>
             <Card className="p-4 text-center flex flex-col items-center justify-center">
               <div className="flex items-center gap-2">
                 <UserAvatar name={toPerson} size="sm" />
-                <p className="text-sm font-bold text-on-surface">{toPerson}</p>
+                <p className="text-sm font-bold text-[var(--color-text)]">{toPerson}</p>
               </div>
-              <p className="text-xs text-on-surface-variant mt-1">인수자</p>
+              <p className="text-xs text-[var(--color-text-muted)] mt-1">인수자</p>
             </Card>
           </div>
 
           <Card className="overflow-hidden">
             <table className="w-full">
               <thead>
-                <tr className="bg-surface-container-high/50">
-                  <th className="text-left text-xs font-bold text-on-surface-variant uppercase tracking-wider px-4 py-3">대학명</th>
-                  <th className="text-left text-xs font-bold text-on-surface-variant uppercase tracking-wider px-4 py-3">서비스명</th>
-                  <th className="text-left text-xs font-bold text-on-surface-variant uppercase tracking-wider px-4 py-3 w-[200px]">변경 내용</th>
+                <tr className="bg-[var(--color-surface)]/50">
+                  <th className="text-left text-xs font-bold text-[var(--color-text-muted)] uppercase tracking-wider px-4 py-3">대학명</th>
+                  <th className="text-left text-xs font-bold text-[var(--color-text-muted)] uppercase tracking-wider px-4 py-3">서비스명</th>
+                  <th className="text-left text-xs font-bold text-[var(--color-text-muted)] uppercase tracking-wider px-4 py-3 w-[200px]">변경 내용</th>
                 </tr>
               </thead>
               <tbody>
                 {selectedServices.slice(0, 20).map((s) => (
-                  <tr key={s.id} className="border-t border-outline-variant/5">
-                    <td className="px-4 py-2 text-sm text-on-surface">{s.university_name ?? "-"}</td>
-                    <td className="px-4 py-2 text-sm text-on-surface-variant">{stripYear(s.service_name ?? "-")}</td>
+                  <tr key={s.id} className="border-t border-black/[0.04]/5">
+                    <td className="px-4 py-2 text-sm text-[var(--color-text)]">{s.university_name ?? "-"}</td>
+                    <td className="px-4 py-2 text-sm text-[var(--color-text-muted)]">{stripYear(s.service_name ?? "-")}</td>
                     <td className="px-4 py-2">
                       <div className="flex items-center gap-2 text-xs">
-                        <span className="text-on-surface-variant">{s.operator ?? "미배정"}</span>
+                        <span className="text-[var(--color-text-muted)]">{s.operator ?? "미배정"}</span>
                         <IconArrowRight size={14} className="text-primary" />
                         <span className="font-bold text-primary">{toPerson}</span>
                       </div>
@@ -335,14 +335,14 @@ export default function HandoverFlow({
               </tbody>
             </table>
             {selectedServices.length > 20 && (
-              <div className="px-4 py-2 text-xs text-on-surface-variant bg-surface-container-high/30 text-center">
+              <div className="px-4 py-2 text-xs text-[var(--color-text-muted)] bg-[var(--color-surface)]/30 text-center">
                 외 {selectedServices.length - 20}건
               </div>
             )}
           </Card>
 
           <div>
-            <label className="block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-2">
+            <label className="block text-[10px] font-bold text-[var(--color-text-muted)] tracking-widest uppercase mb-2">
               인수인계 사유 / 메모 (선택)
             </label>
             <textarea
@@ -350,12 +350,12 @@ export default function HandoverFlow({
               onChange={(e) => setMemo(e.target.value)}
               placeholder="인수인계 사유를 입력하세요..."
               rows={6}
-              className="w-full p-4 bg-surface-container-highest rounded-lg text-sm text-on-surface border-none placeholder:text-on-surface-variant/50 resize-none overflow-y-auto max-h-[200px] focus:outline-none focus:ring-1 focus:ring-primary/50"
+              className="w-full p-4 bg-[var(--color-surface)] rounded-[14px] text-sm text-[var(--color-text)] border-none placeholder:text-[var(--color-text-muted)]/50 resize-none overflow-y-auto max-h-[200px] focus:outline-none focus:ring-1 focus:ring-primary/50"
             />
           </div>
 
           {result?.error && (
-            <div className="flex items-center gap-2 px-4 py-3 rounded-lg bg-error/10 text-error text-xs font-medium">
+            <div className="flex items-center gap-2 px-4 py-3 rounded-[14px] bg-error/10 text-error text-xs font-medium">
               <IconAlertCircle size={16} />
               {result.error}
             </div>
@@ -370,12 +370,12 @@ export default function HandoverFlow({
             <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
               <IconCircleCheck size={30} className="text-primary" />
             </div>
-            <h3 className="text-xl font-bold text-on-surface mb-2">인수인계 완료</h3>
-            <p className="text-sm text-on-surface-variant mb-1">
+            <h3 className="text-xl font-bold text-[var(--color-text)] mb-2">인수인계 완료</h3>
+            <p className="text-sm text-[var(--color-text-muted)] mb-1">
               <span className="font-bold text-primary">{result?.count}건</span>의 서비스가
-              <span className="font-bold text-on-surface"> {toPerson}</span>에게 인수인계되었습니다.
+              <span className="font-bold text-[var(--color-text)]"> {toPerson}</span>에게 인수인계되었습니다.
             </p>
-            <p className="text-xs text-on-surface-variant">이력은 하단 인수인계 이력에서 확인할 수 있습니다.</p>
+            <p className="text-xs text-[var(--color-text-muted)]">이력은 하단 인수인계 이력에서 확인할 수 있습니다.</p>
           </div>
         </Card>
       )}
@@ -389,7 +389,7 @@ export default function HandoverFlow({
             <button
               type="button"
               onClick={handleCancel}
-              className="px-5 py-2.5 rounded-lg bg-surface-container-high text-on-surface-variant text-sm font-bold transition-colors hover:bg-surface-container-highest"
+              className="px-5 py-2.5 rounded-[14px] bg-[var(--color-surface)] text-[var(--color-text-muted)] text-sm font-bold transition-colors hover:bg-[var(--color-surface)]"
             >
               취소
             </button>
@@ -398,7 +398,7 @@ export default function HandoverFlow({
             <button
               type="button"
               onClick={() => setStep((step - 1) as Step)}
-              className="px-5 py-2.5 rounded-lg bg-surface-container-high text-on-surface-variant text-sm font-bold transition-colors hover:bg-surface-container-highest"
+              className="px-5 py-2.5 rounded-[14px] bg-[var(--color-surface)] text-[var(--color-text-muted)] text-sm font-bold transition-colors hover:bg-[var(--color-surface)]"
             >
               이전
             </button>
@@ -408,7 +408,7 @@ export default function HandoverFlow({
               type="button"
               onClick={() => setStep(1)}
               disabled={selectedIds.size === 0}
-              className="px-5 py-2.5 rounded-lg bg-primary text-on-primary text-sm font-bold transition-colors hover:bg-primary/90 disabled:opacity-40 disabled:cursor-not-allowed"
+              className="px-5 py-2.5 rounded-[14px] bg-primary text-on-primary text-sm font-bold transition-colors hover:bg-primary/90 disabled:opacity-40 disabled:cursor-not-allowed"
             >
               다음: 인수자 선택
             </button>
@@ -418,7 +418,7 @@ export default function HandoverFlow({
               type="button"
               onClick={() => setStep(2)}
               disabled={!toPerson}
-              className="px-5 py-2.5 rounded-lg bg-primary text-on-primary text-sm font-bold transition-colors hover:bg-primary/90 disabled:opacity-40 disabled:cursor-not-allowed"
+              className="px-5 py-2.5 rounded-[14px] bg-primary text-on-primary text-sm font-bold transition-colors hover:bg-primary/90 disabled:opacity-40 disabled:cursor-not-allowed"
             >
               다음: 확인
             </button>
@@ -428,7 +428,7 @@ export default function HandoverFlow({
               type="button"
               onClick={handleExecute}
               disabled={isPending}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary text-on-primary text-sm font-bold transition-colors hover:bg-primary/90 disabled:opacity-60"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-[14px] bg-primary text-on-primary text-sm font-bold transition-colors hover:bg-primary/90 disabled:opacity-60"
             >
               {isPending && <IconLoader2 size={16} className="animate-spin" />}
               인수인계 실행
@@ -438,7 +438,7 @@ export default function HandoverFlow({
             <button
               type="button"
               onClick={() => { reset(); onComplete(); }}
-              className="px-5 py-2.5 rounded-lg bg-primary text-on-primary text-sm font-bold transition-colors hover:bg-primary/90"
+              className="px-5 py-2.5 rounded-[14px] bg-primary text-on-primary text-sm font-bold transition-colors hover:bg-primary/90"
             >
               현황으로 돌아가기
             </button>

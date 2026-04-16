@@ -32,11 +32,11 @@ export default function CategoryFilter({ categories }: CategoryFilterProps) {
 
   return (
     <div className="relative flex items-center gap-1.5">
-      <IconFilter size={14} className="text-on-surface-variant" />
+      <IconFilter size={14} className="text-[var(--color-text-muted)]" />
       <select
         value={current}
         onChange={(e) => handleChange(e.target.value)}
-        className="appearance-none bg-surface-container-high rounded-lg px-3 py-1.5 pr-6 text-xs font-bold text-on-surface-variant tracking-wide focus:outline-none focus:ring-1 focus:ring-primary/50 cursor-pointer"
+        className="appearance-none bg-[var(--color-surface)] rounded-[14px] px-3 py-1.5 pr-6 text-xs font-bold text-[var(--color-text-muted)] tracking-wide focus:outline-none focus:ring-1 focus:ring-primary/50 cursor-pointer"
       >
         <option value="">전체 분류</option>
         {categories.map((c) => (

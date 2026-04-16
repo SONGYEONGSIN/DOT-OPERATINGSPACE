@@ -39,8 +39,8 @@ export default async function DashboardLayout({
       <main className="ml-64 pt-16 min-h-[calc(100vh-4rem)]">
         <div className="p-6">{children}</div>
       </main>
-      <footer className="ml-64 border-t border-outline-variant/10 py-4 px-6">
-        <p className="text-[11px] text-on-surface-variant text-center">&copy; {new Date().getFullYear()} Orchestrator System. All rights reserved.</p>
+      <footer className="ml-64 border-t border-black/[0.04]/10 py-4 px-6">
+        <p className="text-[11px] text-[var(--color-text-muted)] text-center">&copy; {new Date().getFullYear()} Orchestrator System. All rights reserved.</p>
       </footer>
     </div>
   );

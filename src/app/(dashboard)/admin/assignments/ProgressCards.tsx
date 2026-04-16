@@ -25,7 +25,7 @@ interface ProgressCardsProps {
 const STATUS_ACCENT: Record<PhaseInfo["status"], string> = {
   done: "bg-primary",
   active: "bg-tertiary",
-  todo: "bg-surface-container-highest",
+  todo: "bg-[var(--color-surface)]",
 };
 
 function getProgressColor(pct: number): "primary" | "warning" | "error" {
@@ -55,21 +55,21 @@ export default function ProgressCards({ phases }: ProgressCardsProps) {
               <div className="flex items-center gap-3 mb-3">
                 <span
                   className={cn(
-                    "w-7 h-7 rounded-lg flex items-center justify-center text-xs font-black",
+                    "w-7 h-7 rounded-[14px] flex items-center justify-center text-xs font-black",
                     phase.status === "done"
                       ? "bg-primary/15 text-primary"
                       : phase.status === "active"
                         ? "bg-tertiary/15 text-tertiary"
-                        : "bg-surface-container-highest text-on-surface-variant",
+                        : "bg-[var(--color-surface)] text-[var(--color-text-muted)]",
                   )}
                 >
                   {phase.phase}
                 </span>
                 <div>
-                  <h4 className="text-xs font-bold text-on-surface">
+                  <h4 className="text-xs font-bold text-[var(--color-text)]">
                     Phase {phase.phase}
                   </h4>
-                  <p className="text-[10px] text-on-surface-variant">
+                  <p className="text-[10px] text-[var(--color-text-muted)]">
                     {phase.label}
                   </p>
                 </div>
@@ -90,7 +90,7 @@ export default function ProgressCards({ phases }: ProgressCardsProps) {
                           ? "bg-primary/10 text-primary"
                           : typePct > 0
                             ? "bg-tertiary/10 text-tertiary"
-                            : "bg-surface-container-highest text-on-surface-variant",
+                            : "bg-[var(--color-surface)] text-[var(--color-text-muted)]",
                       )}
                     >
                       {t.label}
@@ -113,9 +113,9 @@ export default function ProgressCards({ phases }: ProgressCardsProps) {
               {/* Stats row */}
               <div className="flex items-center justify-between mt-3">
                 <div className="flex items-center gap-3 text-[10px]">
-                  <span className="text-on-surface-variant">
+                  <span className="text-[var(--color-text-muted)]">
                     배정{" "}
-                    <span className="font-bold text-on-surface tabular-nums">
+                    <span className="font-bold text-[var(--color-text)] tabular-nums">
                       {totalAssigned}
                     </span>
                   </span>
@@ -125,7 +125,7 @@ export default function ProgressCards({ phases }: ProgressCardsProps) {
                       미배정 {unassigned}
                     </span>
                   )}
-                  <span className="text-on-surface-variant tabular-nums">
+                  <span className="text-[var(--color-text-muted)] tabular-nums">
                     {pct}%
                   </span>
                 </div>
@@ -133,10 +133,10 @@ export default function ProgressCards({ phases }: ProgressCardsProps) {
                 <a
                   href={`?type=${firstType}&step=1`}
                   className={cn(
-                    "flex items-center gap-1 px-3 py-1.5 rounded-lg text-[10px] font-bold transition-colors",
+                    "flex items-center gap-1 px-3 py-1.5 rounded-[14px] text-[10px] font-bold transition-colors",
                     phase.status === "done"
                       ? "bg-primary/10 text-primary hover:bg-primary/20"
-                      : "bg-surface-container-high text-on-surface hover:bg-surface-bright",
+                      : "bg-[var(--color-surface)] text-[var(--color-text)] hover:bg-surface-bright",
                   )}
                 >
                   {phase.status === "done" ? "확인" : "시작"}

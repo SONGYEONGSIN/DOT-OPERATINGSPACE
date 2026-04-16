@@ -74,19 +74,19 @@ export default async function ContactsPage({ searchParams }: PageProps) {
   ];
 
   const tableData = filtered.map((c) => ({
-    university: <span className="text-sm font-medium text-on-surface">{c.university_name}</span>,
+    university: <span className="text-sm font-medium text-[var(--color-text)]">{c.university_name}</span>,
     category: (
       <span className={c.category === "PIMS" ? "text-xs font-bold text-primary" : "text-xs font-bold text-tertiary"}>
         {c.category}
       </span>
     ),
-    dept: <span className="text-xs text-on-surface-variant">{c.department ?? "-"}</span>,
-    role: <span className="text-xs text-on-surface-variant">{c.role ?? "-"}</span>,
-    person: <span className="text-xs font-semibold text-on-surface">{c.person_name}</span>,
-    phone: <span className="text-xs text-on-surface tabular-nums">{c.phone ?? "-"}</span>,
-    email: <span className="text-xs text-on-surface-variant">{c.email ?? "-"}</span>,
+    dept: <span className="text-xs text-[var(--color-text-muted)]">{c.department ?? "-"}</span>,
+    role: <span className="text-xs text-[var(--color-text-muted)]">{c.role ?? "-"}</span>,
+    person: <span className="text-xs font-semibold text-[var(--color-text)]">{c.person_name}</span>,
+    phone: <span className="text-xs text-[var(--color-text)] tabular-nums">{c.phone ?? "-"}</span>,
+    email: <span className="text-xs text-[var(--color-text-muted)]">{c.email ?? "-"}</span>,
     updated: (
-      <span className="text-xs text-on-surface-variant tabular-nums">
+      <span className="text-xs text-[var(--color-text-muted)] tabular-nums">
         {new Date(c.updated_at).toLocaleDateString("ko-KR")}
       </span>
     ),
@@ -102,10 +102,10 @@ export default async function ContactsPage({ searchParams }: PageProps) {
       />
 
       <KpiGrid>
-        <KpiCard icon={<IconSchool size={18} className="text-on-surface-variant" />} label="등록 대학수" value={uniqueUniversities.toString()} suffix="개" />
-        <KpiCard icon={<IconUsers size={18} className="text-on-surface-variant" />} label="전체 담당자" value={contacts.length.toString()} suffix="명" />
-        <KpiCard icon={<IconCategory size={18} className="text-on-surface-variant" />} label="PIMS" value={pimsCount.toString()} suffix="명" />
-        <KpiCard icon={<IconRefresh size={18} className="text-on-surface-variant" />} label="원서접수" value={receptionCount.toString()} suffix="명" />
+        <KpiCard icon={<IconSchool size={18} className="text-[var(--color-text-muted)]" />} label="등록 대학수" value={uniqueUniversities.toString()} suffix="개" />
+        <KpiCard icon={<IconUsers size={18} className="text-[var(--color-text-muted)]" />} label="전체 담당자" value={contacts.length.toString()} suffix="명" />
+        <KpiCard icon={<IconCategory size={18} className="text-[var(--color-text-muted)]" />} label="PIMS" value={pimsCount.toString()} suffix="명" />
+        <KpiCard icon={<IconRefresh size={18} className="text-[var(--color-text-muted)]" />} label="원서접수" value={receptionCount.toString()} suffix="명" />
       </KpiGrid>
 
       <Suspense>
@@ -122,7 +122,7 @@ export default async function ContactsPage({ searchParams }: PageProps) {
       <TableSection totalCount={filtered.length}>
         <DataTable columns={columns} data={tableData} />
         {contacts.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-16 text-on-surface-variant">
+          <div className="flex flex-col items-center justify-center py-16 text-[var(--color-text-muted)]">
             <IconSchool size={40} className="opacity-30 mb-2" />
             <p className="text-sm font-medium">등록된 연락처가 없습니다.</p>
             <p className="text-xs mt-1">연락처 추가 또는 엑셀 업로드로 등록해주세요.</p>

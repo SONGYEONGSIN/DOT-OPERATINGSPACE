@@ -54,18 +54,18 @@ export default function AssistantPage() {
         {/* Chat Area */}
         <Card className="lg:col-span-2 flex flex-col overflow-hidden p-0">
           {/* Chat Header */}
-          <div className="flex items-center gap-3 px-5 py-3.5 border-b border-outline-variant/15">
-            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+          <div className="flex items-center gap-3 px-5 py-3.5 border-b border-black/[0.04]/15">
+            <div className="w-8 h-8 rounded-[14px] bg-primary/10 flex items-center justify-center">
               <IconRobot size={18} className="text-primary" />
             </div>
             <div className="flex-1">
-              <p className="text-sm font-bold text-on-surface">DOT 어시스턴트</p>
+              <p className="text-sm font-bold text-[var(--color-text)]">DOT 어시스턴트</p>
               <div className="flex items-center gap-1">
                 <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-                <span className="text-[10px] text-on-surface-variant">온라인</span>
+                <span className="text-[10px] text-[var(--color-text-muted)]">온라인</span>
               </div>
             </div>
-            <button className="w-8 h-8 rounded-lg hover:bg-surface-container-high flex items-center justify-center text-on-surface-variant transition-colors">
+            <button className="w-8 h-8 rounded-[14px] hover:bg-[var(--color-surface)] flex items-center justify-center text-[var(--color-text-muted)] transition-colors">
               <IconDotsVertical size={18} />
             </button>
           </div>
@@ -78,20 +78,20 @@ export default function AssistantPage() {
                 className={`flex gap-3 ${msg.role === "user" ? "justify-end" : ""}`}
               >
                 {msg.role === "assistant" && (
-                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <div className="w-8 h-8 rounded-[14px] bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
                     <IconRobot size={16} className="text-primary" />
                   </div>
                 )}
                 <div
-                  className={`max-w-[75%] rounded-2xl px-4 py-3 ${
+                  className={`max-w-[75%] rounded-[20px] px-4 py-3 ${
                     msg.role === "user"
                       ? "bg-primary text-on-primary rounded-br-md"
-                      : "bg-surface-container-high text-on-surface rounded-bl-md"
+                      : "bg-[var(--color-surface)] text-[var(--color-text)] rounded-bl-md"
                   }`}
                 >
                   <p
                     className={`text-sm leading-relaxed whitespace-pre-line ${
-                      msg.role === "user" ? "" : "text-on-surface/90"
+                      msg.role === "user" ? "" : "text-[var(--color-text)]/90"
                     }`}
                   >
                     {msg.content}
@@ -100,14 +100,14 @@ export default function AssistantPage() {
                     className={`text-[10px] mt-1.5 ${
                       msg.role === "user"
                         ? "text-on-primary/60"
-                        : "text-on-surface-variant"
+                        : "text-[var(--color-text-muted)]"
                     }`}
                   >
                     {msg.timestamp}
                   </p>
                 </div>
                 {msg.role === "user" && (
-                  <div className="w-8 h-8 rounded-lg bg-secondary-container flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <div className="w-8 h-8 rounded-[14px] bg-secondary-container flex items-center justify-center flex-shrink-0 mt-0.5">
                     <span className="text-xs font-black text-on-secondary-container">
                       나
                     </span>
@@ -123,7 +123,7 @@ export default function AssistantPage() {
               {suggestedPrompts.slice(0, 3).map((sp) => (
                 <button
                   key={sp.title}
-                  className="flex items-center gap-1.5 bg-surface-container-high border border-outline-variant/15 rounded-full px-3 py-1.5 text-xs text-on-surface-variant hover:text-primary hover:border-primary/20 transition-colors whitespace-nowrap flex-shrink-0"
+                  className="flex items-center gap-1.5 bg-[var(--color-surface)] border border-black/[0.04]/15 rounded-full px-3 py-1.5 text-xs text-[var(--color-text-muted)] hover:text-primary hover:border-primary/20 transition-colors whitespace-nowrap flex-shrink-0"
                 >
                   <sp.icon size={14} />
                   {sp.prompt}
@@ -134,16 +134,16 @@ export default function AssistantPage() {
 
           {/* Input Area */}
           <div className="px-5 pb-4">
-            <div className="flex items-center gap-2 bg-surface-container-high rounded-xl border border-outline-variant/15 px-4 py-2.5 focus-within:border-primary/30 transition-colors">
+            <div className="flex items-center gap-2 bg-[var(--color-surface)] rounded-[20px] border border-black/[0.04]/15 px-4 py-2.5 focus-within:border-primary/30 transition-colors">
               <input
                 type="text"
                 placeholder="메시지를 입력하세요..."
-                className="flex-1 bg-transparent text-sm text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none"
+                className="flex-1 bg-transparent text-sm text-[var(--color-text)] placeholder:text-[var(--color-text-muted)]/50 focus:outline-none"
               />
-              <button className="w-8 h-8 rounded-lg hover:bg-surface-container flex items-center justify-center text-on-surface-variant transition-colors">
+              <button className="w-8 h-8 rounded-[14px] hover:bg-[var(--color-surface)] flex items-center justify-center text-[var(--color-text-muted)] transition-colors">
                 <IconPaperclip size={20} />
               </button>
-              <button className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-on-primary hover:bg-primary-dim transition-colors">
+              <button className="w-8 h-8 rounded-[14px] bg-primary flex items-center justify-center text-on-primary hover:bg-primary-dim transition-colors">
                 <IconSend size={18} />
               </button>
             </div>
@@ -154,17 +154,17 @@ export default function AssistantPage() {
         <div className="space-y-4 overflow-y-auto">
           {/* Prompt Grid */}
           <Card className="p-4">
-            <h3 className="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-3">
+            <h3 className="text-xs font-bold text-[var(--color-text-muted)] uppercase tracking-wider mb-3">
               빠른 질문
             </h3>
             <div className="grid grid-cols-2 gap-2">
               {suggestedPrompts.map((sp) => (
                 <button
                   key={sp.title}
-                  className="flex flex-col items-start gap-1.5 bg-surface-container-high rounded-lg p-3 hover:bg-primary/10 hover:border-primary/20 border border-transparent transition-colors text-left group"
+                  className="flex flex-col items-start gap-1.5 bg-[var(--color-surface)] rounded-[14px] p-3 hover:bg-primary/10 hover:border-primary/20 border border-transparent transition-colors text-left group"
                 >
-                  <sp.icon size={20} className="text-on-surface-variant group-hover:text-primary transition-colors" />
-                  <span className="text-[11px] font-semibold text-on-surface group-hover:text-primary transition-colors">
+                  <sp.icon size={20} className="text-[var(--color-text-muted)] group-hover:text-primary transition-colors" />
+                  <span className="text-[11px] font-semibold text-[var(--color-text)] group-hover:text-primary transition-colors">
                     {sp.title}
                   </span>
                 </button>
@@ -175,7 +175,7 @@ export default function AssistantPage() {
           {/* Recent Conversations */}
           <Card className="p-4">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">
+              <h3 className="text-xs font-bold text-[var(--color-text-muted)] uppercase tracking-wider">
                 최근 대화
               </h3>
               <button className="text-[10px] text-primary font-semibold hover:underline">
@@ -186,22 +186,22 @@ export default function AssistantPage() {
               {recentConversations.map((conv) => (
                 <button
                   key={conv.id}
-                  className="w-full text-left p-2.5 rounded-lg hover:bg-surface-container-high transition-colors group"
+                  className="w-full text-left p-2.5 rounded-[14px] hover:bg-[var(--color-surface)] transition-colors group"
                 >
                   <div className="flex items-start justify-between">
-                    <p className="text-xs font-semibold text-on-surface group-hover:text-primary transition-colors line-clamp-1">
+                    <p className="text-xs font-semibold text-[var(--color-text)] group-hover:text-primary transition-colors line-clamp-1">
                       {conv.title}
                     </p>
-                    <span className="text-[10px] text-on-surface-variant flex-shrink-0 ml-2">
+                    <span className="text-[10px] text-[var(--color-text-muted)] flex-shrink-0 ml-2">
                       {conv.date}
                     </span>
                   </div>
-                  <p className="text-[11px] text-on-surface-variant line-clamp-1 mt-0.5">
+                  <p className="text-[11px] text-[var(--color-text-muted)] line-clamp-1 mt-0.5">
                     {conv.preview}
                   </p>
                   <div className="flex items-center gap-1 mt-1">
-                    <IconMessage size={11} className="text-on-surface-variant" />
-                    <span className="text-[10px] text-on-surface-variant">
+                    <IconMessage size={11} className="text-[var(--color-text-muted)]" />
+                    <span className="text-[10px] text-[var(--color-text-muted)]">
                       {conv.messageCount}개 메시지
                     </span>
                   </div>

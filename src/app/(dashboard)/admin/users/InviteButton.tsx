@@ -11,7 +11,7 @@ export default function InviteButton() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center gap-2 bg-primary text-on-primary px-4 py-2.5 rounded-lg text-sm font-bold active:scale-95 transition-transform"
+        className="flex items-center gap-2 bg-primary text-on-primary px-4 py-2.5 rounded-[14px] text-sm font-bold active:scale-95 transition-transform"
       >
         <IconUserPlus size={16} />
         사용자 초대

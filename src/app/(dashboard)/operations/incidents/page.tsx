@@ -137,20 +137,20 @@ export default async function IncidentsPage({ searchParams }: PageProps) {
 
       <KpiGrid>
         <KpiCard
-          icon={<IconAlertOctagon size={18} className="text-on-surface-variant" />}
+          icon={<IconAlertOctagon size={18} className="text-[var(--color-text-muted)]" />}
           label="전체"
           value={totalCount.toString()}
           suffix="건"
         />
         <KpiCard
-          icon={<IconClock size={18} className="text-on-surface-variant" />}
+          icon={<IconClock size={18} className="text-[var(--color-text-muted)]" />}
           label="할일 / 진행중"
           value={activeCount.toString()}
           suffix="건"
           alert={activeCount > 0}
         />
         <KpiCard
-          icon={<IconCircleCheck size={18} className="text-on-surface-variant" />}
+          icon={<IconCircleCheck size={18} className="text-[var(--color-text-muted)]" />}
           label="처리완료"
           value={doneCount.toString()}
           suffix="건"
@@ -158,7 +158,7 @@ export default async function IncidentsPage({ searchParams }: PageProps) {
           trend={doneCount > 0 ? "up" : undefined}
         />
         <KpiCard
-          icon={<IconHandStop size={18} className="text-on-surface-variant" />}
+          icon={<IconHandStop size={18} className="text-[var(--color-text-muted)]" />}
           label="보류"
           value={holdCount.toString()}
           suffix="건"
@@ -194,7 +194,7 @@ export default async function IncidentsPage({ searchParams }: PageProps) {
               <IncidentList incidents={filtered} profiles={profiles} />
             </Card>
             {allIncidents.length === 0 && (
-              <div className="flex flex-col items-center justify-center py-16 text-on-surface-variant">
+              <div className="flex flex-col items-center justify-center py-16 text-[var(--color-text-muted)]">
                 <IconAlertOctagon size={40} className="opacity-30 mb-2" />
                 <p className="text-sm font-medium">등록된 사고 리포트가 없습니다.</p>
               </div>

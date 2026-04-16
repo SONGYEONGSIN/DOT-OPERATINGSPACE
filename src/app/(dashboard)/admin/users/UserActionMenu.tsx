@@ -45,22 +45,22 @@ export default function UserActionMenu({
 
   const menuItems: MenuItem[] = [
     {
-      icon: <IconUser size={18} className="text-on-surface-variant" />,
+      icon: <IconUser size={18} className="text-[var(--color-text-muted)]" />,
       label: "프로필 보기",
       onClick: () => setIsOpen(false),
     },
     {
-      icon: <IconArrowsExchange size={18} className="text-on-surface-variant" />,
+      icon: <IconArrowsExchange size={18} className="text-[var(--color-text-muted)]" />,
       label: "역할 변경",
       onClick: () => setIsOpen(false),
     },
     {
-      icon: status === "active" ? <IconUserOff size={18} className="text-on-surface-variant" /> : <IconUser size={18} className="text-on-surface-variant" />,
+      icon: status === "active" ? <IconUserOff size={18} className="text-[var(--color-text-muted)]" /> : <IconUser size={18} className="text-[var(--color-text-muted)]" />,
       label: status === "active" ? "비활성화" : "활성화",
       onClick: () => setIsOpen(false),
     },
     {
-      icon: <IconLockOpen size={18} className="text-on-surface-variant" />,
+      icon: <IconLockOpen size={18} className="text-[var(--color-text-muted)]" />,
       label: "비밀번호 초기화",
       onClick: () => setIsOpen(false),
     },
@@ -72,9 +72,9 @@ export default function UserActionMenu({
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
         className={cn(
-          "w-8 h-8 rounded-lg flex items-center justify-center",
-          "text-on-surface-variant hover:text-on-surface",
-          "hover:bg-surface-container-high transition-colors",
+          "w-8 h-8 rounded-[14px] flex items-center justify-center",
+          "text-[var(--color-text-muted)] hover:text-[var(--color-text)]",
+          "hover:bg-[var(--color-surface)] transition-colors",
         )}
         aria-label={`${userName} 관리 메뉴`}
       >
@@ -86,8 +86,8 @@ export default function UserActionMenu({
           className={cn(
             "absolute right-0 top-full mt-1 z-10",
             "min-w-[160px]",
-            "bg-surface-container-high rounded-lg",
-            "border border-outline-variant/15 shadow-elevated",
+            "bg-[var(--color-surface)] rounded-[14px]",
+            "border border-black/[0.04]/15 shadow-neu-strong",
           )}
         >
           {menuItems.map((item) => (
@@ -98,7 +98,7 @@ export default function UserActionMenu({
               onClick={item.onClick}
               className={cn(
                 "w-full flex items-center gap-2.5 px-4 py-2.5 text-sm",
-                "text-on-surface hover:bg-surface-bright transition-colors",
+                "text-[var(--color-text)] hover:bg-surface-bright transition-colors",
                 "first:rounded-t-lg last:rounded-b-lg",
               )}
             >

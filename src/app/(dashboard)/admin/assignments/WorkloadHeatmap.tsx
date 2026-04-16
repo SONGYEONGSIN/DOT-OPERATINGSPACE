@@ -47,7 +47,7 @@ function calcTotal(op: OperatorSummary): number {
 
 function getCellStyle(value: number): string {
   if (value === 0)
-    return "bg-surface-container-highest text-on-surface-variant/30";
+    return "bg-[var(--color-surface)] text-[var(--color-text-muted)]/30";
   if (value <= 2) return "bg-primary/10 text-primary";
   if (value <= 5) return "bg-primary/25 text-primary";
   if (value <= 8) return "bg-primary/40 text-on-primary";
@@ -57,7 +57,7 @@ function getCellStyle(value: number): string {
 
 function getTotalStyle(value: number, maxTotal: number): string {
   if (value === 0)
-    return "bg-surface-container-highest text-on-surface-variant/30";
+    return "bg-[var(--color-surface)] text-[var(--color-text-muted)]/30";
   const ratio = maxTotal > 0 ? value / maxTotal : 0;
   if (ratio >= 0.85) return "bg-tertiary text-on-tertiary";
   if (ratio >= 0.65) return "bg-tertiary/50 text-on-tertiary";
@@ -112,10 +112,10 @@ export default function WorkloadHeatmap({
     <Card className="p-5 relative">
       <div className="flex items-center justify-between mb-5">
         <div>
-          <h3 className="text-sm font-bold text-on-surface">
+          <h3 className="text-sm font-bold text-[var(--color-text)]">
             운영자 워크로드 히트맵
           </h3>
-          <p className="text-xs text-on-surface-variant mt-1">
+          <p className="text-xs text-[var(--color-text-muted)] mt-1">
             각 셀을 클릭하면 배정된 대학 목록을 확인할 수 있습니다.
           </p>
         </div>
@@ -127,7 +127,7 @@ export default function WorkloadHeatmap({
         {METRIC_KEYS.map((mk) => (
           <span
             key={mk.key}
-            className="flex-1 text-center text-xs font-bold text-on-surface-variant tracking-wide"
+            className="flex-1 text-center text-xs font-bold text-[var(--color-text-muted)] tracking-wide"
           >
             {mk.label}
           </span>
@@ -155,7 +155,7 @@ export default function WorkloadHeatmap({
                     key={name}
                     className="flex items-center gap-1.5 group/row"
                   >
-                    <span className="w-[80px] text-xs font-medium text-on-surface truncate shrink-0">
+                    <span className="w-[80px] text-xs font-medium text-[var(--color-text)] truncate shrink-0">
                       {name}
                     </span>
                     {METRIC_KEYS.map((mk) => {
@@ -181,7 +181,7 @@ export default function WorkloadHeatmap({
                               });
                             }}
                             className={cn(
-                              "w-full h-9 rounded-lg flex items-center justify-center",
+                              "w-full h-9 rounded-[14px] flex items-center justify-center",
                               "text-[11px] font-bold tabular-nums",
                               "transition-all duration-150 hover:scale-105 hover:shadow-glow",
                               "select-none",
@@ -198,10 +198,10 @@ export default function WorkloadHeatmap({
                           {isActive && activeUnivs.length > 0 && (
                             <div
                               ref={popoverRef}
-                              className="absolute top-full left-1/2 -translate-x-1/2 z-40 mt-2 w-56 bg-surface-container-high border border-outline-variant/20 rounded-xl shadow-elevated overflow-hidden"
+                              className="absolute top-full left-1/2 -translate-x-1/2 z-40 mt-2 w-56 bg-[var(--color-surface)] border border-black/[0.04]/20 rounded-[20px] shadow-neu-strong overflow-hidden"
                             >
-                              <div className="px-3 py-2 border-b border-outline-variant/10 flex items-center justify-between">
-                                <span className="text-[9px] font-bold text-on-surface-variant uppercase tracking-widest">
+                              <div className="px-3 py-2 border-b border-black/[0.04]/10 flex items-center justify-between">
+                                <span className="text-[9px] font-bold text-[var(--color-text-muted)] uppercase tracking-widest">
                                   {name} · {activeCell.label}
                                 </span>
                                 <span className="text-[9px] font-bold text-primary tabular-nums">
@@ -214,7 +214,7 @@ export default function WorkloadHeatmap({
                                     key={u.universityName}
                                     className="px-3 py-1.5 flex items-center justify-between gap-2 text-xs"
                                   >
-                                    <span className="font-medium text-on-surface truncate">
+                                    <span className="font-medium text-[var(--color-text)] truncate">
                                       {u.universityName}
                                     </span>
                                     <span className="text-[9px] text-primary font-bold shrink-0">
@@ -230,7 +230,7 @@ export default function WorkloadHeatmap({
                     })}
                     <div
                       className={cn(
-                        "w-16 h-9 rounded-lg flex items-center justify-center",
+                        "w-16 h-9 rounded-[14px] flex items-center justify-center",
                         "text-[11px] font-black tabular-nums",
                         "transition-all duration-150 hover:scale-105",
                         "cursor-default select-none",
@@ -255,7 +255,7 @@ function HeatLegend() {
   const items = [
     {
       label: "0",
-      cls: "bg-surface-container-highest text-on-surface-variant/30",
+      cls: "bg-[var(--color-surface)] text-[var(--color-text-muted)]/30",
     },
     { label: "1-2", cls: "bg-primary/10 text-primary" },
     { label: "3-5", cls: "bg-primary/25 text-primary" },
@@ -266,7 +266,7 @@ function HeatLegend() {
 
   return (
     <div className="flex items-center gap-1">
-      <span className="text-[9px] text-on-surface-variant uppercase tracking-widest mr-1">
+      <span className="text-[9px] text-[var(--color-text-muted)] uppercase tracking-widest mr-1">
         밀도
       </span>
       {items.map((item) => (

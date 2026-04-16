@@ -286,27 +286,27 @@ export default function OrganizationPage() {
       {/* KPI Cards */}
       <KpiGrid>
         <KpiCard
-          icon={<IconUsers size={18} className="text-on-surface-variant" />}
+          icon={<IconUsers size={18} className="text-[var(--color-text-muted)]" />}
           label="총 인원"
           value={totalCount.toString()}
           suffix="명"
           change={`운영1팀 ${[...(teams.get("운영1팀") ?? [])].length} · 운영2팀 ${[...(teams.get("운영2팀") ?? [])].length}`}
         />
         <KpiCard
-          icon={<IconCalendar size={18} className="text-on-surface-variant" />}
+          icon={<IconCalendar size={18} className="text-[var(--color-text-muted)]" />}
           label="평균 근속"
           value={avgTenure.toFixed(1)}
           suffix="년"
         />
         <KpiCard
-          icon={<IconCake size={18} className="text-on-surface-variant" />}
+          icon={<IconCake size={18} className="text-[var(--color-text-muted)]" />}
           label="평균 연령"
           value={avgAge.toFixed(1)}
           suffix="세"
         />
         <KpiCard
           icon={
-            <IconGenderBigender size={18} className="text-on-surface-variant" />
+            <IconGenderBigender size={18} className="text-[var(--color-text-muted)]" />
           }
           label="성비"
           value={`${maleCount}:${femaleCount}`}
@@ -363,7 +363,7 @@ export default function OrganizationPage() {
                 <span className="text-[9px] font-extrabold text-primary uppercase tracking-[0.15em]">
                   {teamName}
                 </span>
-                <span className="text-[9px] text-on-surface-variant">
+                <span className="text-[9px] text-[var(--color-text-muted)]">
                   {members.length}명 · 평균 {teamAvgTenure.toFixed(1)}년 ·{" "}
                   {teamAvgAge.toFixed(0)}세
                 </span>
@@ -392,7 +392,7 @@ export default function OrganizationPage() {
                     </div>
                   ))}
                 </div>
-                <span className="text-[7px] text-on-surface-variant/40 ml-0.5">
+                <span className="text-[7px] text-[var(--color-text-muted)]/40 ml-0.5">
                   연차분포
                 </span>
               </div>
@@ -408,15 +408,15 @@ export default function OrganizationPage() {
                   <div
                     key={member.empNo}
                     className={cn(
-                      "rounded-[10px] bg-surface-container border transition-all",
+                      "rounded-[10px] bg-[var(--color-surface)] border transition-all",
                       member.position !== "매니저"
-                        ? "border-outline-variant/15"
-                        : "border-outline-variant/5 hover:border-outline-variant/10",
+                        ? "border-black/[0.04]/15"
+                        : "border-black/[0.04]/5 hover:border-black/[0.04]/10",
                     )}
                   >
                     <div className="flex items-center gap-0">
                       {/* Left: Badge + Name */}
-                      <div className="w-[170px] shrink-0 px-3.5 py-2.5 flex items-center gap-2.5 border-r border-outline-variant/5">
+                      <div className="w-[170px] shrink-0 px-3.5 py-2.5 flex items-center gap-2.5 border-r border-black/[0.04]/5">
                         <div
                           className={cn(
                             "w-8 h-8 rounded-md flex items-center justify-center text-[10px] font-black shrink-0",
@@ -427,7 +427,7 @@ export default function OrganizationPage() {
                         </div>
                         <div className="text-left min-w-0">
                           <div className="flex items-center gap-1.5">
-                            <span className="text-[11px] font-bold text-on-surface">
+                            <span className="text-[11px] font-bold text-[var(--color-text)]">
                               {member.name}
                             </span>
                             {member.position !== "매니저" && (
@@ -441,7 +441,7 @@ export default function OrganizationPage() {
                               </span>
                             )}
                           </div>
-                          <div className="text-[8px] text-on-surface-variant">
+                          <div className="text-[8px] text-[var(--color-text-muted)]">
                             {member.hireDate.slice(0, 7)} 입사
                             {member.assignGroup && (
                               <span className="text-primary ml-1.5 font-bold">
@@ -469,11 +469,11 @@ export default function OrganizationPage() {
                       </div>
 
                       {/* Right: Age + Gender */}
-                      <div className="w-[70px] shrink-0 text-center py-2 border-l border-outline-variant/5">
-                        <div className="text-sm font-black text-on-surface tabular-nums">
+                      <div className="w-[70px] shrink-0 text-center py-2 border-l border-black/[0.04]/5">
+                        <div className="text-sm font-black text-[var(--color-text)] tabular-nums">
                           {Math.floor(member.age)}
                         </div>
-                        <div className="text-[7px] text-on-surface-variant uppercase">
+                        <div className="text-[7px] text-[var(--color-text-muted)] uppercase">
                           {member.gender === "남" ? "M" : "F"} · 세
                         </div>
                       </div>

@@ -69,12 +69,12 @@ export default function KanbanBoard({ tasks, project, onAddTask, onEditTask }: K
                 <span className={cn("text-[10px] font-bold uppercase tracking-widest", col.color)}>
                   {col.label}
                 </span>
-                <span className="text-[10px] font-bold text-on-surface-variant bg-surface-container-high rounded-full w-5 h-5 flex items-center justify-center">
+                <span className="text-[10px] font-bold text-[var(--color-text-muted)] bg-[var(--color-surface)] rounded-full w-5 h-5 flex items-center justify-center">
                   {col.tasks.length}
                 </span>
               </div>
               {col.key === "request" && (
-                <button type="button" onClick={onAddTask} className="p-1 rounded-lg text-on-surface-variant hover:text-primary hover:bg-primary/10 transition-colors">
+                <button type="button" onClick={onAddTask} className="p-1 rounded-[14px] text-[var(--color-text-muted)] hover:text-primary hover:bg-primary/10 transition-colors">
                   <IconPlus size={14} />
                 </button>
               )}
@@ -86,8 +86,8 @@ export default function KanbanBoard({ tasks, project, onAddTask, onEditTask }: K
                   ref={provided.innerRef}
                   {...provided.droppableProps}
                   className={cn(
-                    "min-h-[180px] rounded-xl p-1.5 transition-colors space-y-1.5",
-                    snapshot.isDraggingOver ? "bg-primary/5 ring-1 ring-primary/20" : "bg-surface-container-low/30",
+                    "min-h-[180px] rounded-[20px] p-1.5 transition-colors space-y-1.5",
+                    snapshot.isDraggingOver ? "bg-primary/5 ring-1 ring-primary/20" : "bg-[var(--color-surface)]/30",
                   )}
                 >
                   {col.tasks.map((task, index) => (
@@ -97,14 +97,14 @@ export default function KanbanBoard({ tasks, project, onAddTask, onEditTask }: K
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           className={cn(
-                            "bg-surface-container rounded-lg border border-outline-variant/10 p-2.5 transition-shadow group",
+                            "bg-[var(--color-surface)] rounded-[14px] border border-black/[0.04]/10 p-2.5 transition-shadow group",
                             snapshot.isDragging && "shadow-xl ring-1 ring-primary/30",
                           )}
                         >
                           <div className="flex items-start gap-1.5">
                             <div
                               {...provided.dragHandleProps}
-                              className="mt-0.5 text-on-surface-variant/30 hover:text-on-surface-variant transition-colors cursor-grab active:cursor-grabbing"
+                              className="mt-0.5 text-[var(--color-text-muted)]/30 hover:text-[var(--color-text-muted)] transition-colors cursor-grab active:cursor-grabbing"
                             >
                               <IconGripVertical size={12} />
                             </div>
@@ -112,7 +112,7 @@ export default function KanbanBoard({ tasks, project, onAddTask, onEditTask }: K
                               className="flex-1 min-w-0 cursor-pointer"
                               onClick={() => onEditTask?.(task)}
                             >
-                              <p className="text-xs font-semibold text-on-surface leading-snug line-clamp-2">
+                              <p className="text-xs font-semibold text-[var(--color-text)] leading-snug line-clamp-2">
                                 {task.title}
                               </p>
                               <div className="flex items-center gap-1.5 mt-1.5 flex-wrap">
@@ -120,7 +120,7 @@ export default function KanbanBoard({ tasks, project, onAddTask, onEditTask }: K
                                   {PRIORITY_CONFIG[task.priority].label}
                                 </StatusBadge>
                                 {task.due_date && (
-                                  <span className="flex items-center gap-0.5 text-[9px] text-on-surface-variant">
+                                  <span className="flex items-center gap-0.5 text-[9px] text-[var(--color-text-muted)]">
                                     <IconCalendar size={9} />
                                     {task.due_date.slice(5)}
                                   </span>
@@ -133,7 +133,7 @@ export default function KanbanBoard({ tasks, project, onAddTask, onEditTask }: K
                                 {task.assignee ? (
                                   <div className="flex items-center gap-1">
                                     <UserAvatar name={task.assignee} size="sm" className="!w-4 !h-4" />
-                                    <span className="text-[9px] text-on-surface-variant">{task.assignee}</span>
+                                    <span className="text-[9px] text-[var(--color-text-muted)]">{task.assignee}</span>
                                   </div>
                                 ) : (
                                   !task.requester && <span />
@@ -141,7 +141,7 @@ export default function KanbanBoard({ tasks, project, onAddTask, onEditTask }: K
                                 <button
                                   type="button"
                                   onClick={(e) => handleDelete(e, task.id)}
-                                  className="p-0.5 rounded text-on-surface-variant/0 group-hover:text-on-surface-variant hover:!text-error transition-colors"
+                                  className="p-0.5 rounded text-[var(--color-text-muted)]/0 group-hover:text-[var(--color-text-muted)] hover:!text-error transition-colors"
                                 >
                                   <IconTrash size={10} />
                                 </button>
@@ -155,7 +155,7 @@ export default function KanbanBoard({ tasks, project, onAddTask, onEditTask }: K
                   {provided.placeholder}
 
                   {col.tasks.length === 0 && !snapshot.isDraggingOver && (
-                    <div className="flex items-center justify-center py-6 text-on-surface-variant/30">
+                    <div className="flex items-center justify-center py-6 text-[var(--color-text-muted)]/30">
                       <p className="text-[10px]">드래그하여 이동</p>
                     </div>
                   )}

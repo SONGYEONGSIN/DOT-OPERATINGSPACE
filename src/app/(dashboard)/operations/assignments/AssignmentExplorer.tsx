@@ -58,10 +58,10 @@ export default function AssignmentExplorer({
 
   return (
     <div
-      className="flex gap-0 border border-outline-variant/15 rounded-xl overflow-hidden bg-surface-container"
+      className="flex gap-0 border border-black/[0.04]/15 rounded-[20px] overflow-hidden bg-[var(--color-surface)]"
       style={{ height: "calc(100vh - 220px)" }}
     >
-      <div className="w-[300px] shrink-0 border-r border-outline-variant/10 overflow-hidden flex flex-col">
+      <div className="w-[300px] shrink-0 border-r border-black/[0.04]/10 overflow-hidden flex flex-col">
         <LeftPanel
           mode={mode}
           onModeChange={setMode}
@@ -76,7 +76,7 @@ export default function AssignmentExplorer({
 
       <div className="flex-1 overflow-y-auto">
         {!selectedId && (
-          <div className="flex items-center justify-center h-full text-on-surface-variant">
+          <div className="flex items-center justify-center h-full text-[var(--color-text-muted)]">
             <div className="text-center">
               <p className="text-sm font-bold">운영자 또는 대학을 선택하세요</p>
               <p className="text-xs mt-1">

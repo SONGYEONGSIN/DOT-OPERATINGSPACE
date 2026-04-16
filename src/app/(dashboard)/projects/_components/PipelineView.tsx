@@ -10,10 +10,10 @@ interface PipelineViewProps {
 
 const stageColors: Record<string, { bg: string; text: string; bar: string }> = {
   request: { bg: "bg-tertiary/10", text: "text-tertiary", bar: "bg-tertiary" },
-  planning: { bg: "bg-on-surface-variant/10", text: "text-on-surface-variant", bar: "bg-on-surface-variant" },
+  planning: { bg: "bg-on-surface-variant/10", text: "text-[var(--color-text-muted)]", bar: "bg-on-surface-variant" },
   development: { bg: "bg-primary/10", text: "text-primary", bar: "bg-primary" },
   testing: { bg: "bg-info/10", text: "text-info", bar: "bg-info" },
-  done: { bg: "bg-primary/5", text: "text-on-surface-variant", bar: "bg-primary/40" },
+  done: { bg: "bg-primary/5", text: "text-[var(--color-text-muted)]", bar: "bg-primary/40" },
   hold: { bg: "bg-error/10", text: "text-error", bar: "bg-error" },
 };
 
@@ -32,7 +32,7 @@ export default function PipelineView({ tasks }: PipelineViewProps) {
           <div
             key={col.key}
             className={cn(
-              "flex-1 rounded-lg p-3 relative transition-colors",
+              "flex-1 rounded-[14px] p-3 relative transition-colors",
               colors.bg,
             )}
           >
@@ -41,15 +41,15 @@ export default function PipelineView({ tasks }: PipelineViewProps) {
                 {col.label}
               </span>
               {!isLast && (
-                <span className="text-on-surface-variant/30 text-xs">→</span>
+                <span className="text-[var(--color-text-muted)]/30 text-xs">→</span>
               )}
             </div>
             <div className="flex items-baseline gap-1">
-              <span className={cn("text-xl font-black tabular-nums", count > 0 ? "text-on-surface" : "text-on-surface-variant/30")}>
+              <span className={cn("text-xl font-black tabular-nums", count > 0 ? "text-[var(--color-text)]" : "text-[var(--color-text-muted)]/30")}>
                 {count}
               </span>
               {total > 0 && count > 0 && (
-                <span className="text-[10px] text-on-surface-variant">{pct}%</span>
+                <span className="text-[10px] text-[var(--color-text-muted)]">{pct}%</span>
               )}
             </div>
           </div>

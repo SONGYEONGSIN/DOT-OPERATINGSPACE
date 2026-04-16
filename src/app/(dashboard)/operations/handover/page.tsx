@@ -92,27 +92,27 @@ export default async function HandoverPage() {
     const svc = serviceMap.get(log.service_id);
     return {
       date: (
-        <span className="text-xs text-on-surface-variant tabular-nums">
+        <span className="text-xs text-[var(--color-text-muted)] tabular-nums">
           {new Date(log.executed_at).toLocaleDateString("ko-KR", { month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" })}
         </span>
       ),
       university: (
-        <span className="text-sm text-on-surface">{svc?.university_name ?? "-"}</span>
+        <span className="text-sm text-[var(--color-text)]">{svc?.university_name ?? "-"}</span>
       ),
       service: (
-        <span className="text-sm text-on-surface-variant">
+        <span className="text-sm text-[var(--color-text-muted)]">
           {(svc?.service_name ?? "-").replace(/\d{4}학년도\s*|\d{4}-(?=\d학기)/g, "")}
         </span>
       ),
       change: (
         <div className="flex items-center gap-1.5 text-xs">
-          <span className="text-on-surface-variant">{log.from_person ?? "미배정"}</span>
+          <span className="text-[var(--color-text-muted)]">{log.from_person ?? "미배정"}</span>
           <IconArrowRight size={14} className="text-primary" />
           <span className="font-bold text-primary">{log.to_person}</span>
         </div>
       ),
       memo: (
-        <span className="text-xs text-on-surface-variant truncate max-w-[150px] block">
+        <span className="text-xs text-[var(--color-text-muted)] truncate max-w-[150px] block">
           {log.memo ?? "-"}
         </span>
       ),
@@ -134,16 +134,16 @@ export default async function HandoverPage() {
     const sc = getStatusConfig(s.status);
     return {
       service: (
-        <span className="font-semibold text-on-surface">
+        <span className="font-semibold text-[var(--color-text)]">
           {(s.service_name ?? "-").replace(/\d{4}학년도\s*|\d{4}-(?=\d학기)/g, "")}
         </span>
       ),
       university: (
-        <span className="text-on-surface-variant">{s.university_name ?? "-"}</span>
+        <span className="text-[var(--color-text-muted)]">{s.university_name ?? "-"}</span>
       ),
       operator: (
         <div className="flex items-center gap-1.5">
-          <IconUser size={14} className="text-on-surface-variant" />
+          <IconUser size={14} className="text-[var(--color-text-muted)]" />
           <span>{s.operator ?? "미배정"}</span>
         </div>
       ),
@@ -153,7 +153,7 @@ export default async function HandoverPage() {
         </StatusBadge>
       ),
       updatedAt: (
-        <span className="text-xs text-on-surface-variant tabular-nums">
+        <span className="text-xs text-[var(--color-text-muted)] tabular-nums">
           {formatRelativeTime(s.updated_at)}
         </span>
       ),
@@ -185,7 +185,7 @@ export default async function HandoverPage() {
               </TableSection>
             ) : (
               <Card className="p-12">
-                <div className="flex flex-col items-center gap-2 text-on-surface-variant">
+                <div className="flex flex-col items-center gap-2 text-[var(--color-text-muted)]">
                   <IconHistory size={40} className="opacity-30" />
                   <p className="text-sm font-medium">인수인계 이력이 없습니다.</p>
                   <p className="text-xs">인수인계를 실행하면 이력이 여기에 표시됩니다.</p>
@@ -197,10 +197,10 @@ export default async function HandoverPage() {
       >
         {/* 담당자 현황 콘텐츠 */}
         <KpiGrid>
-          <KpiCard icon={<IconPackage size={18} className="text-on-surface-variant" />} label="전체 서비스" value={totalCount.toString()} suffix="건" />
-          <KpiCard icon={<IconHeadset size={18} className="text-on-surface-variant" />} label="운영자 수" value={uniqueOperators.size.toString()} suffix="명" change={`평균 ${avgOperatorLoad}건 담당`} trend="neutral" />
-          <KpiCard icon={<IconUserCheck size={18} className="text-on-surface-variant" />} label="배정 완료" value={assignedServices.length.toString()} suffix="건" change={`${totalCount > 0 ? Math.round((assignedServices.length / totalCount) * 100) : 0}%`} trend="up" />
-          <KpiCard icon={<IconUserOff size={18} className="text-on-surface-variant" />} label="미배정" value={unassignedCount.toString()} suffix="건" change={unassignedCount > 0 ? "배정 필요" : undefined} trend={unassignedCount > 0 ? "neutral" : undefined} />
+          <KpiCard icon={<IconPackage size={18} className="text-[var(--color-text-muted)]" />} label="전체 서비스" value={totalCount.toString()} suffix="건" />
+          <KpiCard icon={<IconHeadset size={18} className="text-[var(--color-text-muted)]" />} label="운영자 수" value={uniqueOperators.size.toString()} suffix="명" change={`평균 ${avgOperatorLoad}건 담당`} trend="neutral" />
+          <KpiCard icon={<IconUserCheck size={18} className="text-[var(--color-text-muted)]" />} label="배정 완료" value={assignedServices.length.toString()} suffix="건" change={`${totalCount > 0 ? Math.round((assignedServices.length / totalCount) * 100) : 0}%`} trend="up" />
+          <KpiCard icon={<IconUserOff size={18} className="text-[var(--color-text-muted)]" />} label="미배정" value={unassignedCount.toString()} suffix="건" change={unassignedCount > 0 ? "배정 필요" : undefined} trend={unassignedCount > 0 ? "neutral" : undefined} />
         </KpiGrid>
 
         <section className="space-y-4">
@@ -212,7 +212,7 @@ export default async function HandoverPage() {
           </div>
           {sortedOperators.length === 0 && (
             <Card className="p-8">
-              <div className="flex flex-col items-center gap-2 text-on-surface-variant">
+              <div className="flex flex-col items-center gap-2 text-[var(--color-text-muted)]">
                 <IconUserOff size={30} />
                 <p className="text-sm">배정된 운영자가 없습니다.</p>
               </div>
@@ -227,7 +227,7 @@ export default async function HandoverPage() {
               columns={recentTableColumns}
               data={recentTableData}
               footer={
-                <p className="text-xs text-on-surface-variant text-center">
+                <p className="text-xs text-[var(--color-text-muted)] text-center">
                   최근 업데이트 기준 상위 10건
                 </p>
               }

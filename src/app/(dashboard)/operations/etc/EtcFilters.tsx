@@ -21,7 +21,7 @@ interface EtcFiltersProps {
   managers?: string[];
 }
 
-const selectClass = "search-input px-4 py-2.5 rounded-xl text-sm font-medium text-on-surface focus:outline-none transition-colors appearance-none cursor-pointer min-w-[120px]";
+const selectClass = "search-input px-4 py-2.5 rounded-[20px] text-sm font-medium text-[var(--color-text)] focus:outline-none transition-colors appearance-none cursor-pointer min-w-[120px]";
 
 export default function EtcFilters({ mode, writers, managers }: EtcFiltersProps) {
   const router = useRouter();
@@ -49,34 +49,34 @@ export default function EtcFilters({ mode, writers, managers }: EtcFiltersProps)
     return (
       <div className="flex flex-col gap-3">
         <div className="flex items-center gap-3 flex-wrap">
-          <div className="flex items-center gap-1 bg-surface-container-high rounded-xl p-1">
+          <div className="flex items-center gap-1 bg-[var(--color-surface)] rounded-[20px] p-1">
             {DOC_YEAR_TABS.map((tab) => (
               <button
                 key={tab.value}
                 type="button"
                 onClick={() => updateParams({ year: tab.value })}
                 className={cn(
-                  "px-3.5 py-1.5 rounded-lg text-xs font-bold tracking-wide transition-all",
+                  "px-3.5 py-1.5 rounded-[14px] text-xs font-bold tracking-wide transition-all",
                   currentYear === tab.value
                     ? "bg-primary text-on-primary"
-                    : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container",
+                    : "text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-surface)]",
                 )}
               >
                 {tab.label}
               </button>
             ))}
           </div>
-          <div className="flex items-center gap-1 bg-surface-container-high rounded-xl p-1">
+          <div className="flex items-center gap-1 bg-[var(--color-surface)] rounded-[20px] p-1">
             {DOC_TYPE_TABS.map((tab) => (
               <button
                 key={tab.value}
                 type="button"
                 onClick={() => updateParams({ docType: tab.value })}
                 className={cn(
-                  "px-3.5 py-1.5 rounded-lg text-xs font-bold tracking-wide transition-all",
+                  "px-3.5 py-1.5 rounded-[14px] text-xs font-bold tracking-wide transition-all",
                   currentDocType === tab.value
                     ? "bg-primary text-on-primary"
-                    : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container",
+                    : "text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-surface)]",
                 )}
               >
                 {tab.label}
@@ -87,13 +87,13 @@ export default function EtcFilters({ mode, writers, managers }: EtcFiltersProps)
 
         <div className="flex items-center gap-3 flex-wrap">
           <div className="relative flex-1 min-w-[200px]">
-            <IconSearch size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" />
+            <IconSearch size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]" />
             <input
               type="text"
               defaultValue={currentSearch}
               onChange={(e) => updateParams({ search: e.target.value })}
               placeholder="문서번호, 제목, 발신처 검색..."
-              className="search-input w-full pl-10 pr-4 py-2.5 rounded-xl text-sm text-on-surface focus:outline-none transition-colors"
+              className="search-input w-full pl-10 pr-4 py-2.5 rounded-[20px] text-sm text-[var(--color-text)] focus:outline-none transition-colors"
             />
           </div>
 
@@ -112,13 +112,13 @@ export default function EtcFilters({ mode, writers, managers }: EtcFiltersProps)
   return (
     <div className="flex items-center gap-3 flex-wrap">
       <div className="relative flex-1 min-w-[200px]">
-        <IconSearch size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" />
+        <IconSearch size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]" />
         <input
           type="text"
           defaultValue={currentSearch}
           onChange={(e) => updateParams({ search: e.target.value })}
           placeholder="수신처, 수신자, 담당자 검색..."
-          className="search-input w-full pl-10 pr-4 py-2.5 rounded-xl text-sm text-on-surface focus:outline-none transition-colors"
+          className="search-input w-full pl-10 pr-4 py-2.5 rounded-[20px] text-sm text-[var(--color-text)] focus:outline-none transition-colors"
         />
       </div>
 

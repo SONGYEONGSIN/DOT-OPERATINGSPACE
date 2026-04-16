@@ -44,14 +44,14 @@ export default function IncidentList({ incidents, profiles }: IncidentListProps)
     <>
       <table className="w-full">
         <thead>
-          <tr className="bg-surface-container-high/50">
-            <th className="text-left text-xs font-bold text-on-surface-variant uppercase tracking-wider px-5 py-3 w-[8%]">분류</th>
-            <th className="text-left text-xs font-bold text-on-surface-variant uppercase tracking-wider px-5 py-3">요약</th>
-            <th className="text-left text-xs font-bold text-on-surface-variant uppercase tracking-wider px-5 py-3 w-[12%]">대학교</th>
-            <th className="text-left text-xs font-bold text-on-surface-variant uppercase tracking-wider px-5 py-3 w-[8%]">담당자</th>
-            <th className="text-left text-xs font-bold text-on-surface-variant uppercase tracking-wider px-5 py-3 w-[8%]">보고자</th>
-            <th className="text-left text-xs font-bold text-on-surface-variant uppercase tracking-wider px-5 py-3 w-[8%]">상태</th>
-            <th className="text-left text-xs font-bold text-on-surface-variant uppercase tracking-wider px-5 py-3 w-[8%]">날짜</th>
+          <tr className="bg-[var(--color-surface)]/50">
+            <th className="text-left text-xs font-bold text-[var(--color-text-muted)] uppercase tracking-wider px-5 py-3 w-[8%]">분류</th>
+            <th className="text-left text-xs font-bold text-[var(--color-text-muted)] uppercase tracking-wider px-5 py-3">요약</th>
+            <th className="text-left text-xs font-bold text-[var(--color-text-muted)] uppercase tracking-wider px-5 py-3 w-[12%]">대학교</th>
+            <th className="text-left text-xs font-bold text-[var(--color-text-muted)] uppercase tracking-wider px-5 py-3 w-[8%]">담당자</th>
+            <th className="text-left text-xs font-bold text-[var(--color-text-muted)] uppercase tracking-wider px-5 py-3 w-[8%]">보고자</th>
+            <th className="text-left text-xs font-bold text-[var(--color-text-muted)] uppercase tracking-wider px-5 py-3 w-[8%]">상태</th>
+            <th className="text-left text-xs font-bold text-[var(--color-text-muted)] uppercase tracking-wider px-5 py-3 w-[8%]">날짜</th>
           </tr>
         </thead>
         <tbody>
@@ -59,40 +59,40 @@ export default function IncidentList({ incidents, profiles }: IncidentListProps)
             <tr
               key={inc.id}
               onClick={() => setSelected(inc)}
-              className="border-t border-outline-variant/5 cursor-pointer hover:bg-surface-container-high/30 transition-colors"
+              className="border-t border-black/[0.04]/5 cursor-pointer hover:bg-[var(--color-surface)]/30 transition-colors"
             >
               <td className="px-5 py-3">
-                <span className="text-xs font-medium text-on-surface-variant bg-surface-container-high rounded-md px-2 py-0.5">
+                <span className="text-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface)] rounded-md px-2 py-0.5">
                   {inc.category ?? "-"}
                 </span>
               </td>
               <td className="px-5 py-3">
-                <span className="text-sm font-semibold text-on-surface">{inc.title}</span>
+                <span className="text-sm font-semibold text-[var(--color-text)]">{inc.title}</span>
               </td>
               <td className="px-5 py-3">
-                <span className="text-xs text-on-surface-variant">{inc.university ?? "-"}</span>
+                <span className="text-xs text-[var(--color-text-muted)]">{inc.university ?? "-"}</span>
               </td>
               <td className="px-5 py-3">
                 {inc.assignee ? (
                   <div className="flex items-center gap-1.5">
                     <UserAvatar name={inc.assignee} size="sm" className="!w-5 !h-5" />
-                    <span className="text-xs text-on-surface">{inc.assignee}</span>
+                    <span className="text-xs text-[var(--color-text)]">{inc.assignee}</span>
                   </div>
                 ) : (
-                  <span className="text-xs text-on-surface-variant">-</span>
+                  <span className="text-xs text-[var(--color-text-muted)]">-</span>
                 )}
               </td>
               <td className="px-5 py-3">
                 <div className="flex items-center gap-1.5">
                   <UserAvatar name={inc.reporter} size="sm" className="!w-5 !h-5" />
-                  <span className="text-xs text-on-surface">{inc.reporter}</span>
+                  <span className="text-xs text-[var(--color-text)]">{inc.reporter}</span>
                 </div>
               </td>
               <td className="px-5 py-3">
                 <StatusBadge variant={statusVariant[inc.status] ?? "neutral"}>{inc.status}</StatusBadge>
               </td>
               <td className="px-5 py-3">
-                <span className="text-xs text-on-surface-variant tabular-nums">
+                <span className="text-xs text-[var(--color-text-muted)] tabular-nums">
                   {new Date(inc.incident_date).toLocaleDateString("ko-KR", { month: "2-digit", day: "2-digit" })}
                 </span>
               </td>

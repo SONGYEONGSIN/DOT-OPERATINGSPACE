@@ -11,7 +11,7 @@ import { LEAVE_TYPES } from "./types";
 
 const TiptapEditor = dynamic(
   () => import("@/app/(dashboard)/operations/services/[id]/TiptapEditor"),
-  { ssr: false, loading: () => <div className="min-h-[160px] rounded-lg bg-surface-container-highest animate-pulse" /> },
+  { ssr: false, loading: () => <div className="min-h-[160px] rounded-[14px] bg-[var(--color-surface)] animate-pulse" /> },
 );
 
 interface Profile {
@@ -113,8 +113,8 @@ export default function BackupForm({
           <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
             <IconCircleCheck size={30} className="text-primary" />
           </div>
-          <h3 className="text-xl font-bold text-on-surface mb-2">백업 요청 완료</h3>
-          <p className="text-sm text-on-surface-variant">백업 현황에서 확인할 수 있습니다.</p>
+          <h3 className="text-xl font-bold text-[var(--color-text)] mb-2">백업 요청 완료</h3>
+          <p className="text-sm text-[var(--color-text-muted)]">백업 현황에서 확인할 수 있습니다.</p>
         </div>
       </Card>
     );
@@ -123,19 +123,19 @@ export default function BackupForm({
   return (
     <div className="space-y-6">
       {error && (
-        <div className="p-3 rounded-lg bg-error-container/20 border border-error/30 text-error text-xs font-medium">{error}</div>
+        <div className="p-3 rounded-[14px] bg-error-container/20 border border-error/30 text-error text-xs font-medium">{error}</div>
       )}
 
       {/* 기본 정보 */}
       <Card className="p-6">
-        <h3 className="text-sm font-bold text-on-surface mb-4">기본 정보</h3>
+        <h3 className="text-sm font-bold text-[var(--color-text)] mb-4">기본 정보</h3>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <div>
-            <label className="block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-2">요청자</label>
+            <label className="block text-[10px] font-bold text-[var(--color-text-muted)] tracking-widest uppercase mb-2">요청자</label>
             <select
               value={operatorName}
               onChange={(e) => setOperatorName(e.target.value)}
-              className="w-full bg-surface-container-highest border-none rounded-lg px-4 py-3 text-sm text-on-surface focus:ring-1 focus:ring-primary/50 focus:outline-none appearance-none"
+              className="w-full bg-[var(--color-surface)] border-none rounded-[14px] px-4 py-3 text-sm text-[var(--color-text)] focus:ring-1 focus:ring-primary/50 focus:outline-none appearance-none"
             >
               <option value="">선택</option>
               {profiles.map((p) => (
@@ -145,11 +145,11 @@ export default function BackupForm({
           </div>
 
           <div>
-            <label className="block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-2">휴가(외근) 유형</label>
+            <label className="block text-[10px] font-bold text-[var(--color-text-muted)] tracking-widest uppercase mb-2">휴가(외근) 유형</label>
             <select
               value={leaveType}
               onChange={(e) => setLeaveType(e.target.value)}
-              className="w-full bg-surface-container-highest border-none rounded-lg px-4 py-3 text-sm text-on-surface focus:ring-1 focus:ring-primary/50 focus:outline-none appearance-none"
+              className="w-full bg-[var(--color-surface)] border-none rounded-[14px] px-4 py-3 text-sm text-[var(--color-text)] focus:ring-1 focus:ring-primary/50 focus:outline-none appearance-none"
             >
               {LEAVE_TYPES.map((t) => (
                 <option key={t.value} value={t.value}>{t.value}</option>
@@ -158,7 +158,7 @@ export default function BackupForm({
           </div>
 
           <div>
-            <label className="block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-2">휴가(외근) 기간</label>
+            <label className="block text-[10px] font-bold text-[var(--color-text-muted)] tracking-widest uppercase mb-2">휴가(외근) 기간</label>
             <DateRangePicker
               startDate={startDate}
               endDate={endDate}
@@ -171,16 +171,16 @@ export default function BackupForm({
 
         {/* 선택된 요청자 정보 */}
         {selectedProfile && (
-          <div className="flex items-center gap-3 mt-4 pt-4 border-t border-outline-variant/10">
+          <div className="flex items-center gap-3 mt-4 pt-4 border-t border-black/[0.04]/10">
             <UserAvatar name={selectedProfile.name} size="sm" />
             <div>
-              <p className="text-sm font-bold text-on-surface">{selectedProfile.name}</p>
-              <p className="text-xs text-on-surface-variant">{selectedProfile.team}</p>
+              <p className="text-sm font-bold text-[var(--color-text)]">{selectedProfile.name}</p>
+              <p className="text-xs text-[var(--color-text-muted)]">{selectedProfile.team}</p>
             </div>
             {startDate && endDate && (
               <div className="ml-auto text-right">
-                <p className="text-xs text-on-surface-variant">{leaveType}</p>
-                <p className="text-xs text-on-surface tabular-nums">{startDate} → {endDate}</p>
+                <p className="text-xs text-[var(--color-text-muted)]">{leaveType}</p>
+                <p className="text-xs text-[var(--color-text)] tabular-nums">{startDate} → {endDate}</p>
               </div>
             )}
           </div>
@@ -190,11 +190,11 @@ export default function BackupForm({
       {/* 백업 항목 */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="text-sm font-bold text-on-surface">백업 내용</h3>
+          <h3 className="text-sm font-bold text-[var(--color-text)]">백업 내용</h3>
           <button
             type="button"
             onClick={addItem}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-primary hover:bg-primary/10 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-[14px] text-xs font-bold text-primary hover:bg-primary/10 transition-colors"
           >
             <IconPlus size={14} />
             백업 항목 추가
@@ -204,14 +204,14 @@ export default function BackupForm({
         {items.map((item, idx) => (
           <Card key={item.id} className="p-6">
             <div className="flex items-center justify-between mb-4">
-              <span className="text-xs font-bold text-on-surface-variant">
+              <span className="text-xs font-bold text-[var(--color-text-muted)]">
                 {items.length > 1 ? `항목 ${idx + 1}` : ""}
               </span>
               {items.length > 1 && (
                 <button
                   type="button"
                   onClick={() => removeItem(item.id)}
-                  className="flex items-center gap-1 px-2 py-1 rounded-lg text-xs text-on-surface-variant hover:text-error hover:bg-error/10 transition-colors"
+                  className="flex items-center gap-1 px-2 py-1 rounded-[14px] text-xs text-[var(--color-text-muted)] hover:text-error hover:bg-error/10 transition-colors"
                 >
                   <IconTrash size={12} />
                   삭제
@@ -221,11 +221,11 @@ export default function BackupForm({
 
             <div className="space-y-4">
               <div>
-                <label className="block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-2">백업자</label>
+                <label className="block text-[10px] font-bold text-[var(--color-text-muted)] tracking-widest uppercase mb-2">백업자</label>
                 <select
                   value={item.backupPerson}
                   onChange={(e) => updateItemPerson(item.id, e.target.value)}
-                  className="w-full bg-surface-container-highest border-none rounded-lg px-4 py-3 text-sm text-on-surface focus:ring-1 focus:ring-primary/50 focus:outline-none appearance-none"
+                  className="w-full bg-[var(--color-surface)] border-none rounded-[14px] px-4 py-3 text-sm text-[var(--color-text)] focus:ring-1 focus:ring-primary/50 focus:outline-none appearance-none"
                 >
                   <option value="">선택</option>
                   {otherProfiles.map((p) => (
@@ -235,11 +235,11 @@ export default function BackupForm({
               </div>
 
               {item.backupPerson && (
-                <div className="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/5">
+                <div className="flex items-center gap-3 px-3 py-2 rounded-[14px] bg-primary/5">
                   <UserAvatar name={item.backupPerson} size="sm" />
                   <div>
-                    <p className="text-sm font-bold text-on-surface">{item.backupPerson}</p>
-                    <p className="text-xs text-on-surface-variant">
+                    <p className="text-sm font-bold text-[var(--color-text)]">{item.backupPerson}</p>
+                    <p className="text-xs text-[var(--color-text-muted)]">
                       {otherProfiles.find((p) => p.name === item.backupPerson)?.team}
                     </p>
                   </div>
@@ -247,7 +247,7 @@ export default function BackupForm({
               )}
 
               <div>
-                <label className="block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-2">백업 내용</label>
+                <label className="block text-[10px] font-bold text-[var(--color-text-muted)] tracking-widest uppercase mb-2">백업 내용</label>
                 <TiptapEditor
                   key={`form-${item.id}`}
                   content={item.content}
@@ -265,7 +265,7 @@ export default function BackupForm({
         <button
           type="button"
           onClick={onComplete}
-          className="px-6 py-2.5 rounded-lg bg-surface-container-high text-on-surface-variant text-sm font-bold transition-colors hover:bg-surface-container-highest"
+          className="px-6 py-2.5 rounded-[14px] bg-[var(--color-surface)] text-[var(--color-text-muted)] text-sm font-bold transition-colors hover:bg-[var(--color-surface)]"
         >
           취소
         </button>
@@ -274,7 +274,7 @@ export default function BackupForm({
           onClick={handleSubmit}
           disabled={isPending}
           className={cn(
-            "flex items-center gap-2 px-6 py-2.5 rounded-lg bg-primary text-on-primary text-sm font-bold transition-colors hover:bg-primary/90",
+            "flex items-center gap-2 px-6 py-2.5 rounded-[14px] bg-primary text-on-primary text-sm font-bold transition-colors hover:bg-primary/90",
             isPending && "opacity-60 cursor-not-allowed",
           )}
         >

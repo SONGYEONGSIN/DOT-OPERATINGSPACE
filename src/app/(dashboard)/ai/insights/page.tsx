@@ -97,14 +97,14 @@ export default function InsightsPage() {
         <div className="absolute inset-0 kinetic-grid" />
 
         <div className="relative flex items-center gap-5">
-          <div className="w-14 h-14 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center glow-primary">
+          <div className="w-14 h-14 rounded-[20px] bg-primary/10 border border-primary/20 flex items-center justify-center glow-primary">
             <IconBrain size={28} className="text-primary" />
           </div>
           <div className="flex-1">
-            <h2 className="text-lg font-bold text-on-surface">
+            <h2 className="text-lg font-bold text-[var(--color-text)]">
               AI 분석 엔진 가동 중
             </h2>
-            <p className="text-sm text-on-surface-variant mt-0.5">
+            <p className="text-sm text-[var(--color-text-muted)] mt-0.5">
               4개의 데이터 소스에서 실시간 패턴을 분석하고 있습니다. 마지막
               업데이트: 2분 전
             </p>
@@ -112,16 +112,16 @@ export default function InsightsPage() {
           <div className="flex items-center gap-6">
             <div className="text-center">
               <p className="text-2xl font-black text-primary">{insights.length}</p>
-              <p className="text-[10px] text-on-surface-variant font-bold uppercase tracking-wider">
+              <p className="text-[10px] text-[var(--color-text-muted)] font-bold uppercase tracking-wider">
                 인사이트
               </p>
             </div>
             <div className="w-px h-10 bg-outline-variant/20" />
             <div className="text-center">
-              <p className="text-2xl font-black text-on-surface">
+              <p className="text-2xl font-black text-[var(--color-text)]">
                 {recommendations.length}
               </p>
-              <p className="text-[10px] text-on-surface-variant font-bold uppercase tracking-wider">
+              <p className="text-[10px] text-[var(--color-text-muted)] font-bold uppercase tracking-wider">
                 제안
               </p>
             </div>
@@ -147,16 +147,16 @@ export default function InsightsPage() {
                   </StatusBadge>
                   <StatusBadge variant="neutral">{insight.category}</StatusBadge>
                 </div>
-                <span className="text-[10px] text-on-surface-variant">
+                <span className="text-[10px] text-[var(--color-text-muted)]">
                   {insight.generatedAt}
                 </span>
               </div>
 
-              <h3 className="text-base font-bold text-on-surface mb-2 group-hover:text-primary transition-colors">
+              <h3 className="text-base font-bold text-[var(--color-text)] mb-2 group-hover:text-primary transition-colors">
                 {insight.title}
               </h3>
 
-              <p className="text-sm text-on-surface-variant leading-relaxed mb-4">
+              <p className="text-sm text-[var(--color-text-muted)] leading-relaxed mb-4">
                 {insight.summary}
               </p>
 
@@ -165,14 +165,14 @@ export default function InsightsPage() {
                   {insight.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="rounded-md px-2 py-0.5 text-[10px] font-medium bg-surface-container-high text-on-surface-variant border border-outline-variant/10"
+                      className="rounded-md px-2 py-0.5 text-[10px] font-medium bg-[var(--color-surface)] text-[var(--color-text-muted)] border border-black/[0.04]/10"
                     >
                       {tag}
                     </span>
                   ))}
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] text-on-surface-variant">신뢰도</span>
+                  <span className="text-[10px] text-[var(--color-text-muted)]">신뢰도</span>
                   <div className="w-16">
                     <ProgressBar value={insight.confidence} />
                   </div>
@@ -194,13 +194,13 @@ export default function InsightsPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {recommendations.map((rec) => (
             <Card key={rec.title} hover className="p-4 cursor-pointer group">
-              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-3 group-hover:bg-primary/20 transition-colors">
+              <div className="w-10 h-10 rounded-[14px] bg-primary/10 flex items-center justify-center mb-3 group-hover:bg-primary/20 transition-colors">
                 <rec.icon size={22} className="text-primary" />
               </div>
-              <h3 className="text-sm font-bold text-on-surface mb-1">
+              <h3 className="text-sm font-bold text-[var(--color-text)] mb-1">
                 {rec.title}
               </h3>
-              <p className="text-xs text-on-surface-variant">{rec.description}</p>
+              <p className="text-xs text-[var(--color-text-muted)]">{rec.description}</p>
             </Card>
           ))}
         </div>

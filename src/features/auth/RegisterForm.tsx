@@ -39,7 +39,7 @@ function PasswordStrength({ password }: { password: string }) {
                   : ratio <= 0.8
                     ? "bg-tertiary-dim"
                     : "bg-primary"
-                : "bg-surface-container-highest",
+                : "bg-[var(--color-surface)]",
             )}
           />
         ))}
@@ -54,12 +54,12 @@ function PasswordStrength({ password }: { password: string }) {
               {ok ? (
                 <IconCircleCheck size={14} className={cn("transition-colors duration-200", "text-primary")} />
               ) : (
-                <IconCircle size={14} className={cn("transition-colors duration-200", "text-outline-variant")} />
+                <IconCircle size={14} className={cn("transition-colors duration-200", "text-[var(--color-text-faint)]")} />
               )}
               <span
                 className={cn(
                   "text-[10px] font-medium transition-colors duration-200",
-                  ok ? "text-primary" : "text-on-surface-variant",
+                  ok ? "text-primary" : "text-[var(--color-text-muted)]",
                 )}
               >
                 {rule.label}
@@ -81,7 +81,7 @@ export default function RegisterForm() {
       <div className="py-8 text-center">
         <IconMail size={48} className="text-primary mb-4 mx-auto block" />
         <h3 className="text-lg font-bold mb-2">이메일을 확인해 주세요</h3>
-        <p className="text-sm text-on-surface-variant leading-relaxed">
+        <p className="text-sm text-[var(--color-text-muted)] leading-relaxed">
           {state.success}
         </p>
       </div>
@@ -91,14 +91,14 @@ export default function RegisterForm() {
   return (
     <form action={formAction}>
       {state.error && (
-        <div className="mb-6 p-3 rounded-lg bg-error-container/20 border border-error/30 text-error text-xs font-medium">
+        <div className="mb-6 p-3 rounded-[14px] bg-error-container/20 border border-error/30 text-error text-xs font-medium">
           {state.error}
         </div>
       )}
 
       <div className="space-y-4">
         <div>
-          <label className="block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-2">
+          <label className="block text-[10px] font-bold text-[var(--color-text-muted)] tracking-widest uppercase mb-2">
             이름
           </label>
           <input
@@ -106,8 +106,8 @@ export default function RegisterForm() {
             type="text"
             placeholder="홍길동"
             className={cn(
-              "w-full bg-surface-container-highest border-none rounded-lg",
-              "px-4 py-3 text-on-surface placeholder:text-outline",
+              "w-full bg-[var(--color-surface)] border-none rounded-[14px]",
+              "px-4 py-3 text-[var(--color-text)] placeholder:text-outline",
               "focus:ring-1 focus:ring-primary/50 focus:outline-none transition-all",
               state.fieldErrors?.name && "ring-1 ring-error/50",
             )}
@@ -117,7 +117,7 @@ export default function RegisterForm() {
           )}
         </div>
         <div>
-          <label className="block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-2">
+          <label className="block text-[10px] font-bold text-[var(--color-text-muted)] tracking-widest uppercase mb-2">
             워크스페이스 이메일
           </label>
           <input
@@ -125,8 +125,8 @@ export default function RegisterForm() {
             type="email"
             placeholder="name@jinhakapply.com"
             className={cn(
-              "w-full bg-surface-container-highest border-none rounded-lg",
-              "px-4 py-3 text-on-surface placeholder:text-outline",
+              "w-full bg-[var(--color-surface)] border-none rounded-[14px]",
+              "px-4 py-3 text-[var(--color-text)] placeholder:text-outline",
               "focus:ring-1 focus:ring-primary/50 focus:outline-none transition-all",
               state.fieldErrors?.email && "ring-1 ring-error/50",
             )}
@@ -136,7 +136,7 @@ export default function RegisterForm() {
           )}
         </div>
         <div>
-          <label className="block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-2">
+          <label className="block text-[10px] font-bold text-[var(--color-text-muted)] tracking-widest uppercase mb-2">
             비밀번호
           </label>
           <input
@@ -146,8 +146,8 @@ export default function RegisterForm() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className={cn(
-              "w-full bg-surface-container-highest border-none rounded-lg",
-              "px-4 py-3 text-on-surface placeholder:text-outline",
+              "w-full bg-[var(--color-surface)] border-none rounded-[14px]",
+              "px-4 py-3 text-[var(--color-text)] placeholder:text-outline",
               "focus:ring-1 focus:ring-primary/50 focus:outline-none transition-all",
               state.fieldErrors?.password && "ring-1 ring-error/50",
             )}
@@ -160,7 +160,7 @@ export default function RegisterForm() {
           <PasswordStrength password={password} />
         </div>
         <div>
-          <label className="block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-2">
+          <label className="block text-[10px] font-bold text-[var(--color-text-muted)] tracking-widest uppercase mb-2">
             비밀번호 확인
           </label>
           <input
@@ -168,8 +168,8 @@ export default function RegisterForm() {
             type="password"
             placeholder="비밀번호 재입력"
             className={cn(
-              "w-full bg-surface-container-highest border-none rounded-lg",
-              "px-4 py-3 text-on-surface placeholder:text-outline",
+              "w-full bg-[var(--color-surface)] border-none rounded-[14px]",
+              "px-4 py-3 text-[var(--color-text)] placeholder:text-outline",
               "focus:ring-1 focus:ring-primary/50 focus:outline-none transition-all",
               state.fieldErrors?.confirmPassword && "ring-1 ring-error/50",
             )}

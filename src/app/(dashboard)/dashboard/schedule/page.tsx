@@ -185,7 +185,7 @@ export default async function SchedulePage() {
 
       {/* 이번 주 일정 */}
       <Card className="p-6">
-        <h3 className="mb-6 flex items-center gap-2 text-sm font-bold text-on-surface">
+        <h3 className="mb-6 flex items-center gap-2 text-sm font-bold text-[var(--color-text)]">
           <IconCalendarEvent size={18} className="text-primary" />
           이번 주 서비스 일정
         </h3>
@@ -194,42 +194,42 @@ export default async function SchedulePage() {
             <div key={dayBlock.day}>
               <div className="mb-3 flex items-center gap-2">
                 <span
-                  className={`flex h-7 w-7 items-center justify-center rounded-lg text-xs font-bold ${
+                  className={`flex h-7 w-7 items-center justify-center rounded-[14px] text-xs font-bold ${
                     dayBlock.isToday
                       ? "bg-primary text-on-primary"
-                      : "bg-surface-container-high text-on-surface-variant"
+                      : "bg-[var(--color-surface)] text-[var(--color-text-muted)]"
                   }`}
                 >
                   {dayBlock.day}
                 </span>
-                <span className="text-xs text-on-surface-variant">
+                <span className="text-xs text-[var(--color-text-muted)]">
                   {dayBlock.date}
                 </span>
                 {dayBlock.isToday && (
                   <StatusBadge variant="success">오늘</StatusBadge>
                 )}
                 {dayBlock.totalCount > 0 && (
-                  <span className="text-[10px] text-on-surface-variant">
+                  <span className="text-[10px] text-[var(--color-text-muted)]">
                     {dayBlock.totalCount}건
                   </span>
                 )}
               </div>
-              <div className="ml-2 space-y-2 border-l border-outline-variant/20 pl-5">
+              <div className="ml-2 space-y-2 border-l border-black/[0.04]/20 pl-5">
                 {dayBlock.items.length > 0 ? (
                   dayBlock.items.map((item, idx) => (
                     <div
                       key={idx}
-                      className="flex items-center justify-between rounded-lg border border-outline-variant/10 bg-surface-container-high p-3 transition-colors hover:bg-surface-bright"
+                      className="flex items-center justify-between rounded-[14px] border border-black/[0.04]/10 bg-[var(--color-surface)] p-3 transition-colors hover:bg-surface-bright"
                     >
                       <div className="flex items-center gap-3">
-                        <span className="text-xs text-on-surface-variant truncate max-w-[120px]">
+                        <span className="text-xs text-[var(--color-text-muted)] truncate max-w-[120px]">
                           {item.subtitle}
                         </span>
-                        <span className="text-sm font-medium text-on-surface">
+                        <span className="text-sm font-medium text-[var(--color-text)]">
                           {item.title}
                         </span>
                         {item.period && (
-                          <span className="text-[10px] text-on-surface-variant/60">
+                          <span className="text-[10px] text-[var(--color-text-muted)]/60">
                             {item.period}
                           </span>
                         )}
@@ -252,12 +252,12 @@ export default async function SchedulePage() {
                     </div>
                   ))
                 ) : (
-                  <p className="text-xs text-on-surface-variant/50 py-2">
+                  <p className="text-xs text-[var(--color-text-muted)]/50 py-2">
                     일정 없음
                   </p>
                 )}
                 {dayBlock.totalCount > 5 && (
-                  <p className="text-xs text-on-surface-variant">
+                  <p className="text-xs text-[var(--color-text-muted)]">
                     외 {dayBlock.totalCount - 5}건
                   </p>
                 )}

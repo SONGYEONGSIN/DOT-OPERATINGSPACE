@@ -36,7 +36,7 @@ function getHeatColor(load: number, max: number): string {
   if (ratio >= 0.6) return "bg-primary/30 text-primary";
   if (ratio >= 0.3) return "bg-primary/15 text-primary";
   if (ratio > 0) return "bg-primary/8 text-primary";
-  return "bg-surface-container-highest text-on-surface-variant/40";
+  return "bg-[var(--color-surface)] text-[var(--color-text-muted)]/40";
 }
 
 function getGaugeGradient(ratio: number): string {
@@ -181,10 +181,10 @@ export default function WizardStep3({
     return (
       <div
         ref={popoverRef}
-        className="absolute top-full left-0 z-30 mt-1 w-48 bg-surface-container-high border border-outline-variant/20 rounded-xl shadow-elevated overflow-hidden"
+        className="absolute top-full left-0 z-30 mt-1 w-48 bg-[var(--color-surface)] border border-black/[0.04]/20 rounded-[20px] shadow-neu-strong overflow-hidden"
       >
-        <div className="px-3 py-2 border-b border-outline-variant/10">
-          <span className="text-[9px] font-bold text-on-surface-variant uppercase tracking-widest">
+        <div className="px-3 py-2 border-b border-black/[0.04]/10">
+          <span className="text-[9px] font-bold text-[var(--color-text-muted)] uppercase tracking-widest">
             운영자 선택
           </span>
         </div>
@@ -211,7 +211,7 @@ export default function WizardStep3({
                       "w-full flex items-center justify-between px-3 py-1.5 text-xs transition-colors",
                       currentOp === op
                         ? "bg-primary/10 text-primary"
-                        : "text-on-surface hover:bg-surface-container-highest",
+                        : "text-[var(--color-text)] hover:bg-[var(--color-surface)]",
                     )}
                   >
                     <span className="font-medium">{op}</span>
@@ -220,7 +220,7 @@ export default function WizardStep3({
                         "text-[10px] tabular-nums",
                         ld > mx
                           ? "text-error font-bold"
-                          : "text-on-surface-variant",
+                          : "text-[var(--color-text-muted)]",
                       )}
                     >
                       {ld}/{mx}
@@ -250,25 +250,25 @@ export default function WizardStep3({
       <div className="mb-4">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-sm font-black text-on-surface">
+            <h2 className="text-sm font-black text-[var(--color-text)]">
               배정 — <span className="text-primary">{typeLabel}</span>
             </h2>
-            <p className="text-xs text-on-surface-variant mt-1">
+            <p className="text-xs text-[var(--color-text-muted)] mt-1">
               운영자 레인을 클릭하면 배정된 대학 목록이 펼쳐집니다.
             </p>
           </div>
 
           {/* PIMS tab toggle */}
           {pimsTab && onPimsTabChange && (
-            <div className="flex bg-surface-container-highest rounded-lg p-0.5">
+            <div className="flex bg-[var(--color-surface)] rounded-[14px] p-0.5">
               <button
                 type="button"
                 onClick={() => onPimsTabChange("full")}
                 className={cn(
                   "px-3 py-1.5 rounded-md text-[11px] font-bold transition-all",
                   pimsTab === "full"
-                    ? "bg-primary text-on-primary shadow-sm"
-                    : "text-on-surface-variant hover:text-on-surface",
+                    ? "bg-primary text-on-primary shadow-neu-soft"
+                    : "text-[var(--color-text-muted)] hover:text-[var(--color-text)]",
                 )}
               >
                 전체사용
@@ -279,8 +279,8 @@ export default function WizardStep3({
                 className={cn(
                   "px-3 py-1.5 rounded-md text-[11px] font-bold transition-all",
                   pimsTab === "select"
-                    ? "bg-primary text-on-primary shadow-sm"
-                    : "text-on-surface-variant hover:text-on-surface",
+                    ? "bg-primary text-on-primary shadow-neu-soft"
+                    : "text-[var(--color-text-muted)] hover:text-[var(--color-text)]",
                 )}
               >
                 선택사용
@@ -295,21 +295,21 @@ export default function WizardStep3({
         <div className="relative flex-1 min-w-[200px]">
           <IconSearch
             size={16}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant"
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]"
           />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="대학명 검색..."
-            className="search-input w-full pl-10 pr-4 py-2.5 rounded-xl text-sm text-on-surface focus:outline-none transition-colors"
+            className="search-input w-full pl-10 pr-4 py-2.5 rounded-[20px] text-sm text-[var(--color-text)] focus:outline-none transition-colors"
           />
         </div>
         {uniqueCategories.length > 0 && (
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="search-input px-4 py-2.5 rounded-xl text-sm font-medium text-on-surface focus:outline-none transition-colors appearance-none cursor-pointer min-w-[140px]"
+            className="search-input px-4 py-2.5 rounded-[20px] text-sm font-medium text-[var(--color-text)] focus:outline-none transition-colors appearance-none cursor-pointer min-w-[140px]"
           >
             <option value="">전체 분류</option>
             {uniqueCategories.map((c) => (
@@ -322,15 +322,15 @@ export default function WizardStep3({
       </div>
 
       {/* Stats */}
-      <div className="flex items-center gap-3 text-xs text-on-surface-variant mb-4">
+      <div className="flex items-center gap-3 text-xs text-[var(--color-text-muted)] mb-4">
         <span>
-          전체 <b className="text-on-surface">{totalCount}</b>
+          전체 <b className="text-[var(--color-text)]">{totalCount}</b>
         </span>
-        <span className="text-outline-variant">|</span>
+        <span className="text-[var(--color-text-faint)]">|</span>
         <span>
           배정 <b className="text-primary">{assignedCount}</b>
         </span>
-        <span className="text-outline-variant">|</span>
+        <span className="text-[var(--color-text-faint)]">|</span>
         <span>
           미배정 <b className="text-error">{unassignedCount}</b>
         </span>
@@ -338,7 +338,7 @@ export default function WizardStep3({
 
       {/* Unassigned Pool */}
       {unassigned.length > 0 && (
-        <div className="border border-dashed border-error/20 bg-error/[0.03] rounded-xl p-3 mb-4">
+        <div className="border border-dashed border-error/20 bg-error/[0.03] rounded-[20px] p-3 mb-4">
           <span className="text-[11px] font-extrabold text-error block mb-2">
             미배정 대학 {unassigned.length}개
           </span>
@@ -354,7 +354,7 @@ export default function WizardStep3({
                         : u.universityName,
                     )
                   }
-                  className="px-[10px] py-1 bg-error/8 border border-error/20 rounded-md text-xs font-semibold text-on-surface hover:bg-error/15 hover:border-error/40 transition-all cursor-pointer"
+                  className="px-[10px] py-1 bg-error/8 border border-error/20 rounded-md text-xs font-semibold text-[var(--color-text)] hover:bg-error/15 hover:border-error/40 transition-all cursor-pointer"
                 >
                   {u.universityName}
                   <span className="text-[8px] text-error ml-1">{u.region}</span>
@@ -390,10 +390,10 @@ export default function WizardStep3({
                 <div
                   key={op}
                   className={cn(
-                    "mb-2 rounded-[10px] bg-surface-container border transition-all",
+                    "mb-2 rounded-[10px] bg-[var(--color-surface)] border transition-all",
                     isExpanded
-                      ? "border-outline-variant/15 overflow-visible"
-                      : "border-outline-variant/5 hover:border-outline-variant/10 overflow-hidden",
+                      ? "border-black/[0.04]/15 overflow-visible"
+                      : "border-black/[0.04]/5 hover:border-black/[0.04]/10 overflow-hidden",
                   )}
                 >
                   {/* Lane Header */}
@@ -403,7 +403,7 @@ export default function WizardStep3({
                     className="w-full flex items-center gap-0 cursor-pointer select-none"
                   >
                     {/* Left: Avatar + Name */}
-                    <div className="w-[140px] shrink-0 px-3.5 py-2.5 flex items-center gap-2 border-r border-outline-variant/5">
+                    <div className="w-[140px] shrink-0 px-3.5 py-2.5 flex items-center gap-2 border-r border-black/[0.04]/5">
                       <div
                         className={cn(
                           "w-7 h-7 rounded-md flex items-center justify-center text-[11px] font-black shrink-0",
@@ -413,10 +413,10 @@ export default function WizardStep3({
                         {load}
                       </div>
                       <div className="text-left min-w-0">
-                        <div className="text-[11px] font-bold text-on-surface truncate">
+                        <div className="text-[11px] font-bold text-[var(--color-text)] truncate">
                           {op}
                         </div>
-                        <div className="text-[8px] text-on-surface-variant">
+                        <div className="text-[8px] text-[var(--color-text-muted)]">
                           {groupLabel} · {load}/{max}
                         </div>
                       </div>
@@ -446,8 +446,8 @@ export default function WizardStep3({
                                 className={cn(
                                   "px-1.5 py-0.5 rounded-sm text-[8px] font-semibold whitespace-nowrap shrink-0",
                                   isChanged
-                                    ? "bg-tertiary/30 text-on-surface dark:bg-tertiary/20 dark:text-tertiary"
-                                    : "bg-primary/20 text-on-surface dark:bg-on-surface/10 dark:text-on-surface",
+                                    ? "bg-tertiary/30 text-[var(--color-text)] dark:bg-tertiary/20 dark:text-tertiary"
+                                    : "bg-primary/20 text-[var(--color-text)] dark:bg-on-surface/10 dark:text-[var(--color-text)]",
                                 )}
                               >
                                 {u.universityName.replace("대학교", "대")}
@@ -465,11 +465,11 @@ export default function WizardStep3({
                     </div>
 
                     {/* Right: MAX */}
-                    <div className="w-[50px] shrink-0 text-center py-2 border-l border-outline-variant/5">
-                      <div className="text-sm font-black text-on-surface">
+                    <div className="w-[50px] shrink-0 text-center py-2 border-l border-black/[0.04]/5">
+                      <div className="text-sm font-black text-[var(--color-text)]">
                         {max}
                       </div>
-                      <div className="text-[7px] text-on-surface-variant uppercase">
+                      <div className="text-[7px] text-[var(--color-text-muted)] uppercase">
                         MAX
                       </div>
                     </div>
@@ -479,7 +479,7 @@ export default function WizardStep3({
                       <IconChevronDown
                         size={14}
                         className={cn(
-                          "text-on-surface-variant transition-transform",
+                          "text-[var(--color-text-muted)] transition-transform",
                           isExpanded && "rotate-180",
                         )}
                       />
@@ -489,7 +489,7 @@ export default function WizardStep3({
                   {/* Lane Detail (expanded) */}
                   {isExpanded && (
                     <div className="px-3.5 pb-3">
-                      <div className="flex gap-1 flex-wrap pt-2 border-t border-outline-variant/5">
+                      <div className="flex gap-1 flex-wrap pt-2 border-t border-black/[0.04]/5">
                         {univs.map((u) => {
                           const key = `${u.universityName}__${assignType}`;
                           const isChanged =
@@ -513,13 +513,13 @@ export default function WizardStep3({
                                   "group",
                                   isChanged
                                     ? "border-tertiary/30 bg-tertiary/10"
-                                    : "border-outline-variant/15 bg-surface-container-high",
+                                    : "border-black/[0.04]/15 bg-[var(--color-surface)]",
                                 )}
                               >
-                                <span className="font-semibold text-on-surface">
+                                <span className="font-semibold text-[var(--color-text)]">
                                   {u.universityName}
                                 </span>
-                                <span className="text-[8px] text-on-surface-variant">
+                                <span className="text-[8px] text-[var(--color-text-muted)]">
                                   {u.region}
                                 </span>
                                 <span className="text-[8px] font-bold text-primary opacity-0 group-hover:opacity-100 transition-opacity">
@@ -531,7 +531,7 @@ export default function WizardStep3({
                           );
                         })}
                         {univs.length === 0 && (
-                          <span className="text-[10px] text-on-surface-variant/50 italic py-2">
+                          <span className="text-[10px] text-[var(--color-text-muted)]/50 italic py-2">
                             배정된 대학이 없습니다
                           </span>
                         )}
@@ -546,23 +546,23 @@ export default function WizardStep3({
       </div>
 
       {/* Bottom Fixed Bar */}
-      <div className="fixed bottom-0 left-0 right-0 bg-surface-container border-t border-outline-variant/10 px-5 py-2.5 flex items-center justify-between z-50">
+      <div className="fixed bottom-0 left-0 right-0 bg-[var(--color-surface)] border-t border-black/[0.04]/10 px-5 py-2.5 flex items-center justify-between z-50">
         <button
           type="button"
           onClick={onBack}
-          className="px-4 py-2 rounded-lg bg-surface-container-high text-on-surface-variant text-[11px] font-bold hover:bg-surface-bright transition-colors"
+          className="px-4 py-2 rounded-[14px] bg-[var(--color-surface)] text-[var(--color-text-muted)] text-[11px] font-bold hover:bg-surface-bright transition-colors"
         >
           ← 시뮬레이션
         </button>
 
-        <div className="flex items-center gap-3 text-[11px] text-on-surface-variant">
+        <div className="flex items-center gap-3 text-[11px] text-[var(--color-text-muted)]">
           <span>
             배정{" "}
             <span className="font-extrabold text-primary">
               {assignedCount}/{totalCount}
             </span>
           </span>
-          <span className="text-outline-variant">·</span>
+          <span className="text-[var(--color-text-faint)]">·</span>
           <span>
             미배정{" "}
             <span className="font-extrabold text-error">{unassignedCount}</span>
@@ -570,7 +570,7 @@ export default function WizardStep3({
           <button
             type="button"
             onClick={onRerun}
-            className="flex items-center gap-1 text-[10px] text-on-surface-variant hover:text-primary transition-colors ml-2"
+            className="flex items-center gap-1 text-[10px] text-[var(--color-text-muted)] hover:text-primary transition-colors ml-2"
           >
             <IconRefresh size={10} />
             재실행
@@ -580,7 +580,7 @@ export default function WizardStep3({
         <button
           type="button"
           onClick={onNext}
-          className="px-5 py-2 rounded-lg bg-primary text-on-primary text-[11px] font-bold hover:bg-primary-dim transition-colors"
+          className="px-5 py-2 rounded-[14px] bg-primary text-on-primary text-[11px] font-bold hover:bg-primary-dim transition-colors"
         >
           최종 확인 →
         </button>

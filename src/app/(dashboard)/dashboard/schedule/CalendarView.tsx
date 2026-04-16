@@ -184,23 +184,23 @@ export default function CalendarView({ services, schedules }: CalendarViewProps)
         {/* 헤더 */}
         <div className="mb-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <button onClick={prevMonth} className="p-1 rounded-lg hover:bg-surface-container-high transition-colors">
-              <IconChevronLeft size={20} className="text-on-surface-variant" />
+            <button onClick={prevMonth} className="p-1 rounded-[14px] hover:bg-[var(--color-surface)] transition-colors">
+              <IconChevronLeft size={20} className="text-[var(--color-text-muted)]" />
             </button>
-            <h3 className="flex items-center gap-2 text-lg font-bold text-on-surface min-w-[140px] justify-center">
+            <h3 className="flex items-center gap-2 text-lg font-bold text-[var(--color-text)] min-w-[140px] justify-center">
               <IconCalendar size={20} className="text-primary" />
               {year}년 {month}월
             </h3>
-            <button onClick={nextMonth} className="p-1 rounded-lg hover:bg-surface-container-high transition-colors">
-              <IconChevronRight size={20} className="text-on-surface-variant" />
+            <button onClick={nextMonth} className="p-1 rounded-[14px] hover:bg-[var(--color-surface)] transition-colors">
+              <IconChevronRight size={20} className="text-[var(--color-text-muted)]" />
             </button>
             {!isCurrentMonth && (
-              <button onClick={goToday} className="ml-2 px-3 py-1 rounded-lg bg-surface-container-high text-xs font-bold text-on-surface-variant hover:bg-surface-container-highest transition-colors">
+              <button onClick={goToday} className="ml-2 px-3 py-1 rounded-[14px] bg-[var(--color-surface)] text-xs font-bold text-[var(--color-text-muted)] hover:bg-[var(--color-surface)] transition-colors">
                 오늘
               </button>
             )}
           </div>
-          <div className="flex items-center gap-4 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
+          <div className="flex items-center gap-4 text-[10px] font-bold uppercase tracking-widest text-[var(--color-text-muted)]">
             <div className="flex items-center gap-1.5">
               <span className="h-2 w-2 rounded-full bg-error" />
               일정
@@ -223,7 +223,7 @@ export default function CalendarView({ services, schedules }: CalendarViewProps)
               key={label}
               className={cn(
                 "text-center text-[10px] font-bold uppercase tracking-widest py-2",
-                i === 0 ? "text-error/70" : i === 6 ? "text-secondary/70" : "text-on-surface-variant",
+                i === 0 ? "text-error/70" : i === 6 ? "text-secondary/70" : "text-[var(--color-text-muted)]",
               )}
             >
               {label}
@@ -232,7 +232,7 @@ export default function CalendarView({ services, schedules }: CalendarViewProps)
         </div>
 
         {/* 날짜 그리드 */}
-        <div className="grid grid-cols-7 border-t border-outline-variant/10">
+        <div className="grid grid-cols-7 border-t border-black/[0.04]/10">
           {cells.map((cell, idx) => {
             const isToday = isCurrentMonth && cell.day === today.getDate();
             const isWeekend = idx % 7 === 0 || idx % 7 === 6;
@@ -243,8 +243,8 @@ export default function CalendarView({ services, schedules }: CalendarViewProps)
                 key={idx}
                 onClick={() => cell.day && setSelectedDay(cell.day === selectedDay ? null : cell.day)}
                 className={cn(
-                  "relative flex flex-col items-center gap-1 border-b border-r border-outline-variant/10 py-3 min-h-[72px] transition-colors cursor-pointer",
-                  cell.day ? "hover:bg-surface-container-high" : "",
+                  "relative flex flex-col items-center gap-1 border-b border-r border-black/[0.04]/10 py-3 min-h-[72px] transition-colors cursor-pointer",
+                  cell.day ? "hover:bg-[var(--color-surface)]" : "",
                   isSelected && "bg-primary/5",
                 )}
               >
@@ -258,8 +258,8 @@ export default function CalendarView({ services, schedules }: CalendarViewProps)
                           : isSelected
                             ? "bg-primary/20 text-primary"
                             : isWeekend
-                              ? "text-on-surface-variant/60"
-                              : "text-on-surface",
+                              ? "text-[var(--color-text-muted)]/60"
+                              : "text-[var(--color-text)]",
                       )}
                     >
                       {cell.day}
@@ -280,8 +280,8 @@ export default function CalendarView({ services, schedules }: CalendarViewProps)
 
         {/* 선택된 날짜 상세 */}
         {selectedDay && (
-          <div className="mt-4 pt-4 border-t border-outline-variant/10">
-            <h4 className="text-xs font-bold text-on-surface-variant mb-3">
+          <div className="mt-4 pt-4 border-t border-black/[0.04]/10">
+            <h4 className="text-xs font-bold text-[var(--color-text-muted)] mb-3">
               {month}월 {selectedDay}일 일정 ({selectedDayItems.length}건)
             </h4>
             {selectedDayItems.length > 0 ? (
@@ -289,13 +289,13 @@ export default function CalendarView({ services, schedules }: CalendarViewProps)
                 {selectedDayItems.slice(0, 15).map((item, i) => (
                   <div
                     key={i}
-                    className="flex items-center justify-between rounded-lg border border-outline-variant/10 bg-surface-container-high px-4 py-2.5"
+                    className="flex items-center justify-between rounded-[14px] border border-black/[0.04]/10 bg-[var(--color-surface)] px-4 py-2.5"
                   >
                     <div className="flex items-center gap-3 min-w-0">
-                      <span className="text-xs text-on-surface-variant shrink-0 w-[100px] truncate">
+                      <span className="text-xs text-[var(--color-text-muted)] shrink-0 w-[100px] truncate">
                         {item.subtitle}
                       </span>
-                      <span className="text-sm text-on-surface truncate">
+                      <span className="text-sm text-[var(--color-text)] truncate">
                         {item.title}
                       </span>
                     </div>
@@ -310,11 +310,11 @@ export default function CalendarView({ services, schedules }: CalendarViewProps)
                   </div>
                 ))}
                 {selectedDayItems.length > 15 && (
-                  <p className="text-xs text-on-surface-variant text-center">외 {selectedDayItems.length - 15}건</p>
+                  <p className="text-xs text-[var(--color-text-muted)] text-center">외 {selectedDayItems.length - 15}건</p>
                 )}
               </div>
             ) : (
-              <p className="text-xs text-on-surface-variant/50 text-center py-4">해당 날짜에 일정이 없습니다.</p>
+              <p className="text-xs text-[var(--color-text-muted)]/50 text-center py-4">해당 날짜에 일정이 없습니다.</p>
             )}
           </div>
         )}

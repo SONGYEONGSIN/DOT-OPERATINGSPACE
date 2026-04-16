@@ -42,7 +42,7 @@ export default async function ServiceDetailPage({ params }: PageProps) {
         actions={
           <Link
             href="/operations/services"
-            className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-surface-container-high text-on-surface-variant text-xs font-bold transition-colors hover:bg-surface-container-highest"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-[14px] bg-[var(--color-surface)] text-[var(--color-text-muted)] text-xs font-bold transition-colors hover:bg-[var(--color-surface)]"
           >
             <IconArrowLeft size={16} />
             목록으로
@@ -52,8 +52,8 @@ export default async function ServiceDetailPage({ params }: PageProps) {
 
       {/* ── 서비스 정보 히어로 카드 ── */}
       <div className="space-y-3">
-      <h2 className="text-lg font-black text-on-surface tracking-tight">서비스정보</h2>
-      <div className="relative overflow-hidden rounded-2xl border border-outline-variant/15 bg-surface-container">
+      <h2 className="text-lg font-black text-[var(--color-text)] tracking-tight">서비스정보</h2>
+      <div className="relative overflow-hidden rounded-[20px] border border-black/[0.04]/15 bg-[var(--color-surface)]">
         {/* 좌측 액센트 바 */}
         <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-primary to-tertiary" />
 
@@ -62,19 +62,19 @@ export default async function ServiceDetailPage({ params }: PageProps) {
           <div className="flex items-start justify-between gap-4 mb-4">
             <div className="space-y-1">
               <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-xl bg-primary/15 flex items-center justify-center">
+                <div className="w-9 h-9 rounded-[20px] bg-primary/15 flex items-center justify-center">
                   <IconBuildingBank size={18} className="text-primary" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-black text-on-surface tracking-tight leading-tight">
+                  <h2 className="text-lg font-black text-[var(--color-text)] tracking-tight leading-tight">
                     {service.university_name ?? "미지정"}
                   </h2>
-                  <p className="text-xs text-on-surface-variant mt-0.5">{serviceName}</p>
+                  <p className="text-xs text-[var(--color-text-muted)] mt-0.5">{serviceName}</p>
                 </div>
               </div>
             </div>
             {service.is_exclusive && (
-              <span className="shrink-0 flex items-center gap-1 px-2.5 py-1 rounded-lg bg-primary/10 text-primary text-[10px] font-bold">
+              <span className="shrink-0 flex items-center gap-1 px-2.5 py-1 rounded-[14px] bg-primary/10 text-primary text-[10px] font-bold">
                 <IconCheck size={12} /> 단독
               </span>
             )}
@@ -110,10 +110,10 @@ function MetaChip({
   accent?: boolean;
 }) {
   return (
-    <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container-high/80">
-      <Icon size={13} className={accent ? "text-primary" : "text-on-surface-variant/50"} />
-      <span className="text-[10px] text-on-surface-variant">{label}</span>
-      <span className={`text-xs font-bold ${accent ? "text-primary" : "text-on-surface"}`}>
+    <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-[14px] bg-[var(--color-surface)]/80">
+      <Icon size={13} className={accent ? "text-primary" : "text-[var(--color-text-muted)]/50"} />
+      <span className="text-[10px] text-[var(--color-text-muted)]">{label}</span>
+      <span className={`text-xs font-bold ${accent ? "text-primary" : "text-[var(--color-text)]"}`}>
         {value ?? "-"}
       </span>
     </div>

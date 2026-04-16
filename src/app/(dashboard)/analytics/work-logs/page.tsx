@@ -77,26 +77,26 @@ export default async function WorkLogsPage() {
 
       <KpiGrid>
         <KpiCard
-          icon={<IconHistory size={18} className="text-on-surface-variant" />}
+          icon={<IconHistory size={18} className="text-[var(--color-text-muted)]" />}
           label="프로젝트 활동"
           value={totalLogs.toString()}
           suffix="건"
           change={`오늘 ${todayLogs}건`}
         />
         <KpiCard
-          icon={<IconCircleCheck size={18} className="text-on-surface-variant" />}
+          icon={<IconCircleCheck size={18} className="text-[var(--color-text-muted)]" />}
           label="서비스 작업이력"
           value={(workLogCount ?? 0).toString()}
           suffix="건"
         />
         <KpiCard
-          icon={<IconUsers size={18} className="text-on-surface-variant" />}
+          icon={<IconUsers size={18} className="text-[var(--color-text-muted)]" />}
           label="활동 인원"
           value={uniqueActors.toString()}
           suffix="명"
         />
         <KpiCard
-          icon={<IconListCheck size={18} className="text-on-surface-variant" />}
+          icon={<IconListCheck size={18} className="text-[var(--color-text-muted)]" />}
           label="활성 프로젝트"
           value={projectCounts.size.toString()}
           suffix="개"
@@ -109,8 +109,8 @@ export default async function WorkLogsPage() {
           <div className="flex items-center gap-4 flex-wrap">
             {topProjects.map(([proj, count]) => (
               <div key={proj} className="flex items-center gap-2">
-                <span className="text-xs font-bold text-on-surface">{PROJECT_NAMES[proj] ?? proj}</span>
-                <span className="text-xs text-on-surface-variant tabular-nums">{count}건</span>
+                <span className="text-xs font-bold text-[var(--color-text)]">{PROJECT_NAMES[proj] ?? proj}</span>
+                <span className="text-xs text-[var(--color-text-muted)] tabular-nums">{count}건</span>
               </div>
             ))}
           </div>
@@ -128,7 +128,7 @@ export default async function WorkLogsPage() {
                   <IconHistory size={10} className="text-on-primary" />
                 </div>
                 <span className="text-xs font-bold text-primary tracking-wider uppercase">{date}</span>
-                <span className="text-[10px] text-on-surface-variant">{dateLogs.length}건</span>
+                <span className="text-[10px] text-[var(--color-text-muted)]">{dateLogs.length}건</span>
               </div>
 
               {dateLogs.map((log) => {
@@ -142,14 +142,14 @@ export default async function WorkLogsPage() {
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-1">
-                            <span className="text-sm font-bold text-on-surface">{log.actor}</span>
+                            <span className="text-sm font-bold text-[var(--color-text)]">{log.actor}</span>
                             <StatusBadge variant={config.variant}>{config.label}</StatusBadge>
                           </div>
-                          <p className="text-sm text-on-surface/90">{log.detail ?? "-"}</p>
+                          <p className="text-sm text-[var(--color-text)]/90">{log.detail ?? "-"}</p>
                         </div>
                         <StatusBadge variant="neutral">{PROJECT_NAMES[log.project] ?? log.project}</StatusBadge>
                       </div>
-                      <div className="flex items-center gap-1 mt-3 text-on-surface-variant">
+                      <div className="flex items-center gap-1 mt-3 text-[var(--color-text-muted)]">
                         <IconHistory size={11} />
                         <span className="text-[11px]">
                           {new Date(log.created_at).toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" })}
@@ -163,7 +163,7 @@ export default async function WorkLogsPage() {
           ))}
 
           {allLogs.length === 0 && (
-            <div className="flex flex-col items-center justify-center py-16 text-on-surface-variant">
+            <div className="flex flex-col items-center justify-center py-16 text-[var(--color-text-muted)]">
               <IconHistory size={40} className="opacity-30 mb-2" />
               <p className="text-sm font-medium">활동 기록이 없습니다.</p>
               <p className="text-xs mt-1">프로젝트에서 작업을 수행하면 자동으로 기록됩니다.</p>

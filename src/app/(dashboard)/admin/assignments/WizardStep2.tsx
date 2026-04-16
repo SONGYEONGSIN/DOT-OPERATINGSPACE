@@ -30,7 +30,7 @@ function getHeatColor(load: number, max: number): string {
   if (ratio >= 0.6) return "bg-primary/30 text-primary";
   if (ratio >= 0.3) return "bg-primary/15 text-primary";
   if (ratio > 0) return "bg-primary/8 text-primary";
-  return "bg-surface-container-highest text-on-surface-variant/40";
+  return "bg-[var(--color-surface)] text-[var(--color-text-muted)]/40";
 }
 
 function getGaugeGradient(ratio: number): string {
@@ -54,10 +54,10 @@ export default function WizardStep2({
     <div className="pb-20">
       {/* Header */}
       <div className="mb-4">
-        <h2 className="text-sm font-black text-on-surface">
+        <h2 className="text-sm font-black text-[var(--color-text)]">
           시뮬레이션 — <span className="text-primary">{typeLabel}</span>
         </h2>
-        <p className="text-xs text-on-surface-variant mt-1">
+        <p className="text-xs text-[var(--color-text-muted)] mt-1">
           설정된 용량 기준으로 자동배정 시뮬레이션을 실행합니다.
         </p>
       </div>
@@ -69,20 +69,20 @@ export default function WizardStep2({
           onClick={onRun}
           disabled={isRunning}
           className={cn(
-            "w-full rounded-xl border p-12",
+            "w-full rounded-[20px] border p-12",
             "flex flex-col items-center justify-center",
             "cursor-pointer transition-all group",
-            "bg-surface-container border-outline-variant/10",
-            "hover:border-primary/20 hover:bg-surface-container-high",
+            "bg-[var(--color-surface)] border-black/[0.04]/10",
+            "hover:border-primary/20 hover:bg-[var(--color-surface)]",
             isRunning && "opacity-60 pointer-events-none",
           )}
         >
           <div
             className={cn(
-              "w-16 h-16 rounded-2xl flex items-center justify-center mb-4 transition-all",
+              "w-16 h-16 rounded-[20px] flex items-center justify-center mb-4 transition-all",
               isRunning
                 ? "bg-primary/20 animate-pulse"
-                : "bg-surface-container-highest group-hover:bg-primary/10 group-hover:shadow-glow",
+                : "bg-[var(--color-surface)] group-hover:bg-primary/10 group-hover:shadow-glow",
             )}
           >
             <IconPlayerPlay
@@ -91,14 +91,14 @@ export default function WizardStep2({
                 "transition-colors",
                 isRunning
                   ? "text-primary"
-                  : "text-on-surface-variant group-hover:text-primary",
+                  : "text-[var(--color-text-muted)] group-hover:text-primary",
               )}
             />
           </div>
-          <p className="text-sm font-bold text-on-surface mb-1">
+          <p className="text-sm font-bold text-[var(--color-text)] mb-1">
             {isRunning ? "시뮬레이션 실행 중..." : "클릭하여 시뮬레이션 실행"}
           </p>
-          <p className="text-xs text-on-surface-variant">
+          <p className="text-xs text-[var(--color-text-muted)]">
             설정된 용량으로 자동배정 결과를 미리 확인합니다.
           </p>
         </button>
@@ -108,21 +108,21 @@ export default function WizardStep2({
       {simResult && (
         <>
           {/* Stats */}
-          <div className="flex items-center gap-3 text-xs text-on-surface-variant mb-4">
+          <div className="flex items-center gap-3 text-xs text-[var(--color-text-muted)] mb-4">
             <span>
-              대상 <b className="text-on-surface">{totalUniversities}</b>
+              대상 <b className="text-[var(--color-text)]">{totalUniversities}</b>
             </span>
-            <span className="text-outline-variant">|</span>
+            <span className="text-[var(--color-text-faint)]">|</span>
             <span>
               배정 <b className="text-primary">{simResult.assignedCount}</b>
             </span>
-            <span className="text-outline-variant">|</span>
+            <span className="text-[var(--color-text-faint)]">|</span>
             <span>
               신규 <b className="text-tertiary">{simResult.newCount}</b>
             </span>
             {simResult.failedCount > 0 && (
               <>
-                <span className="text-outline-variant">|</span>
+                <span className="text-[var(--color-text-faint)]">|</span>
                 <span>
                   불가 <b className="text-error">{simResult.failedCount}</b>
                 </span>
@@ -149,11 +149,11 @@ export default function WizardStep2({
                   return (
                     <div
                       key={op}
-                      className="mb-2 rounded-[10px] bg-surface-container border border-outline-variant/5 hover:border-outline-variant/10 transition-all"
+                      className="mb-2 rounded-[10px] bg-[var(--color-surface)] border border-black/[0.04]/5 hover:border-black/[0.04]/10 transition-all"
                     >
                       <div className="flex items-center gap-0">
                         {/* Left: Badge + Name */}
-                        <div className="w-[140px] shrink-0 px-3.5 py-2.5 flex items-center gap-2 border-r border-outline-variant/5">
+                        <div className="w-[140px] shrink-0 px-3.5 py-2.5 flex items-center gap-2 border-r border-black/[0.04]/5">
                           <div
                             className={cn(
                               "w-7 h-7 rounded-md flex items-center justify-center text-[11px] font-black shrink-0",
@@ -163,10 +163,10 @@ export default function WizardStep2({
                             {load}
                           </div>
                           <div className="text-left min-w-0">
-                            <div className="text-[11px] font-bold text-on-surface truncate">
+                            <div className="text-[11px] font-bold text-[var(--color-text)] truncate">
                               {op}
                             </div>
-                            <div className="text-[8px] text-on-surface-variant">
+                            <div className="text-[8px] text-[var(--color-text-muted)]">
                               {group.label} · {load}/{max}
                             </div>
                           </div>
@@ -191,11 +191,11 @@ export default function WizardStep2({
                         </div>
 
                         {/* Right: MAX */}
-                        <div className="w-[50px] shrink-0 text-center py-2 border-l border-outline-variant/5">
-                          <div className="text-sm font-black text-on-surface">
+                        <div className="w-[50px] shrink-0 text-center py-2 border-l border-black/[0.04]/5">
+                          <div className="text-sm font-black text-[var(--color-text)]">
                             {max}
                           </div>
-                          <div className="text-[7px] text-on-surface-variant uppercase">
+                          <div className="text-[7px] text-[var(--color-text-muted)] uppercase">
                             MAX
                           </div>
                         </div>
@@ -210,16 +210,16 @@ export default function WizardStep2({
       )}
 
       {/* Bottom Fixed Bar */}
-      <div className="fixed bottom-0 left-0 right-0 bg-surface-container border-t border-outline-variant/10 px-5 py-2.5 flex items-center justify-between z-50">
+      <div className="fixed bottom-0 left-0 right-0 bg-[var(--color-surface)] border-t border-black/[0.04]/10 px-5 py-2.5 flex items-center justify-between z-50">
         <button
           type="button"
           onClick={onBack}
-          className="px-4 py-2 rounded-lg bg-surface-container-high text-on-surface-variant text-[11px] font-bold hover:bg-surface-bright transition-colors"
+          className="px-4 py-2 rounded-[14px] bg-[var(--color-surface)] text-[var(--color-text-muted)] text-[11px] font-bold hover:bg-surface-bright transition-colors"
         >
           ← 용량 설정
         </button>
 
-        <div className="flex items-center gap-3 text-[11px] text-on-surface-variant">
+        <div className="flex items-center gap-3 text-[11px] text-[var(--color-text-muted)]">
           {simResult ? (
             <>
               <span>
@@ -230,7 +230,7 @@ export default function WizardStep2({
               </span>
               {simResult.failedCount > 0 && (
                 <>
-                  <span className="text-outline-variant">·</span>
+                  <span className="text-[var(--color-text-faint)]">·</span>
                   <span>
                     불가{" "}
                     <span className="font-extrabold text-error">
@@ -242,7 +242,7 @@ export default function WizardStep2({
               <button
                 type="button"
                 onClick={onRun}
-                className="flex items-center gap-1 text-[10px] text-on-surface-variant hover:text-primary transition-colors ml-2"
+                className="flex items-center gap-1 text-[10px] text-[var(--color-text-muted)] hover:text-primary transition-colors ml-2"
               >
                 <IconRefresh size={10} />
                 재실행
@@ -257,7 +257,7 @@ export default function WizardStep2({
           <button
             type="button"
             onClick={onNext}
-            className="px-5 py-2 rounded-lg bg-primary text-on-primary text-[11px] font-bold hover:bg-primary-dim transition-colors"
+            className="px-5 py-2 rounded-[14px] bg-primary text-on-primary text-[11px] font-bold hover:bg-primary-dim transition-colors"
           >
             결과 확인 & 조정 →
           </button>

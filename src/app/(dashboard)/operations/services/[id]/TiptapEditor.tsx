@@ -72,7 +72,7 @@ function Btn({
         "p-1.5 rounded-md transition-colors disabled:opacity-40",
         isActive
           ? "bg-primary/15 text-primary"
-          : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest",
+          : "text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-surface)]",
         className,
       )}
     >
@@ -105,7 +105,7 @@ function ColorPicker({
   onClose: () => void;
 }) {
   return (
-    <div className="absolute top-full left-0 mt-1 z-50 bg-surface-container border border-outline-variant/15 rounded-lg shadow-xl p-2 flex gap-1">
+    <div className="absolute top-full left-0 mt-1 z-50 bg-[var(--color-surface)] border border-black/[0.04]/15 rounded-[14px] shadow-xl p-2 flex gap-1">
       {TEXT_COLORS.map((c) => (
         <button
           key={c.value || "default"}
@@ -123,7 +123,7 @@ function ColorPicker({
             "w-6 h-6 rounded-full border-2 transition-transform hover:scale-110",
             c.value
               ? "border-transparent"
-              : "border-outline-variant/30 bg-on-surface",
+              : "border-black/[0.04]/30 bg-on-surface",
           )}
           style={c.value ? { backgroundColor: c.value } : undefined}
         />
@@ -146,13 +146,13 @@ function LinkInput({
   );
 
   return (
-    <div className="absolute top-full left-0 mt-1 z-50 bg-surface-container border border-outline-variant/15 rounded-lg shadow-xl p-3 flex gap-2 min-w-[300px]">
+    <div className="absolute top-full left-0 mt-1 z-50 bg-[var(--color-surface)] border border-black/[0.04]/15 rounded-[14px] shadow-xl p-3 flex gap-2 min-w-[300px]">
       <input
         type="url"
         value={url}
         onChange={(e) => setUrl(e.target.value)}
         placeholder="https://..."
-        className="flex-1 bg-surface-container-highest rounded-md px-3 py-1.5 text-xs text-on-surface border-none focus:outline-none focus:ring-1 focus:ring-primary/50"
+        className="flex-1 bg-[var(--color-surface)] rounded-md px-3 py-1.5 text-xs text-[var(--color-text)] border-none focus:outline-none focus:ring-1 focus:ring-primary/50"
         autoFocus
         onKeyDown={(e) => {
           if (e.key === "Enter") {
@@ -215,8 +215,8 @@ function TableInsert({
   onClose: () => void;
 }) {
   return (
-    <div className="absolute top-full left-0 mt-1 z-50 bg-surface-container border border-outline-variant/15 rounded-lg shadow-xl p-3 space-y-2 min-w-[160px]">
-      <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
+    <div className="absolute top-full left-0 mt-1 z-50 bg-[var(--color-surface)] border border-black/[0.04]/15 rounded-[14px] shadow-xl p-3 space-y-2 min-w-[160px]">
+      <p className="text-[10px] font-bold text-[var(--color-text-muted)] uppercase tracking-widest">
         테이블 삽입
       </p>
       {[
@@ -240,7 +240,7 @@ function TableInsert({
               .run();
             onClose();
           }}
-          className="block w-full text-left px-3 py-1.5 rounded-md text-xs text-on-surface hover:bg-surface-container-highest transition-colors"
+          className="block w-full text-left px-3 py-1.5 rounded-md text-xs text-[var(--color-text)] hover:bg-[var(--color-surface)] transition-colors"
         >
           {opt.label}
         </button>
@@ -263,7 +263,7 @@ function EditorToolbar({ editor }: { editor: Editor }) {
   }, []);
 
   return (
-    <div className="flex items-center gap-0.5 px-2 py-1.5 border-b border-outline-variant/10 bg-surface-container-high/50 flex-wrap">
+    <div className="flex items-center gap-0.5 px-2 py-1.5 border-b border-black/[0.04]/10 bg-[var(--color-surface)]/50 flex-wrap">
       {/* 텍스트 서식 */}
       <Btn
         icon={<IconBold size={16} />}
@@ -508,7 +508,7 @@ export default function TiptapEditor({
     },
     editorProps: {
       attributes: {
-        class: "tiptap min-h-[120px] p-5 text-sm text-on-surface leading-relaxed focus:outline-none",
+        class: "tiptap min-h-[120px] p-5 text-sm text-[var(--color-text)] leading-relaxed focus:outline-none",
       },
     },
   });
@@ -522,7 +522,7 @@ export default function TiptapEditor({
   if (!editor) return null;
 
   return (
-    <div className="rounded-lg border border-outline-variant/15 bg-surface-container-highest overflow-hidden">
+    <div className="rounded-[14px] border border-black/[0.04]/15 bg-[var(--color-surface)] overflow-hidden">
       <EditorToolbar editor={editor} />
       <EditorContent editor={editor} />
     </div>

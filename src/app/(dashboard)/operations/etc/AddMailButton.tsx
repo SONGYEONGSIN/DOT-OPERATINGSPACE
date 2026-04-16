@@ -7,8 +7,8 @@ import { cn } from "@/lib/cn";
 import { DatePicker } from "@/components/common";
 import { createMailRecord } from "./actions";
 
-const inputClass = "w-full bg-surface-container-highest border-none rounded-lg px-4 py-3 text-sm text-on-surface placeholder:text-outline focus:ring-1 focus:ring-primary/50 focus:outline-none";
-const labelClass = "block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-2";
+const inputClass = "w-full bg-[var(--color-surface)] border-none rounded-[14px] px-4 py-3 text-sm text-[var(--color-text)] placeholder:text-outline focus:ring-1 focus:ring-primary/50 focus:outline-none";
+const labelClass = "block text-[10px] font-bold text-[var(--color-text-muted)] tracking-widest uppercase mb-2";
 
 export default function AddMailButton() {
   const router = useRouter();
@@ -46,18 +46,18 @@ export default function AddMailButton() {
 
   return (
     <>
-      <button onClick={() => setOpen(true)} className="flex items-center gap-2 bg-primary text-on-primary px-4 py-2.5 rounded-xl font-bold text-sm hover:bg-primary-dim transition-colors">
+      <button onClick={() => setOpen(true)} className="flex items-center gap-2 bg-primary text-on-primary px-4 py-2.5 rounded-[20px] font-bold text-sm hover:bg-primary-dim transition-colors">
         <IconPlus size={16} />
         우편물 등록
       </button>
 
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div className="absolute inset-0 bg-surface-container-lowest/80 backdrop-blur-sm" onClick={() => setOpen(false)} />
-          <div className="relative w-full max-w-md bg-surface-container rounded-2xl border border-outline-variant/15 shadow-2xl animate-slide-up overflow-visible">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-outline-variant/10">
-              <h2 className="text-lg font-bold text-on-surface">우편물 등록</h2>
-              <button onClick={() => setOpen(false)} className="p-1 text-on-surface-variant hover:text-on-surface transition-colors rounded-lg">
+          <div className="absolute inset-0 bg-[var(--color-surface)]est/80 backdrop-blur-sm" onClick={() => setOpen(false)} />
+          <div className="relative w-full max-w-md bg-[var(--color-surface)] rounded-[20px] border border-black/[0.04]/15 shadow-neu-strong animate-slide-up overflow-visible">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-black/[0.04]/10">
+              <h2 className="text-lg font-bold text-[var(--color-text)]">우편물 등록</h2>
+              <button onClick={() => setOpen(false)} className="p-1 text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors rounded-[14px]">
                 <IconX size={20} />
               </button>
             </div>
@@ -65,11 +65,11 @@ export default function AddMailButton() {
             {success ? (
               <div className="p-8 text-center">
                 <IconCircleCheck size={48} className="text-primary mx-auto mb-3" />
-                <p className="font-bold text-on-surface">등록되었습니다!</p>
+                <p className="font-bold text-[var(--color-text)]">등록되었습니다!</p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="p-6 space-y-4 overflow-visible">
-                {error && <div className="p-3 rounded-lg bg-error-container/20 border border-error/30 text-error text-xs font-medium">{error}</div>}
+                {error && <div className="p-3 rounded-[14px] bg-error-container/20 border border-error/30 text-error text-xs font-medium">{error}</div>}
 
                 <div>
                   <label className={labelClass}>발송일</label>
@@ -109,8 +109,8 @@ export default function AddMailButton() {
                 </div>
 
                 <div className="flex gap-3 pt-2">
-                  <button type="button" onClick={() => setOpen(false)} className="flex-1 py-3 bg-surface-container-high text-on-surface-variant font-bold rounded-lg text-sm">취소</button>
-                  <button type="submit" disabled={isPending} className={cn("flex-1 py-3 bg-primary text-on-primary font-bold rounded-lg text-sm", isPending && "opacity-60")}>
+                  <button type="button" onClick={() => setOpen(false)} className="flex-1 py-3 bg-[var(--color-surface)] text-[var(--color-text-muted)] font-bold rounded-[14px] text-sm">취소</button>
+                  <button type="submit" disabled={isPending} className={cn("flex-1 py-3 bg-primary text-on-primary font-bold rounded-[14px] text-sm", isPending && "opacity-60")}>
                     {isPending ? "등록 중..." : "등록"}
                   </button>
                 </div>

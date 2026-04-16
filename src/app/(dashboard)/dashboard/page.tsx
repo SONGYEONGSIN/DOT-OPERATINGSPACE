@@ -193,14 +193,14 @@ export default async function DashboardPage() {
       {/* ── KPI Cards ── */}
       <KpiGrid>
         <KpiCard
-          icon={<IconNetwork size={18} className="text-on-surface-variant" />}
+          icon={<IconNetwork size={18} className="text-[var(--color-text-muted)]" />}
           label="전체 서비스"
           value={allServices.length.toString()}
           suffix="건"
           change={`등록중 ${activeCount} · 완료 ${completedCount}`}
         />
         <KpiCard
-          icon={<IconListCheck size={18} className="text-on-surface-variant" />}
+          icon={<IconListCheck size={18} className="text-[var(--color-text-muted)]" />}
           label="프로젝트 작업"
           value={taskTotal.toString()}
           suffix="건"
@@ -208,7 +208,7 @@ export default async function DashboardPage() {
         />
         <KpiCard
           icon={
-            <IconArrowsExchange size={18} className="text-on-surface-variant" />
+            <IconArrowsExchange size={18} className="text-[var(--color-text-muted)]" />
           }
           label="인수인계"
           value={allHandoverLogs.length.toString()}
@@ -216,7 +216,7 @@ export default async function DashboardPage() {
           change="최근 기록"
         />
         <KpiCard
-          icon={<IconUsers size={18} className="text-on-surface-variant" />}
+          icon={<IconUsers size={18} className="text-[var(--color-text-muted)]" />}
           label="운영인력"
           value={allProfiles.length.toString()}
           suffix="명"
@@ -234,8 +234,8 @@ export default async function DashboardPage() {
           <div className="space-y-4">
             <div className="space-y-2">
               <div className="flex items-center justify-between text-xs">
-                <span className="text-on-surface-variant">등록중</span>
-                <span className="font-bold text-on-surface">
+                <span className="text-[var(--color-text-muted)]">등록중</span>
+                <span className="font-bold text-[var(--color-text)]">
                   {activeCount.toLocaleString()}건
                 </span>
               </div>
@@ -248,8 +248,8 @@ export default async function DashboardPage() {
             </div>
             <div className="space-y-2">
               <div className="flex items-center justify-between text-xs">
-                <span className="text-on-surface-variant">등록완료</span>
-                <span className="font-bold text-on-surface">
+                <span className="text-[var(--color-text-muted)]">등록완료</span>
+                <span className="font-bold text-[var(--color-text)]">
                   {completedCount.toLocaleString()}건
                 </span>
               </div>
@@ -262,8 +262,8 @@ export default async function DashboardPage() {
             </div>
             <div className="space-y-2">
               <div className="flex items-center justify-between text-xs">
-                <span className="text-on-surface-variant">등록예정</span>
-                <span className="font-bold text-on-surface">
+                <span className="text-[var(--color-text-muted)]">등록예정</span>
+                <span className="font-bold text-[var(--color-text)]">
                   {upcomingCount.toLocaleString()}건
                 </span>
               </div>
@@ -275,7 +275,7 @@ export default async function DashboardPage() {
               />
             </div>
           </div>
-          <div className="mt-4 pt-4 border-t border-outline-variant/10 text-center">
+          <div className="mt-4 pt-4 border-t border-black/[0.04]/10 text-center">
             <Link
               href="/operations/services"
               className="text-xs font-bold text-primary hover:underline"
@@ -313,31 +313,31 @@ export default async function DashboardPage() {
                 />
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-2xl font-black text-on-surface">
+                <span className="text-2xl font-black text-[var(--color-text)]">
                   {taskPct}%
                 </span>
-                <span className="text-[10px] text-on-surface-variant">
+                <span className="text-[10px] text-[var(--color-text-muted)]">
                   달성률
                 </span>
               </div>
             </div>
           </div>
-          <div className="flex items-center justify-center gap-6 text-[10px] text-on-surface-variant">
+          <div className="flex items-center justify-center gap-6 text-[10px] text-[var(--color-text-muted)]">
             <span>
               할 일{" "}
-              <strong className="text-on-surface">
+              <strong className="text-[var(--color-text)]">
                 {taskTotal - taskDone - taskInProgress}
               </strong>
             </span>
             <span>
               진행 중{" "}
-              <strong className="text-on-surface">{taskInProgress}</strong>
+              <strong className="text-[var(--color-text)]">{taskInProgress}</strong>
             </span>
             <span>
-              완료 <strong className="text-on-surface">{taskDone}</strong>
+              완료 <strong className="text-[var(--color-text)]">{taskDone}</strong>
             </span>
           </div>
-          <div className="mt-4 pt-4 border-t border-outline-variant/10 text-center">
+          <div className="mt-4 pt-4 border-t border-black/[0.04]/10 text-center">
             <Link
               href="/projects"
               className="text-xs font-bold text-primary hover:underline"
@@ -363,7 +363,7 @@ export default async function DashboardPage() {
               </StatusBadge>
             </div>
             {urgentDeadlines.length === 0 ? (
-              <p className="text-xs text-on-surface-variant py-6 text-center">
+              <p className="text-xs text-[var(--color-text-muted)] py-6 text-center">
                 7일 이내 마감 예정 서비스가 없습니다.
               </p>
             ) : (
@@ -375,11 +375,11 @@ export default async function DashboardPage() {
                   return (
                     <div
                       key={`${item.svc.id}-${item.type}-${idx}`}
-                      className="flex items-center justify-between p-3 rounded-lg bg-surface-container-low/50"
+                      className="flex items-center justify-between p-3 rounded-[14px] bg-[var(--color-surface)]/50"
                     >
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <span className="text-sm font-semibold text-on-surface truncate">
+                          <span className="text-sm font-semibold text-[var(--color-text)] truncate">
                             {item.svc.university_name}
                           </span>
                           <StatusBadge
@@ -390,7 +390,7 @@ export default async function DashboardPage() {
                             {item.type}
                           </StatusBadge>
                         </div>
-                        <p className="text-xs text-on-surface-variant mt-0.5 truncate">
+                        <p className="text-xs text-[var(--color-text-muted)] mt-0.5 truncate">
                           {item.svc.service_name} ·{" "}
                           {item.svc.operator ?? "미배정"}
                         </p>
@@ -417,8 +417,8 @@ export default async function DashboardPage() {
             {operatorStats.map((op) => (
               <div key={op.name} className="space-y-1.5">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-on-surface font-medium">{op.name}</span>
-                  <span className="font-bold text-on-surface-variant tabular-nums">
+                  <span className="text-[var(--color-text)] font-medium">{op.name}</span>
+                  <span className="font-bold text-[var(--color-text-muted)] tabular-nums">
                     {op.count}건
                   </span>
                 </div>
@@ -443,7 +443,7 @@ export default async function DashboardPage() {
           </h3>
           {allHandoverLogs.length === 0 ? (
             <Card className="p-6">
-              <p className="text-xs text-on-surface-variant text-center">
+              <p className="text-xs text-[var(--color-text-muted)] text-center">
                 인수인계 기록이 없습니다.
               </p>
             </Card>
@@ -454,26 +454,26 @@ export default async function DashboardPage() {
                 return (
                   <div
                     key={log.id}
-                    className="px-5 py-3.5 flex items-center gap-3 hover:bg-surface-container-high/50 transition-colors"
+                    className="px-5 py-3.5 flex items-center gap-3 hover:bg-[var(--color-surface)]/50 transition-colors"
                   >
                     <IconArrowsExchange
                       size={16}
                       className="text-primary shrink-0"
                     />
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-on-surface truncate">
+                      <p className="text-sm font-semibold text-[var(--color-text)] truncate">
                         {svc?.university_name ?? "서비스"} ·{" "}
                         {svc?.service_name ?? ""}
                       </p>
-                      <p className="text-[10px] text-on-surface-variant mt-0.5">
+                      <p className="text-[10px] text-[var(--color-text-muted)] mt-0.5">
                         {log.from_person ?? "미배정"} →{" "}
-                        <strong className="text-on-surface">
+                        <strong className="text-[var(--color-text)]">
                           {log.to_person}
                         </strong>{" "}
                         · {log.executed_by}
                       </p>
                     </div>
-                    <span className="text-[10px] text-on-surface-variant tabular-nums whitespace-nowrap">
+                    <span className="text-[10px] text-[var(--color-text-muted)] tabular-nums whitespace-nowrap">
                       {new Date(log.executed_at).toLocaleDateString("ko-KR")}
                     </span>
                   </div>
@@ -503,7 +503,7 @@ export default async function DashboardPage() {
           </h3>
           {allBackupRequests.length === 0 ? (
             <Card className="p-6">
-              <p className="text-xs text-on-surface-variant text-center">
+              <p className="text-xs text-[var(--color-text-muted)] text-center">
                 백업 요청이 없습니다.
               </p>
             </Card>
@@ -512,11 +512,11 @@ export default async function DashboardPage() {
               {allBackupRequests.slice(0, 5).map((req) => (
                 <div
                   key={req.id}
-                  className="px-5 py-3.5 flex items-center gap-3 hover:bg-surface-container-high/50 transition-colors"
+                  className="px-5 py-3.5 flex items-center gap-3 hover:bg-[var(--color-surface)]/50 transition-colors"
                 >
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-semibold text-on-surface">
+                      <span className="text-sm font-semibold text-[var(--color-text)]">
                         {req.operator_name}
                       </span>
                       <StatusBadge
@@ -527,7 +527,7 @@ export default async function DashboardPage() {
                         {req.status}
                       </StatusBadge>
                     </div>
-                    <p className="text-[10px] text-on-surface-variant mt-0.5">
+                    <p className="text-[10px] text-[var(--color-text-muted)] mt-0.5">
                       {req.leave_type} · {req.start_date} ~ {req.end_date}
                     </p>
                   </div>

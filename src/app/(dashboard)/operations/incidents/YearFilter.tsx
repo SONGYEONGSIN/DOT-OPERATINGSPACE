@@ -22,13 +22,13 @@ export default function YearFilter({ years }: YearFilterProps) {
   }
 
   return (
-    <div className="flex items-center gap-1 bg-surface-container-high rounded-xl p-1 w-fit">
+    <div className="flex items-center gap-1 bg-[var(--color-surface)] rounded-[20px] p-1 w-fit">
       <button
         type="button"
         onClick={() => handleChange("")}
         className={cn(
-          "px-3.5 py-1.5 rounded-lg text-xs font-bold tracking-wide transition-all",
-          !currentYear ? "bg-primary text-on-primary" : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container",
+          "px-3.5 py-1.5 rounded-[14px] text-xs font-bold tracking-wide transition-all",
+          !currentYear ? "bg-primary text-on-primary" : "text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-surface)]",
         )}
       >
         전체
@@ -39,8 +39,8 @@ export default function YearFilter({ years }: YearFilterProps) {
           type="button"
           onClick={() => handleChange(String(y))}
           className={cn(
-            "px-3.5 py-1.5 rounded-lg text-xs font-bold tracking-wide transition-all",
-            currentYear === String(y) ? "bg-primary text-on-primary" : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container",
+            "px-3.5 py-1.5 rounded-[14px] text-xs font-bold tracking-wide transition-all",
+            currentYear === String(y) ? "bg-primary text-on-primary" : "text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-surface)]",
           )}
         >
           {y}년

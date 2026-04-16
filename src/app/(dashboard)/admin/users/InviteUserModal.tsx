@@ -78,18 +78,18 @@ export default function InviteUserModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-surface-container-lowest/80 backdrop-blur-sm"
+        className="absolute inset-0 bg-[var(--color-surface)]est/80 backdrop-blur-sm"
         onClick={onClose}
       />
 
       {/* Modal */}
-      <div className="relative w-full max-w-md bg-surface-container rounded-2xl border border-outline-variant/15 shadow-2xl animate-slide-up">
+      <div className="relative w-full max-w-md bg-[var(--color-surface)] rounded-[20px] border border-black/[0.04]/15 shadow-neu-strong animate-slide-up">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-outline-variant/10">
-          <h2 className="text-lg font-bold text-on-surface">사용자 초대</h2>
+        <div className="flex items-center justify-between px-6 py-4 border-b border-black/[0.04]/10">
+          <h2 className="text-lg font-bold text-[var(--color-text)]">사용자 초대</h2>
           <button
             onClick={onClose}
-            className="p-1 text-on-surface-variant hover:text-on-surface transition-colors rounded-lg"
+            className="p-1 text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors rounded-[14px]"
           >
             <IconX size={20} />
           </button>
@@ -98,18 +98,18 @@ export default function InviteUserModal({
         {success ? (
           <div className="p-8 text-center">
             <IconCircleCheck size={48} className="text-primary mb-3" />
-            <p className="font-bold text-on-surface">등록 완료!</p>
+            <p className="font-bold text-[var(--color-text)]">등록 완료!</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="p-6 space-y-4">
             {error && (
-              <div className="p-3 rounded-lg bg-error-container/20 border border-error/30 text-error text-xs font-medium">
+              <div className="p-3 rounded-[14px] bg-error-container/20 border border-error/30 text-error text-xs font-medium">
                 {error}
               </div>
             )}
 
             <div>
-              <label className="block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-2">
+              <label className="block text-[10px] font-bold text-[var(--color-text-muted)] tracking-widest uppercase mb-2">
                 이름
               </label>
               <input
@@ -117,12 +117,12 @@ export default function InviteUserModal({
                 type="text"
                 placeholder="홍길동"
                 required
-                className="w-full bg-surface-container-highest border-none rounded-lg px-4 py-3 text-sm text-on-surface placeholder:text-outline focus:ring-1 focus:ring-primary/50 focus:outline-none transition-all"
+                className="w-full bg-[var(--color-surface)] border-none rounded-[14px] px-4 py-3 text-sm text-[var(--color-text)] placeholder:text-outline focus:ring-1 focus:ring-primary/50 focus:outline-none transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-2">
+              <label className="block text-[10px] font-bold text-[var(--color-text-muted)] tracking-widest uppercase mb-2">
                 이메일
               </label>
               <input
@@ -130,18 +130,18 @@ export default function InviteUserModal({
                 type="email"
                 placeholder="name@jinhakapply.com"
                 required
-                className="w-full bg-surface-container-highest border-none rounded-lg px-4 py-3 text-sm text-on-surface placeholder:text-outline focus:ring-1 focus:ring-primary/50 focus:outline-none transition-all"
+                className="w-full bg-[var(--color-surface)] border-none rounded-[14px] px-4 py-3 text-sm text-[var(--color-text)] placeholder:text-outline focus:ring-1 focus:ring-primary/50 focus:outline-none transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-2">
+              <label className="block text-[10px] font-bold text-[var(--color-text-muted)] tracking-widest uppercase mb-2">
                 역할
               </label>
               <select
                 name="role"
                 defaultValue="operator"
-                className="w-full bg-surface-container-highest border-none rounded-lg px-4 py-3 text-sm text-on-surface focus:ring-1 focus:ring-primary/50 focus:outline-none transition-all appearance-none"
+                className="w-full bg-[var(--color-surface)] border-none rounded-[14px] px-4 py-3 text-sm text-[var(--color-text)] focus:ring-1 focus:ring-primary/50 focus:outline-none transition-all appearance-none"
               >
                 {ROLES.map((r) => (
                   <option key={r.value} value={r.value}>
@@ -152,13 +152,13 @@ export default function InviteUserModal({
             </div>
 
             <div>
-              <label className="block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-2">
+              <label className="block text-[10px] font-bold text-[var(--color-text-muted)] tracking-widest uppercase mb-2">
                 팀
               </label>
               <select
                 name="team"
                 defaultValue="운영1팀"
-                className="w-full bg-surface-container-highest border-none rounded-lg px-4 py-3 text-sm text-on-surface focus:ring-1 focus:ring-primary/50 focus:outline-none transition-all appearance-none"
+                className="w-full bg-[var(--color-surface)] border-none rounded-[14px] px-4 py-3 text-sm text-[var(--color-text)] focus:ring-1 focus:ring-primary/50 focus:outline-none transition-all appearance-none"
               >
                 {TEAMS.map((t) => (
                   <option key={t} value={t}>
@@ -172,7 +172,7 @@ export default function InviteUserModal({
               <button
                 type="button"
                 onClick={onClose}
-                className="flex-1 py-3 bg-surface-container-high text-on-surface-variant font-bold rounded-lg active:scale-95 transition-transform text-sm"
+                className="flex-1 py-3 bg-[var(--color-surface)] text-[var(--color-text-muted)] font-bold rounded-[14px] active:scale-95 transition-transform text-sm"
               >
                 취소
               </button>
@@ -180,7 +180,7 @@ export default function InviteUserModal({
                 type="submit"
                 disabled={isPending}
                 className={cn(
-                  "flex-1 py-3 bg-primary text-on-primary font-bold rounded-lg active:scale-95 transition-transform text-sm glow-primary",
+                  "flex-1 py-3 bg-primary text-on-primary font-bold rounded-[14px] active:scale-95 transition-transform text-sm glow-primary",
                   isPending && "opacity-60 cursor-not-allowed",
                 )}
               >

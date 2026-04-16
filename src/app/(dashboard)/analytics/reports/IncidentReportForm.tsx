@@ -7,9 +7,9 @@ import { Card } from "@/components/common";
 import { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType, BorderStyle, Table, TableRow, TableCell, WidthType } from "docx";
 import { saveAs } from "file-saver";
 
-const inputClass = "w-full bg-surface-container-highest border-none rounded-lg px-4 py-3 text-sm text-on-surface placeholder:text-outline focus:ring-1 focus:ring-primary/50 focus:outline-none";
-const labelClass = "block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-2";
-const textareaClass = "w-full bg-surface-container-highest border-none rounded-lg px-4 py-3 text-sm text-on-surface placeholder:text-outline focus:ring-1 focus:ring-primary/50 focus:outline-none resize-none";
+const inputClass = "w-full bg-[var(--color-surface)] border-none rounded-[14px] px-4 py-3 text-sm text-[var(--color-text)] placeholder:text-outline focus:ring-1 focus:ring-primary/50 focus:outline-none";
+const labelClass = "block text-[10px] font-bold text-[var(--color-text-muted)] tracking-widest uppercase mb-2";
+const textareaClass = "w-full bg-[var(--color-surface)] border-none rounded-[14px] px-4 py-3 text-sm text-[var(--color-text)] placeholder:text-outline focus:ring-1 focus:ring-primary/50 focus:outline-none resize-none";
 
 export default function IncidentReportForm() {
   const [universityName, setUniversityName] = useState("");
@@ -71,7 +71,7 @@ export default function IncidentReportForm() {
 
   return (
     <Card className="p-6 space-y-5">
-      <h3 className="text-base font-bold text-on-surface">경위서 작성</h3>
+      <h3 className="text-base font-bold text-[var(--color-text)]">경위서 작성</h3>
 
       <div className="grid grid-cols-2 gap-4">
         <div>
@@ -110,7 +110,7 @@ export default function IncidentReportForm() {
       </div>
 
       <div className="flex justify-end gap-3 pt-2">
-        <button type="button" onClick={generateDocx} className="flex items-center gap-2 px-5 py-3 rounded-lg bg-primary text-on-primary text-sm font-bold hover:bg-primary/90 transition-colors">
+        <button type="button" onClick={generateDocx} className="flex items-center gap-2 px-5 py-3 rounded-[14px] bg-primary text-on-primary text-sm font-bold hover:bg-primary/90 transition-colors">
           <IconDownload size={16} />
           Word 다운로드
         </button>

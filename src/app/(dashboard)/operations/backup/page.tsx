@@ -80,20 +80,20 @@ export default async function BackupPage({ searchParams }: PageProps) {
     operator: (
       <div className="flex items-center gap-2">
         <UserAvatar name={r.operator_name} size="sm" />
-        <span className="text-sm font-semibold text-on-surface">{r.operator_name}</span>
+        <span className="text-sm font-semibold text-[var(--color-text)]">{r.operator_name}</span>
       </div>
     ),
-    team: <span className="text-xs text-on-surface-variant">{r.operator_team}</span>,
+    team: <span className="text-xs text-[var(--color-text-muted)]">{r.operator_team}</span>,
     leaveType: (
       <StatusBadge variant={getLeaveColor(r.leave_type) as any}>{r.leave_type}</StatusBadge>
     ),
     period: (
-      <span className="text-xs text-on-surface tabular-nums">{r.start_date} → {r.end_date}</span>
+      <span className="text-xs text-[var(--color-text)] tabular-nums">{r.start_date} → {r.end_date}</span>
     ),
     opsBackup: (
       <div className="flex items-center gap-2">
         <UserAvatar name={r.ops_backup_name} size="sm" />
-        <span className="text-xs text-on-surface">{r.ops_backup_name}</span>
+        <span className="text-xs text-[var(--color-text)]">{r.ops_backup_name}</span>
       </div>
     ),
     status: (
@@ -102,7 +102,7 @@ export default async function BackupPage({ searchParams }: PageProps) {
       </StatusBadge>
     ),
     notifiedAt: (
-      <span className="text-xs text-on-surface-variant tabular-nums">
+      <span className="text-xs text-[var(--color-text-muted)] tabular-nums">
         {r.last_notified_at
           ? new Date(r.last_notified_at).toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" })
           : "-"}
@@ -122,10 +122,10 @@ export default async function BackupPage({ searchParams }: PageProps) {
       <BackupPageTabs profiles={profiles}>
         {/* 백업 현황 콘텐츠 */}
         <KpiGrid>
-          <KpiCard icon={<IconCalendarEvent size={18} className="text-on-surface-variant" />} label="전체 요청" value={totalCount.toString()} suffix="건" />
-          <KpiCard icon={<IconClock size={18} className="text-on-surface-variant" />} label="진행 중" value={activeCount.toString()} suffix="건" />
-          <KpiCard icon={<IconCircleCheck size={18} className="text-on-surface-variant" />} label="작성 완료" value={completedCount.toString()} suffix="건" />
-          <KpiCard icon={<IconAlertTriangle size={18} className="text-on-surface-variant" />} label="작성 전" value={pendingCount.toString()} suffix="건" alert={pendingCount > 0} />
+          <KpiCard icon={<IconCalendarEvent size={18} className="text-[var(--color-text-muted)]" />} label="전체 요청" value={totalCount.toString()} suffix="건" />
+          <KpiCard icon={<IconClock size={18} className="text-[var(--color-text-muted)]" />} label="진행 중" value={activeCount.toString()} suffix="건" />
+          <KpiCard icon={<IconCircleCheck size={18} className="text-[var(--color-text-muted)]" />} label="작성 완료" value={completedCount.toString()} suffix="건" />
+          <KpiCard icon={<IconAlertTriangle size={18} className="text-[var(--color-text-muted)]" />} label="작성 전" value={pendingCount.toString()} suffix="건" alert={pendingCount > 0} />
         </KpiGrid>
 
         <Suspense>
@@ -144,7 +144,7 @@ export default async function BackupPage({ searchParams }: PageProps) {
         <TableSection totalCount={filtered.length}>
           <DataTable columns={columns} data={tableData} />
           {filtered.length === 0 && (
-            <div className="flex flex-col items-center justify-center py-16 text-on-surface-variant">
+            <div className="flex flex-col items-center justify-center py-16 text-[var(--color-text-muted)]">
               <IconCalendarEvent size={40} className="opacity-30 mb-2" />
               <p className="text-sm font-medium">백업 요청이 없습니다.</p>
             </div>

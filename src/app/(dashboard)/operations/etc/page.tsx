@@ -78,14 +78,14 @@ export default async function EtcPage({ searchParams }: PageProps) {
     ];
 
     const mailData = filtered.map((m, i) => ({
-      no: <span className="text-xs text-on-surface-variant tabular-nums">{m.no ?? i + 1}</span>,
-      sendDate: <span className="text-xs text-on-surface-variant tabular-nums">{m.sendDate ?? "-"}</span>,
-      recipient: <span className="text-sm text-on-surface">{m.recipient}</span>,
-      recipientPerson: <span className="text-xs text-on-surface-variant">{m.recipientPerson}</span>,
-      manager: <span className="text-xs text-on-surface">{m.manager}</span>,
-      checker: <span className="text-xs text-on-surface-variant">{m.checker ?? "-"}</span>,
-      trackingNumber: <span className="text-xs font-mono text-on-surface-variant">{m.trackingNumber ?? "-"}</span>,
-      remark: <span className="text-xs text-on-surface-variant">{m.remark ?? "-"}</span>,
+      no: <span className="text-xs text-[var(--color-text-muted)] tabular-nums">{m.no ?? i + 1}</span>,
+      sendDate: <span className="text-xs text-[var(--color-text-muted)] tabular-nums">{m.sendDate ?? "-"}</span>,
+      recipient: <span className="text-sm text-[var(--color-text)]">{m.recipient}</span>,
+      recipientPerson: <span className="text-xs text-[var(--color-text-muted)]">{m.recipientPerson}</span>,
+      manager: <span className="text-xs text-[var(--color-text)]">{m.manager}</span>,
+      checker: <span className="text-xs text-[var(--color-text-muted)]">{m.checker ?? "-"}</span>,
+      trackingNumber: <span className="text-xs font-mono text-[var(--color-text-muted)]">{m.trackingNumber ?? "-"}</span>,
+      remark: <span className="text-xs text-[var(--color-text-muted)]">{m.remark ?? "-"}</span>,
       action: <MailActionMenu sendDate={m.sendDate} recipient={m.recipient} recipientPerson={m.recipientPerson} manager={m.manager} checker={m.checker} trackingNumber={m.trackingNumber} remark={m.remark} />,
     }));
 
@@ -98,10 +98,10 @@ export default async function EtcPage({ searchParams }: PageProps) {
         />
 
         <KpiGrid>
-          <KpiCard icon={<IconFileText size={18} className="text-on-surface-variant" />} label="전체 공문" value={documents.length.toString()} suffix="건" change={`2026년 발신 ${sendCount} · 수신 ${recvCount}`} />
-          <KpiCard icon={<IconMailForward size={18} className="text-on-surface-variant" />} label="우편물" value={mailRecords.length.toString()} suffix="건" />
-          <KpiCard icon={<IconCalendarEvent size={18} className="text-on-surface-variant" />} label="공문 연도" value="2" suffix="개년" />
-          <KpiCard icon={<IconHash size={18} className="text-on-surface-variant" />} label="우편물 연도" value="1" suffix="개년" />
+          <KpiCard icon={<IconFileText size={18} className="text-[var(--color-text-muted)]" />} label="전체 공문" value={documents.length.toString()} suffix="건" change={`2026년 발신 ${sendCount} · 수신 ${recvCount}`} />
+          <KpiCard icon={<IconMailForward size={18} className="text-[var(--color-text-muted)]" />} label="우편물" value={mailRecords.length.toString()} suffix="건" />
+          <KpiCard icon={<IconCalendarEvent size={18} className="text-[var(--color-text-muted)]" />} label="공문 연도" value="2" suffix="개년" />
+          <KpiCard icon={<IconHash size={18} className="text-[var(--color-text-muted)]" />} label="우편물 연도" value="1" suffix="개년" />
         </KpiGrid>
 
         <Suspense><EtcTabs /></Suspense>
@@ -110,7 +110,7 @@ export default async function EtcPage({ searchParams }: PageProps) {
         <TableSection totalCount={filtered.length}>
           <DataTable columns={mailColumns} data={mailData} />
           {filtered.length === 0 && (
-            <div className="py-12 text-center text-on-surface-variant text-xs">해당 조건의 우편물이 없습니다.</div>
+            <div className="py-12 text-center text-[var(--color-text-muted)] text-xs">해당 조건의 우편물이 없습니다.</div>
           )}
         </TableSection>
       </div>
@@ -145,19 +145,19 @@ export default async function EtcPage({ searchParams }: PageProps) {
   ];
 
   const docData = filtered.map((doc) => ({
-    no: <span className="text-xs text-on-surface-variant tabular-nums">{doc.no ?? "-"}</span>,
-    docNumber: <span className="text-xs font-mono text-on-surface-variant">{doc.docNumber}</span>,
-    date: <span className="text-xs text-on-surface-variant tabular-nums">{doc.date ?? "-"}</span>,
-    sender: <span className="text-xs text-on-surface">{doc.sender}</span>,
-    title: <span className="text-sm text-on-surface">{doc.title}</span>,
+    no: <span className="text-xs text-[var(--color-text-muted)] tabular-nums">{doc.no ?? "-"}</span>,
+    docNumber: <span className="text-xs font-mono text-[var(--color-text-muted)]">{doc.docNumber}</span>,
+    date: <span className="text-xs text-[var(--color-text-muted)] tabular-nums">{doc.date ?? "-"}</span>,
+    sender: <span className="text-xs text-[var(--color-text)]">{doc.sender}</span>,
+    title: <span className="text-sm text-[var(--color-text)]">{doc.title}</span>,
     file: doc.fileLink ? (
       doc.fileLink.startsWith("http") || doc.fileLink.startsWith("../") ? (
         <a href={doc.fileLink.startsWith("http") ? doc.fileLink : `https://jinhaksa.sharepoint.com${doc.fileLink.replace(/^\.\.\/\.\.\/\.\.\/\.\.\/\.\./, "")}`} target="_blank" rel="noopener noreferrer" className="text-xs text-primary font-medium hover:underline">확인</a>
       ) : (
         <span className="text-xs text-primary font-medium">확인</span>
       )
-    ) : <span className="text-xs text-on-surface-variant">-</span>,
-    writer: <span className="text-xs text-on-surface-variant">{doc.writer ?? "-"}</span>,
+    ) : <span className="text-xs text-[var(--color-text-muted)]">-</span>,
+    writer: <span className="text-xs text-[var(--color-text-muted)]">{doc.writer ?? "-"}</span>,
     action: <DocActionMenu type={doc.type} docNumber={doc.docNumber} date={doc.date} sender={doc.sender} title={doc.title} fileLink={doc.fileLink} writer={doc.writer} receiver={doc.receiver} />,
   }));
 
@@ -170,10 +170,10 @@ export default async function EtcPage({ searchParams }: PageProps) {
       />
 
       <KpiGrid>
-        <KpiCard icon={<IconFileText size={18} className="text-on-surface-variant" />} label="전체 공문" value={documents.length.toString()} suffix="건" change={`2026년 발신 ${sendCount} · 수신 ${recvCount}`} />
-        <KpiCard icon={<IconMailForward size={18} className="text-on-surface-variant" />} label="우편물" value={mailRecords.length.toString()} suffix="건" />
-        <KpiCard icon={<IconCalendarEvent size={18} className="text-on-surface-variant" />} label="공문 연도" value="2" suffix="개년" />
-        <KpiCard icon={<IconHash size={18} className="text-on-surface-variant" />} label="우편물 연도" value="1" suffix="개년" />
+        <KpiCard icon={<IconFileText size={18} className="text-[var(--color-text-muted)]" />} label="전체 공문" value={documents.length.toString()} suffix="건" change={`2026년 발신 ${sendCount} · 수신 ${recvCount}`} />
+        <KpiCard icon={<IconMailForward size={18} className="text-[var(--color-text-muted)]" />} label="우편물" value={mailRecords.length.toString()} suffix="건" />
+        <KpiCard icon={<IconCalendarEvent size={18} className="text-[var(--color-text-muted)]" />} label="공문 연도" value="2" suffix="개년" />
+        <KpiCard icon={<IconHash size={18} className="text-[var(--color-text-muted)]" />} label="우편물 연도" value="1" suffix="개년" />
       </KpiGrid>
 
       <Suspense><EtcTabs /></Suspense>
@@ -182,7 +182,7 @@ export default async function EtcPage({ searchParams }: PageProps) {
       <TableSection totalCount={filtered.length}>
         <DataTable columns={docColumns} data={docData} />
         {filtered.length === 0 && (
-          <div className="py-12 text-center text-on-surface-variant text-xs">해당 조건의 공문이 없습니다.</div>
+          <div className="py-12 text-center text-[var(--color-text-muted)] text-xs">해당 조건의 공문이 없습니다.</div>
         )}
       </TableSection>
     </div>

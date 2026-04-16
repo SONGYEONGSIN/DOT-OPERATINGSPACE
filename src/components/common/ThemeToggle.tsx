@@ -16,7 +16,7 @@ export default function ThemeToggle({ className }: { className?: string }) {
     <button
       onClick={toggle}
       className={cn(
-        "p-2 text-on-surface-variant hover:bg-surface-bright hover:text-primary transition-all duration-200 rounded-lg active:scale-95",
+        "p-2 text-[var(--color-text-muted)] hover:bg-surface-bright hover:text-primary transition-all duration-200 rounded-[14px] active:scale-95",
         className,
       )}
       aria-label={theme === "dark" ? "라이트 모드로 전환" : "다크 모드로 전환"}

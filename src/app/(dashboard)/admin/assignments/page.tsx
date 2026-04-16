@@ -388,7 +388,7 @@ export default async function AssignmentsPage({ searchParams }: PageProps) {
           breadcrumb={["관리자", "대학배정"]}
         />
         <Card className="p-16 text-center">
-          <p className="text-sm text-on-surface-variant">
+          <p className="text-sm text-[var(--color-text-muted)]">
             배정 데이터를 불러올 수 없습니다.
           </p>
         </Card>
@@ -481,28 +481,28 @@ export default async function AssignmentsPage({ searchParams }: PageProps) {
 
       <KpiGrid>
         <KpiCard
-          icon={<IconSchool size={18} className="text-on-surface-variant" />}
+          icon={<IconSchool size={18} className="text-[var(--color-text-muted)]" />}
           label="총 대학"
           value={totalUnivs.toString()}
           suffix="개"
           change={`4년제 ${assignments.filter((a) => a.category === "4년제").length} / 전문대 ${assignments.filter((a) => a.category === "전문대학").length}`}
         />
         <KpiCard
-          icon={<IconUsers size={18} className="text-on-surface-variant" />}
+          icon={<IconUsers size={18} className="text-[var(--color-text-muted)]" />}
           label="운영자"
           value={ALL_OPERATORS.length.toString()}
           suffix="명"
           change="6개 그룹"
         />
         <KpiCard
-          icon={<IconUserOff size={18} className="text-on-surface-variant" />}
+          icon={<IconUserOff size={18} className="text-[var(--color-text-muted)]" />}
           label="미배정"
           value={unassignedCount.toString()}
           suffix="건"
           alert={unassignedCount > 0}
         />
         <KpiCard
-          icon={<IconDatabase size={18} className="text-on-surface-variant" />}
+          icon={<IconDatabase size={18} className="text-[var(--color-text-muted)]" />}
           label="기초자료"
           value={(baseData?.items.length ?? 0).toString()}
           suffix="건"
@@ -511,8 +511,8 @@ export default async function AssignmentsPage({ searchParams }: PageProps) {
 
       <section>
         <div className="mb-4">
-          <h3 className="text-sm font-bold text-on-surface">배정 Phase</h3>
-          <p className="text-xs text-on-surface-variant mt-1">
+          <h3 className="text-sm font-bold text-[var(--color-text)]">배정 Phase</h3>
+          <p className="text-xs text-[var(--color-text-muted)] mt-1">
             Phase를 선택하여 배정 위자드를 시작합니다.
           </p>
         </div>

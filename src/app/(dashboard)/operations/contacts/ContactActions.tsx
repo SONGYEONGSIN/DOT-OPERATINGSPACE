@@ -94,7 +94,7 @@ export default function ContactActions() {
         type="button"
         onClick={() => fileRef.current?.click()}
         disabled={isPending}
-        className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-surface-container-high text-on-surface-variant text-sm font-semibold hover:bg-surface-container-highest transition-colors disabled:opacity-50"
+        className="flex items-center gap-2 px-4 py-2.5 rounded-[14px] bg-[var(--color-surface)] text-[var(--color-text-muted)] text-sm font-semibold hover:bg-[var(--color-surface)] transition-colors disabled:opacity-50"
       >
         <IconUpload size={16} />
         엑셀 업로드
@@ -102,7 +102,7 @@ export default function ContactActions() {
       <button
         type="button"
         onClick={() => { setShowAdd(true); setError(""); setSuccess(""); }}
-        className="flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-bold text-on-primary transition-all hover:brightness-110 active:scale-95"
+        className="flex items-center gap-2 rounded-[20px] bg-primary px-5 py-2.5 text-sm font-bold text-on-primary transition-all hover:brightness-110 active:scale-95"
       >
         <IconPlus size={16} />
         연락처 추가
@@ -110,7 +110,7 @@ export default function ContactActions() {
 
       {/* 성공 토스트 */}
       {success && !showAdd && (
-        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-5 py-3 rounded-xl bg-primary text-on-primary text-sm font-bold shadow-xl animate-slide-up">
+        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-5 py-3 rounded-[20px] bg-primary text-on-primary text-sm font-bold shadow-xl animate-slide-up">
           <IconCircleCheck size={18} />
           {success}
         </div>
@@ -118,7 +118,7 @@ export default function ContactActions() {
 
       {/* 에러 토스트 */}
       {error && !showAdd && (
-        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-5 py-3 rounded-xl bg-error text-white text-sm font-bold shadow-xl animate-slide-up">
+        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-5 py-3 rounded-[20px] bg-error text-white text-sm font-bold shadow-xl animate-slide-up">
           {error}
         </div>
       )}
@@ -126,12 +126,12 @@ export default function ContactActions() {
       {/* 연락처 추가 모달 */}
       {showAdd && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div className="absolute inset-0 bg-surface-container-lowest/80 backdrop-blur-sm" onClick={() => setShowAdd(false)} />
+          <div className="absolute inset-0 bg-[var(--color-surface)]est/80 backdrop-blur-sm" onClick={() => setShowAdd(false)} />
 
-          <div className="relative w-full max-w-lg bg-surface-container rounded-2xl border border-outline-variant/15 shadow-2xl animate-slide-up">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-outline-variant/10">
-              <h2 className="text-lg font-bold text-on-surface">연락처 추가</h2>
-              <button onClick={() => setShowAdd(false)} className="p-1 text-on-surface-variant hover:text-on-surface transition-colors rounded-lg">
+          <div className="relative w-full max-w-lg bg-[var(--color-surface)] rounded-[20px] border border-black/[0.04]/15 shadow-neu-strong animate-slide-up">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-black/[0.04]/10">
+              <h2 className="text-lg font-bold text-[var(--color-text)]">연락처 추가</h2>
+              <button onClick={() => setShowAdd(false)} className="p-1 text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors rounded-[14px]">
                 <IconX size={20} />
               </button>
             </div>
@@ -139,65 +139,65 @@ export default function ContactActions() {
             {success ? (
               <div className="p-8 text-center">
                 <IconCircleCheck size={48} className="text-primary mx-auto mb-3" />
-                <p className="font-bold text-on-surface">{success}</p>
+                <p className="font-bold text-[var(--color-text)]">{success}</p>
               </div>
             ) : (
               <form onSubmit={handleAddSubmit} className="p-6 space-y-4">
                 {error && (
-                  <div className="p-3 rounded-lg bg-error-container/20 border border-error/30 text-error text-xs font-medium">{error}</div>
+                  <div className="p-3 rounded-[14px] bg-error-container/20 border border-error/30 text-error text-xs font-medium">{error}</div>
                 )}
 
                 <div>
-                  <label className="block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-2">대학명</label>
+                  <label className="block text-[10px] font-bold text-[var(--color-text-muted)] tracking-widest uppercase mb-2">대학명</label>
                   <input name="university" type="text" required placeholder="서울대학교"
-                    className="w-full bg-surface-container-highest border-none rounded-lg px-4 py-3 text-sm text-on-surface placeholder:text-outline focus:ring-1 focus:ring-primary/50 focus:outline-none" />
+                    className="w-full bg-[var(--color-surface)] border-none rounded-[14px] px-4 py-3 text-sm text-[var(--color-text)] placeholder:text-outline focus:ring-1 focus:ring-primary/50 focus:outline-none" />
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-2">구분</label>
+                  <label className="block text-[10px] font-bold text-[var(--color-text-muted)] tracking-widest uppercase mb-2">구분</label>
                   <select name="category" defaultValue="PIMS"
-                    className="w-full bg-surface-container-highest border-none rounded-lg px-4 py-3 text-sm text-on-surface focus:ring-1 focus:ring-primary/50 focus:outline-none appearance-none">
+                    className="w-full bg-[var(--color-surface)] border-none rounded-[14px] px-4 py-3 text-sm text-[var(--color-text)] focus:ring-1 focus:ring-primary/50 focus:outline-none appearance-none">
                     {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-2">부서</label>
+                  <label className="block text-[10px] font-bold text-[var(--color-text-muted)] tracking-widest uppercase mb-2">부서</label>
                   <input name="department" type="text" placeholder="입학처"
-                    className="w-full bg-surface-container-highest border-none rounded-lg px-4 py-3 text-sm text-on-surface placeholder:text-outline focus:ring-1 focus:ring-primary/50 focus:outline-none" />
+                    className="w-full bg-[var(--color-surface)] border-none rounded-[14px] px-4 py-3 text-sm text-[var(--color-text)] placeholder:text-outline focus:ring-1 focus:ring-primary/50 focus:outline-none" />
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-2">직급</label>
+                  <label className="block text-[10px] font-bold text-[var(--color-text-muted)] tracking-widest uppercase mb-2">직급</label>
                   <input name="role" type="text" placeholder="팀장"
-                    className="w-full bg-surface-container-highest border-none rounded-lg px-4 py-3 text-sm text-on-surface placeholder:text-outline focus:ring-1 focus:ring-primary/50 focus:outline-none" />
+                    className="w-full bg-[var(--color-surface)] border-none rounded-[14px] px-4 py-3 text-sm text-[var(--color-text)] placeholder:text-outline focus:ring-1 focus:ring-primary/50 focus:outline-none" />
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-2">담당자명</label>
+                  <label className="block text-[10px] font-bold text-[var(--color-text-muted)] tracking-widest uppercase mb-2">담당자명</label>
                   <input name="person" type="text" required placeholder="홍길동"
-                    className="w-full bg-surface-container-highest border-none rounded-lg px-4 py-3 text-sm text-on-surface placeholder:text-outline focus:ring-1 focus:ring-primary/50 focus:outline-none" />
+                    className="w-full bg-[var(--color-surface)] border-none rounded-[14px] px-4 py-3 text-sm text-[var(--color-text)] placeholder:text-outline focus:ring-1 focus:ring-primary/50 focus:outline-none" />
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-2">연락처</label>
+                  <label className="block text-[10px] font-bold text-[var(--color-text-muted)] tracking-widest uppercase mb-2">연락처</label>
                   <input name="phone" type="tel" placeholder="02-000-0000"
-                    className="w-full bg-surface-container-highest border-none rounded-lg px-4 py-3 text-sm text-on-surface placeholder:text-outline focus:ring-1 focus:ring-primary/50 focus:outline-none" />
+                    className="w-full bg-[var(--color-surface)] border-none rounded-[14px] px-4 py-3 text-sm text-[var(--color-text)] placeholder:text-outline focus:ring-1 focus:ring-primary/50 focus:outline-none" />
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-2">이메일</label>
+                  <label className="block text-[10px] font-bold text-[var(--color-text-muted)] tracking-widest uppercase mb-2">이메일</label>
                   <input name="email" type="email" placeholder="name@university.ac.kr"
-                    className="w-full bg-surface-container-highest border-none rounded-lg px-4 py-3 text-sm text-on-surface placeholder:text-outline focus:ring-1 focus:ring-primary/50 focus:outline-none" />
+                    className="w-full bg-[var(--color-surface)] border-none rounded-[14px] px-4 py-3 text-sm text-[var(--color-text)] placeholder:text-outline focus:ring-1 focus:ring-primary/50 focus:outline-none" />
                 </div>
 
                 <div className="flex gap-3 pt-2">
                   <button type="button" onClick={() => setShowAdd(false)}
-                    className="flex-1 py-3 bg-surface-container-high text-on-surface-variant font-bold rounded-lg active:scale-95 transition-transform text-sm">
+                    className="flex-1 py-3 bg-[var(--color-surface)] text-[var(--color-text-muted)] font-bold rounded-[14px] active:scale-95 transition-transform text-sm">
                     취소
                   </button>
                   <button type="submit" disabled={isPending}
-                    className={cn("flex-1 py-3 bg-primary text-on-primary font-bold rounded-lg active:scale-95 transition-transform text-sm", isPending && "opacity-60 cursor-not-allowed")}>
+                    className={cn("flex-1 py-3 bg-primary text-on-primary font-bold rounded-[14px] active:scale-95 transition-transform text-sm", isPending && "opacity-60 cursor-not-allowed")}>
                     {isPending ? "등록 중..." : "등록"}
                   </button>
                 </div>

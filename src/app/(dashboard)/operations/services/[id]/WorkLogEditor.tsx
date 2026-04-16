@@ -37,10 +37,10 @@ import { saveWorkLog, deleteWorkLog } from "./actions";
 const TiptapEditor = dynamic(() => import("./TiptapEditor"), {
   ssr: false,
   loading: () => (
-    <div className="rounded-lg border border-outline-variant/15 bg-surface-container-highest min-h-[200px] flex items-center justify-center">
+    <div className="rounded-[14px] border border-black/[0.04]/15 bg-[var(--color-surface)] min-h-[200px] flex items-center justify-center">
       <IconLoader2
         size={16}
-        className="text-on-surface-variant/30 animate-spin"
+        className="text-[var(--color-text-muted)]/30 animate-spin"
       />
     </div>
   ),
@@ -308,12 +308,12 @@ function ProgressRing({ filled, total }: { filled: number; total: number }) {
         <span
           className={cn(
             "text-2xl font-black tabular-nums leading-none",
-            done ? "text-green-400" : "text-on-surface",
+            done ? "text-green-400" : "text-[var(--color-text)]",
           )}
         >
           {filled}
         </span>
-        <span className="text-[10px] font-bold text-on-surface-variant mt-0.5">
+        <span className="text-[10px] font-bold text-[var(--color-text-muted)] mt-0.5">
           / {total}
         </span>
       </div>
@@ -348,12 +348,12 @@ function QuickJump({
             type="button"
             onClick={() => onJump(cat.key)}
             className={cn(
-              "shrink-0 flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-bold transition-all",
+              "shrink-0 flex items-center gap-1.5 px-2.5 py-1.5 rounded-[14px] text-[11px] font-bold transition-all",
               active
-                ? "bg-primary text-on-primary shadow-sm scale-[1.03]"
+                ? "bg-primary text-on-primary shadow-neu-soft scale-[1.03]"
                 : filled
                   ? "bg-primary/10 text-primary hover:bg-primary/15"
-                  : "bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest",
+                  : "bg-[var(--color-surface)] text-[var(--color-text-muted)] hover:bg-[var(--color-surface)]",
             )}
           >
             {filled ? (
@@ -416,12 +416,12 @@ function CategoryCard({
     <div
       id={`cat-${cat.key}`}
       className={cn(
-        "rounded-xl border transition-all duration-300",
+        "rounded-[20px] border transition-all duration-300",
         isExpanded
-          ? "border-primary/30 bg-surface-container shadow-lg shadow-primary/5"
+          ? "border-primary/30 bg-[var(--color-surface)] shadow-neu-strong shadow-primary/5"
           : has
-            ? "border-outline-variant/15 bg-surface-container hover:border-primary/20 hover:shadow-md"
-            : "border-outline-variant/10 bg-surface-container-low/50 hover:border-outline-variant/20 hover:bg-surface-container",
+            ? "border-black/[0.04]/15 bg-[var(--color-surface)] hover:border-primary/20 hover:shadow-neu-soft"
+            : "border-black/[0.04]/10 bg-[var(--color-surface)]/50 hover:border-black/[0.04]/20 hover:bg-[var(--color-surface)]",
       )}
     >
       {/* ── 헤더 (항상 표시) ── */}
@@ -433,13 +433,13 @@ function CategoryCard({
         {/* 상태 아이콘 */}
         <div
           className={cn(
-            "w-9 h-9 rounded-lg flex items-center justify-center shrink-0 transition-colors",
-            has ? "bg-primary/15" : "bg-surface-container-highest",
+            "w-9 h-9 rounded-[14px] flex items-center justify-center shrink-0 transition-colors",
+            has ? "bg-primary/15" : "bg-[var(--color-surface)]",
           )}
         >
           <CatIcon
             size={17}
-            className={cn(has ? "text-primary" : "text-on-surface-variant/50")}
+            className={cn(has ? "text-primary" : "text-[var(--color-text-muted)]/50")}
           />
         </div>
 
@@ -449,7 +449,7 @@ function CategoryCard({
             <span
               className={cn(
                 "text-sm font-bold",
-                has ? "text-on-surface" : "text-on-surface-variant",
+                has ? "text-[var(--color-text)]" : "text-[var(--color-text-muted)]",
               )}
             >
               {cat.label}
@@ -461,12 +461,12 @@ function CategoryCard({
             )}
           </div>
           {has && !isExpanded && (
-            <p className="text-xs text-on-surface-variant/70 mt-0.5 truncate">
+            <p className="text-xs text-[var(--color-text-muted)]/70 mt-0.5 truncate">
               {preview(log.content)}
             </p>
           )}
           {!has && !isExpanded && (
-            <p className="text-[11px] text-on-surface-variant/40 mt-0.5 italic">
+            <p className="text-[11px] text-[var(--color-text-muted)]/40 mt-0.5 italic">
               미작성
             </p>
           )}
@@ -475,14 +475,14 @@ function CategoryCard({
         {/* 타임스탬프 + 화살표 */}
         <div className="flex items-center gap-3 shrink-0">
           {has && (
-            <span className="text-[10px] text-on-surface-variant/50 tabular-nums hidden sm:block">
+            <span className="text-[10px] text-[var(--color-text-muted)]/50 tabular-nums hidden sm:block">
               {fmt(log.updated_at)}
             </span>
           )}
           <IconChevronDown
             size={16}
             className={cn(
-              "text-on-surface-variant/40 transition-transform duration-300",
+              "text-[var(--color-text-muted)]/40 transition-transform duration-300",
               isExpanded && "rotate-180",
             )}
           />
@@ -503,7 +503,7 @@ function CategoryCard({
             <div className="h-px bg-outline-variant/10" />
 
             {error && (
-              <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-error/10 text-error text-xs font-medium">
+              <div className="flex items-center gap-2 px-3 py-2 rounded-[14px] bg-error/10 text-error text-xs font-medium">
                 <IconAlertCircle size={16} /> {error}
               </div>
             )}
@@ -524,7 +524,7 @@ function CategoryCard({
                       <button
                         type="button"
                         onClick={onUseTemplate}
-                        className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold text-tertiary bg-tertiary/10 hover:bg-tertiary/15 transition-colors"
+                        className="flex items-center gap-1.5 px-3 py-2 rounded-[14px] text-xs font-bold text-tertiary bg-tertiary/10 hover:bg-tertiary/15 transition-colors"
                       >
                         <IconSparkles size={14} />
                         템플릿 채우기
@@ -536,7 +536,7 @@ function CategoryCard({
                       type="button"
                       onClick={onCancel}
                       disabled={isPending}
-                      className="px-4 py-2 rounded-lg bg-surface-container-high text-on-surface-variant text-xs font-bold hover:bg-surface-container-highest transition-colors disabled:opacity-50"
+                      className="px-4 py-2 rounded-[14px] bg-[var(--color-surface)] text-[var(--color-text-muted)] text-xs font-bold hover:bg-[var(--color-surface)] transition-colors disabled:opacity-50"
                     >
                       취소
                     </button>
@@ -544,7 +544,7 @@ function CategoryCard({
                       type="button"
                       onClick={onSave}
                       disabled={isPending}
-                      className="flex items-center gap-1.5 px-5 py-2 rounded-lg bg-primary text-on-primary text-xs font-bold hover:bg-primary/90 transition-colors disabled:opacity-50"
+                      className="flex items-center gap-1.5 px-5 py-2 rounded-[14px] bg-primary text-on-primary text-xs font-bold hover:bg-primary/90 transition-colors disabled:opacity-50"
                     >
                       {isPending ? (
                         <IconLoader2 size={14} className="animate-spin" />
@@ -560,7 +560,7 @@ function CategoryCard({
               /* ── 읽기 모드 ── */
               <div className="space-y-3">
                 <div
-                  className="tiptap rounded-xl bg-surface-container-highest/30 border border-outline-variant/10 p-5 text-sm text-on-surface leading-relaxed"
+                  className="tiptap rounded-[20px] bg-[var(--color-surface)]/30 border border-black/[0.04]/10 p-5 text-sm text-[var(--color-text)] leading-relaxed"
                   dangerouslySetInnerHTML={{
                     __html: log.content.startsWith("<")
                       ? log.content
@@ -568,7 +568,7 @@ function CategoryCard({
                   }}
                 />
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4 text-xs text-on-surface-variant">
+                  <div className="flex items-center gap-4 text-xs text-[var(--color-text-muted)]">
                     {log.author && (
                       <span className="flex items-center gap-1.5">
                         <IconUser size={13} /> {log.author}
@@ -582,7 +582,7 @@ function CategoryCard({
                     <button
                       type="button"
                       onClick={onEdit}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container-high text-on-surface-variant text-xs font-bold hover:bg-surface-container-highest transition-colors"
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-[14px] bg-[var(--color-surface)] text-[var(--color-text-muted)] text-xs font-bold hover:bg-[var(--color-surface)] transition-colors"
                     >
                       <IconEdit size={14} /> 수정
                     </button>
@@ -590,7 +590,7 @@ function CategoryCard({
                       type="button"
                       onClick={onDelete}
                       disabled={isPending}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-error hover:bg-error/10 transition-colors disabled:opacity-50"
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-[14px] text-xs font-semibold text-error hover:bg-error/10 transition-colors disabled:opacity-50"
                     >
                       <IconTrash size={14} /> 삭제
                     </button>
@@ -601,12 +601,12 @@ function CategoryCard({
               /* ── 빈 상태 ── */
               <div className="space-y-4">
                 {tmpl && (
-                  <div className="rounded-xl border border-dashed border-outline-variant/20 bg-surface-container-highest/20 p-4">
-                    <p className="text-[10px] font-bold text-on-surface-variant/50 uppercase tracking-widest mb-2.5 flex items-center gap-1.5">
+                  <div className="rounded-[20px] border border-dashed border-black/[0.04]/20 bg-[var(--color-surface)]/20 p-4">
+                    <p className="text-[10px] font-bold text-[var(--color-text-muted)]/50 uppercase tracking-widest mb-2.5 flex items-center gap-1.5">
                       <IconSparkles size={12} /> 빠른 시작 템플릿
                     </p>
                     <div
-                      className="tiptap text-xs text-on-surface-variant/60 leading-relaxed [&_ul]:ml-4 [&_li]:mb-0.5"
+                      className="tiptap text-xs text-[var(--color-text-muted)]/60 leading-relaxed [&_ul]:ml-4 [&_li]:mb-0.5"
                       dangerouslySetInnerHTML={{ __html: tmpl }}
                     />
                   </div>
@@ -616,7 +616,7 @@ function CategoryCard({
                     <button
                       type="button"
                       onClick={onEditWithTemplate}
-                      className="flex items-center gap-1.5 px-4 py-2.5 rounded-lg bg-primary/10 text-primary text-xs font-bold hover:bg-primary/15 transition-colors"
+                      className="flex items-center gap-1.5 px-4 py-2.5 rounded-[14px] bg-primary/10 text-primary text-xs font-bold hover:bg-primary/15 transition-colors"
                     >
                       <IconSparkles size={14} />
                       템플릿으로 시작
@@ -625,7 +625,7 @@ function CategoryCard({
                   <button
                     type="button"
                     onClick={onEdit}
-                    className="flex items-center gap-1.5 px-4 py-2.5 rounded-lg bg-surface-container-high text-on-surface-variant text-xs font-bold hover:bg-surface-container-highest transition-colors"
+                    className="flex items-center gap-1.5 px-4 py-2.5 rounded-[14px] bg-[var(--color-surface)] text-[var(--color-text-muted)] text-xs font-bold hover:bg-[var(--color-surface)] transition-colors"
                   >
                     <IconWriting size={14} />
                     직접 작성
@@ -764,10 +764,10 @@ export default function WorkLogEditor({
       {/* ── 헤더: 진행률 오버뷰 ── */}
       <div className="flex items-center justify-between gap-6">
         <div className="space-y-1.5">
-          <h2 className="text-lg font-black text-on-surface tracking-tight">
+          <h2 className="text-lg font-black text-[var(--color-text)] tracking-tight">
             작업이력
           </h2>
-          <p className="text-xs text-on-surface-variant leading-relaxed">
+          <p className="text-xs text-[var(--color-text-muted)] leading-relaxed">
             {filledCount === CATEGORIES.length ? (
               <span className="text-green-400 font-bold">
                 모든 항목이 작성되었습니다!
@@ -791,7 +791,7 @@ export default function WorkLogEditor({
               return (
                 <div key={g.key} className="flex items-center gap-1.5">
                   <div className={cn("w-1.5 h-1.5 rounded-full", g.accent)} />
-                  <span className="text-[10px] text-on-surface-variant">
+                  <span className="text-[10px] text-[var(--color-text-muted)]">
                     {g.label}{" "}
                     <span className="font-bold tabular-nums">
                       {done}/{cats.length}
@@ -806,7 +806,7 @@ export default function WorkLogEditor({
       </div>
 
       {/* ── 퀵 점프 (sticky) ── */}
-      <div className="sticky top-0 z-10 -mx-1 px-1 py-2 bg-surface/80 backdrop-blur-sm rounded-xl">
+      <div className="sticky top-0 z-10 -mx-1 px-1 py-2 bg-surface/80 backdrop-blur-sm rounded-[20px]">
         <QuickJump
           logMap={logMap}
           activeKey={expandedKey}
@@ -825,10 +825,10 @@ export default function WorkLogEditor({
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2">
                 <div className={cn("w-1 h-5 rounded-full", group.accent)} />
-                <span className="text-xs font-black text-on-surface-variant tracking-widest uppercase">
+                <span className="text-xs font-black text-[var(--color-text-muted)] tracking-widest uppercase">
                   {group.label}
                 </span>
-                <span className="text-[10px] text-on-surface-variant/50 tabular-nums font-bold">
+                <span className="text-[10px] text-[var(--color-text-muted)]/50 tabular-nums font-bold">
                   {groupFilled}/{groupCats.length}
                 </span>
               </div>
@@ -866,7 +866,7 @@ export default function WorkLogEditor({
       {/* ── 저장 완료 토스트 ── */}
       {savedKey && (
         <div
-          className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-5 py-3 rounded-xl bg-primary text-on-primary text-xs font-bold shadow-2xl"
+          className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-5 py-3 rounded-[20px] bg-primary text-on-primary text-xs font-bold shadow-neu-strong"
           style={{ animation: "slideUp .3s ease-out" }}
         >
           <IconCheck size={16} />

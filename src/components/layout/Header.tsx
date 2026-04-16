@@ -12,7 +12,7 @@ export default function Header() {
       className={cn(
         "fixed top-0 left-64 right-0 z-30 h-16",
         "bg-surface/80 backdrop-blur-xl",
-        "border-b border-outline-variant/15",
+        "border-b border-black/[0.04]/15",
         "shadow-glow-strong",
       )}
     >
@@ -22,11 +22,11 @@ export default function Header() {
 
         {/* Search (가운데) */}
         <div className="relative w-full max-w-md">
-          <IconSearch size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" />
+          <IconSearch size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]" />
           <input
             type="text"
             placeholder="시스템 전체 검색..."
-            className="search-input w-full pl-10 pr-4 py-2 rounded-lg text-sm text-on-surface focus:outline-none transition-all duration-200"
+            className="search-input w-full pl-10 pr-4 py-2 rounded-[14px] text-sm text-[var(--color-text)] focus:outline-none transition-all duration-200"
           />
         </div>
 

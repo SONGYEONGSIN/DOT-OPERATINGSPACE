@@ -32,7 +32,7 @@ export default function EtcTabs() {
 
   return (
     <div className="flex items-center justify-between">
-      <div className="flex items-center gap-1 bg-surface-container-high rounded-xl p-1">
+      <div className="flex items-center gap-1 bg-[var(--color-surface)] rounded-[20px] p-1">
         {tabs.map((t) => {
           const Icon = t.icon;
           return (
@@ -41,10 +41,10 @@ export default function EtcTabs() {
               type="button"
               onClick={() => switchTab(t.key)}
               className={cn(
-                "flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold tracking-wide transition-all",
+                "flex items-center gap-1.5 px-4 py-2 rounded-[14px] text-xs font-bold tracking-wide transition-all",
                 currentTab === t.key
                   ? "bg-primary text-on-primary"
-                  : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container",
+                  : "text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-surface)]",
               )}
             >
               <Icon size={14} />

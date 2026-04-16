@@ -22,7 +22,7 @@ export function SubmitButton({
       type="submit"
       disabled={pending}
       className={cn(
-        "w-full py-4 bg-primary text-on-primary font-black rounded-lg",
+        "w-full py-4 bg-primary text-on-primary font-black rounded-[14px]",
         "active:scale-95 transition-all glow-primary hover:brightness-110",
         pending && "opacity-60 cursor-not-allowed",
         className,

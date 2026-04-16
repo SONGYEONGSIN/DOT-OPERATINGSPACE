@@ -12,7 +12,7 @@ export default function AddScheduleButton() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-bold text-on-primary transition-all hover:brightness-110 active:scale-95"
+        className="flex items-center gap-2 rounded-[20px] bg-primary px-5 py-2.5 text-sm font-bold text-on-primary transition-all hover:brightness-110 active:scale-95"
       >
         <IconPlus size={16} />
         일정 추가

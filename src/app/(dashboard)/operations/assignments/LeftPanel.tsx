@@ -86,17 +86,17 @@ export default function LeftPanel({
   return (
     <>
       {/* Top section: toggle + search */}
-      <div className="p-3 space-y-2 border-b border-outline-variant/10">
+      <div className="p-3 space-y-2 border-b border-black/[0.04]/10">
         {/* Toggle button bar */}
-        <div className="flex bg-surface-container-highest rounded-lg p-0.5">
+        <div className="flex bg-[var(--color-surface)] rounded-[14px] p-0.5">
           <button
             type="button"
             onClick={() => onModeChange("operator")}
             className={cn(
               "flex-1 px-3 py-1.5 rounded-md text-[11px] font-bold transition-all",
               mode === "operator"
-                ? "bg-primary text-on-primary shadow-sm"
-                : "text-on-surface-variant hover:text-on-surface",
+                ? "bg-primary text-on-primary shadow-neu-soft"
+                : "text-[var(--color-text-muted)] hover:text-[var(--color-text)]",
             )}
           >
             운영자
@@ -107,8 +107,8 @@ export default function LeftPanel({
             className={cn(
               "flex-1 px-3 py-1.5 rounded-md text-[11px] font-bold transition-all",
               mode === "university"
-                ? "bg-primary text-on-primary shadow-sm"
-                : "text-on-surface-variant hover:text-on-surface",
+                ? "bg-primary text-on-primary shadow-neu-soft"
+                : "text-[var(--color-text-muted)] hover:text-[var(--color-text)]",
             )}
           >
             대학
@@ -119,7 +119,7 @@ export default function LeftPanel({
         <div className="relative">
           <IconSearch
             size={14}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant"
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]"
           />
           <input
             type="text"
@@ -128,7 +128,7 @@ export default function LeftPanel({
             placeholder={
               mode === "operator" ? "운영자 검색..." : "대학명 검색..."
             }
-            className="search-input w-full pl-9 pr-4 py-2 rounded-lg text-xs text-on-surface focus:outline-none"
+            className="search-input w-full pl-9 pr-4 py-2 rounded-[14px] text-xs text-[var(--color-text)] focus:outline-none"
           />
         </div>
       </div>
@@ -160,11 +160,11 @@ export default function LeftPanel({
                       "w-full flex items-center justify-between px-3 py-2 text-left transition-colors",
                       isSelected
                         ? "bg-primary/10 text-primary"
-                        : "text-on-surface hover:bg-surface-container-highest/50",
+                        : "text-[var(--color-text)] hover:bg-[var(--color-surface)]/50",
                     )}
                   >
                     <span className="text-xs font-bold">{name}</span>
-                    <span className="text-[11px] tabular-nums text-on-surface-variant">
+                    <span className="text-[11px] tabular-nums text-[var(--color-text-muted)]">
                       {total}
                     </span>
                   </button>
@@ -188,7 +188,7 @@ export default function LeftPanel({
                   "w-full flex items-center gap-2 px-3 py-2 text-left transition-colors",
                   isSelected
                     ? "bg-primary/10 text-primary"
-                    : "text-on-surface hover:bg-surface-container-highest/50",
+                    : "text-[var(--color-text)] hover:bg-[var(--color-surface)]/50",
                 )}
               >
                 {hasChanged && (
@@ -198,7 +198,7 @@ export default function LeftPanel({
                   {u.universityName}
                 </span>
                 {u.category && (
-                  <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-surface-container-highest text-on-surface-variant shrink-0">
+                  <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-[var(--color-surface)] text-[var(--color-text-muted)] shrink-0">
                     {u.category}
                   </span>
                 )}
@@ -208,12 +208,12 @@ export default function LeftPanel({
 
         {/* Empty state */}
         {mode === "operator" && filteredGroups.length === 0 && (
-          <div className="p-4 text-center text-xs text-on-surface-variant">
+          <div className="p-4 text-center text-xs text-[var(--color-text-muted)]">
             검색 결과가 없습니다
           </div>
         )}
         {mode === "university" && filteredUniversities.length === 0 && (
-          <div className="p-4 text-center text-xs text-on-surface-variant">
+          <div className="p-4 text-center text-xs text-[var(--color-text-muted)]">
             검색 결과가 없습니다
           </div>
         )}

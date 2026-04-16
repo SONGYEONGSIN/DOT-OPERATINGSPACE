@@ -24,18 +24,18 @@ export default function DeveloperCard({
           <IconCode size={14} className="text-secondary" />
         </div>
         <div className="flex-1 min-w-0">
-          <h3 className="text-sm font-bold text-on-surface truncate">
+          <h3 className="text-sm font-bold text-[var(--color-text)] truncate">
             {developer}
           </h3>
-          <p className="text-[10px] text-on-surface-variant">
+          <p className="text-[10px] text-[var(--color-text-muted)]">
             담당 {devTotal}건
           </p>
         </div>
         <div className="text-right shrink-0">
-          <p className="text-lg font-black text-on-surface tabular-nums">
+          <p className="text-lg font-black text-[var(--color-text)] tabular-nums">
             {devActive}
           </p>
-          <p className="text-[10px] text-on-surface-variant">진행중</p>
+          <p className="text-[10px] text-[var(--color-text-muted)]">진행중</p>
         </div>
       </div>
 
@@ -46,19 +46,19 @@ export default function DeveloperCard({
         color="primary"
       />
       <div className="flex justify-between mt-1.5">
-        <span className="text-[10px] text-on-surface-variant">진행률</span>
-        <span className="text-[10px] font-bold text-on-surface tabular-nums">
+        <span className="text-[10px] text-[var(--color-text-muted)]">진행률</span>
+        <span className="text-[10px] font-bold text-[var(--color-text)] tabular-nums">
           {devTotal > 0 ? Math.round((devActive / devTotal) * 100) : 0}%
         </span>
       </div>
 
       {/* 담당 서비스 카테고리 요약 */}
       {categories.length > 0 && (
-        <div className="flex flex-wrap gap-1 mt-3 pt-3 border-t border-outline-variant/10">
+        <div className="flex flex-wrap gap-1 mt-3 pt-3 border-t border-black/[0.04]/10">
           {categories.map((cat) => (
             <span
               key={cat}
-              className="px-2 py-0.5 rounded-full bg-surface-container-high text-[10px] font-medium text-on-surface-variant"
+              className="px-2 py-0.5 rounded-full bg-[var(--color-surface)] text-[10px] font-medium text-[var(--color-text-muted)]"
             >
               {cat}
             </span>

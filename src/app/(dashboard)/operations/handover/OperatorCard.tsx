@@ -32,8 +32,8 @@ export default function OperatorCard({ operator, services }: OperatorCardProps) 
             <IconUser size={20} className="text-primary" />
           </div>
           <div>
-            <h3 className="text-sm font-bold text-on-surface">{operator}</h3>
-            <p className="text-[10px] text-on-surface-variant">
+            <h3 className="text-sm font-bold text-[var(--color-text)]">{operator}</h3>
+            <p className="text-[10px] text-[var(--color-text-muted)]">
               담당 {total}건
             </p>
           </div>
@@ -47,7 +47,7 @@ export default function OperatorCard({ operator, services }: OperatorCardProps) 
 
       {/* 상태 비율 바 */}
       <div className="mb-4">
-        <div className="flex gap-0.5 h-2 rounded-full overflow-hidden bg-surface-container-highest">
+        <div className="flex gap-0.5 h-2 rounded-full overflow-hidden bg-[var(--color-surface)]">
           {active > 0 && (
             <div
               className="bg-primary rounded-full transition-all duration-300"
@@ -77,7 +77,7 @@ export default function OperatorCard({ operator, services }: OperatorCardProps) 
           {segments.map((item) => (
             <div key={item.label} className="flex items-center gap-1">
               <span className={`w-1.5 h-1.5 rounded-full ${item.color}`} />
-              <span className="text-[10px] text-on-surface-variant font-medium">
+              <span className="text-[10px] text-[var(--color-text-muted)] font-medium">
                 {item.label} {item.count}
               </span>
             </div>
@@ -92,18 +92,18 @@ export default function OperatorCard({ operator, services }: OperatorCardProps) 
           return (
             <div
               key={s.id}
-              className="flex items-center justify-between px-3 py-2 rounded-lg bg-surface-container-high/50 hover:bg-surface-container-high transition-colors"
+              className="flex items-center justify-between px-3 py-2 rounded-[14px] bg-[var(--color-surface)]/50 hover:bg-[var(--color-surface)] transition-colors"
             >
               <div className="flex items-center gap-3 min-w-0">
-                <span className="text-xs font-semibold text-on-surface truncate">
+                <span className="text-xs font-semibold text-[var(--color-text)] truncate">
                   {s.university_name ?? "-"}
                 </span>
-                <span className="text-xs text-on-surface-variant truncate">
+                <span className="text-xs text-[var(--color-text-muted)] truncate">
                   {(s.service_name ?? "-").replace(/\d{4}학년도\s*|\d{4}-(?=\d학기)/g, "")}
                 </span>
               </div>
               <div className="flex items-center gap-3 shrink-0">
-                <span className="text-[10px] text-on-surface-variant tabular-nums">
+                <span className="text-[10px] text-[var(--color-text-muted)] tabular-nums">
                   {s.writing_start && s.writing_end
                     ? `${formatDate(s.writing_start)} ~ ${formatDate(s.writing_end)}`
                     : "-"}
@@ -114,7 +114,7 @@ export default function OperatorCard({ operator, services }: OperatorCardProps) 
           );
         })}
         {services.length > 5 && (
-          <p className="text-[10px] text-on-surface-variant text-center pt-1">
+          <p className="text-[10px] text-[var(--color-text-muted)] text-center pt-1">
             외 {services.length - 5}건
           </p>
         )}

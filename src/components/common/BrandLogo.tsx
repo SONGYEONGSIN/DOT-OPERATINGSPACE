@@ -27,7 +27,7 @@ export default function BrandLogo({
       <div className="flex flex-col items-center">
         <span
           className={cn(
-            "tracking-tight font-black text-on-surface leading-none",
+            "tracking-tight font-black text-[var(--color-text)] leading-none",
             textSize,
           )}
         >
@@ -36,7 +36,7 @@ export default function BrandLogo({
         {showSubtitle && (
           <span
             className={cn(
-              "font-medium text-on-surface-variant tracking-[0.2em] leading-none mt-[2px]",
+              "font-medium text-[var(--color-text-muted)] tracking-[0.2em] leading-none mt-[2px]",
               subSize,
             )}
           >

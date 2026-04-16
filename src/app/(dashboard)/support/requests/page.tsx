@@ -94,8 +94,8 @@ export default async function RequestsPage({ searchParams }: PageProps) {
     return {
       request: (
         <div>
-          <p className="text-sm font-semibold text-on-surface">{t.title}</p>
-          {t.description && <p className="text-xs text-on-surface-variant mt-0.5 line-clamp-1">{t.description}</p>}
+          <p className="text-sm font-semibold text-[var(--color-text)]">{t.title}</p>
+          {t.description && <p className="text-xs text-[var(--color-text-muted)] mt-0.5 line-clamp-1">{t.description}</p>}
         </div>
       ),
       priority: <StatusBadge variant={pc.variant}>{pc.label}</StatusBadge>,
@@ -103,16 +103,16 @@ export default async function RequestsPage({ searchParams }: PageProps) {
       requester: t.requester ? (
         <div className="flex items-center gap-1.5">
           <UserAvatar name={t.requester} size="sm" className="!w-5 !h-5" />
-          <span className="text-xs text-on-surface">{t.requester}</span>
+          <span className="text-xs text-[var(--color-text)]">{t.requester}</span>
         </div>
-      ) : <span className="text-xs text-on-surface-variant">-</span>,
+      ) : <span className="text-xs text-[var(--color-text-muted)]">-</span>,
       assignee: t.assignee ? (
         <div className="flex items-center gap-1.5">
           <UserAvatar name={t.assignee} size="sm" className="!w-5 !h-5" />
-          <span className="text-xs text-on-surface">{t.assignee}</span>
+          <span className="text-xs text-[var(--color-text)]">{t.assignee}</span>
         </div>
-      ) : <span className="text-xs text-on-surface-variant">미배정</span>,
-      date: <span className="text-xs text-on-surface-variant tabular-nums">{new Date(t.created_at).toLocaleDateString("ko-KR")}</span>,
+      ) : <span className="text-xs text-[var(--color-text-muted)]">미배정</span>,
+      date: <span className="text-xs text-[var(--color-text-muted)] tabular-nums">{new Date(t.created_at).toLocaleDateString("ko-KR")}</span>,
     };
   });
 
@@ -127,26 +127,26 @@ export default async function RequestsPage({ searchParams }: PageProps) {
 
       <KpiGrid>
         <KpiCard
-          icon={<IconInbox size={18} className="text-on-surface-variant" />}
+          icon={<IconInbox size={18} className="text-[var(--color-text-muted)]" />}
           label="전체 요청"
           value={totalCount.toString()}
           suffix="건"
         />
         <KpiCard
-          icon={<IconClockPause size={18} className="text-on-surface-variant" />}
+          icon={<IconClockPause size={18} className="text-[var(--color-text-muted)]" />}
           label="처리중"
           value={openCount.toString()}
           suffix="건"
         />
         <KpiCard
-          icon={<IconAlertTriangle size={18} className="text-on-surface-variant" />}
+          icon={<IconAlertTriangle size={18} className="text-[var(--color-text-muted)]" />}
           label="높은 우선순위"
           value={highCount.toString()}
           suffix="건"
           alert={highCount > 0}
         />
         <KpiCard
-          icon={<IconCircleCheck size={18} className="text-on-surface-variant" />}
+          icon={<IconCircleCheck size={18} className="text-[var(--color-text-muted)]" />}
           label="처리 완료"
           value={doneCount.toString()}
           suffix="건"
@@ -171,7 +171,7 @@ export default async function RequestsPage({ searchParams }: PageProps) {
       <TableSection totalCount={filtered.length}>
         <DataTable columns={columns} data={tableData} />
         {allRequests.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-16 text-on-surface-variant">
+          <div className="flex flex-col items-center justify-center py-16 text-[var(--color-text-muted)]">
             <IconInbox size={40} className="opacity-30 mb-2" />
             <p className="text-sm font-medium">등록된 요청이 없습니다.</p>
             <p className="text-xs mt-1">프로젝트 메뉴에서 "요청하기" 탭으로 요청을 등록할 수 있습니다.</p>

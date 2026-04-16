@@ -24,8 +24,8 @@ interface IncidentFormProps {
   profiles: { name: string }[];
 }
 
-const inputClass = "w-full bg-surface-container-highest border-none rounded-lg px-4 py-3 text-sm text-on-surface placeholder:text-outline focus:ring-1 focus:ring-primary/50 focus:outline-none";
-const labelClass = "block text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-2";
+const inputClass = "w-full bg-[var(--color-surface)] border-none rounded-[14px] px-4 py-3 text-sm text-[var(--color-text)] placeholder:text-outline focus:ring-1 focus:ring-primary/50 focus:outline-none";
+const labelClass = "block text-[10px] font-bold text-[var(--color-text-muted)] tracking-widest uppercase mb-2";
 
 export default function IncidentForm({ profiles }: IncidentFormProps) {
   const router = useRouter();
@@ -77,7 +77,7 @@ export default function IncidentForm({ profiles }: IncidentFormProps) {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center gap-2 bg-error text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-error/90 transition-colors"
+        className="flex items-center gap-2 bg-error text-white px-5 py-2.5 rounded-[20px] font-bold text-sm hover:bg-error/90 transition-colors"
       >
         <IconPlus size={16} />
         사고 등록
@@ -85,11 +85,11 @@ export default function IncidentForm({ profiles }: IncidentFormProps) {
 
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div className="absolute inset-0 bg-surface-container-lowest/80 backdrop-blur-sm" onClick={() => setOpen(false)} />
-          <div className="relative w-full max-w-2xl bg-surface-container rounded-2xl border border-outline-variant/15 shadow-2xl animate-slide-up overflow-visible max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-outline-variant/10">
-              <h2 className="text-lg font-bold text-on-surface">사고 리포트 등록</h2>
-              <button onClick={() => setOpen(false)} className="p-1 text-on-surface-variant hover:text-on-surface transition-colors rounded-lg">
+          <div className="absolute inset-0 bg-[var(--color-surface)]est/80 backdrop-blur-sm" onClick={() => setOpen(false)} />
+          <div className="relative w-full max-w-2xl bg-[var(--color-surface)] rounded-[20px] border border-black/[0.04]/15 shadow-neu-strong animate-slide-up overflow-visible max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-black/[0.04]/10">
+              <h2 className="text-lg font-bold text-[var(--color-text)]">사고 리포트 등록</h2>
+              <button onClick={() => setOpen(false)} className="p-1 text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors rounded-[14px]">
                 <IconX size={20} />
               </button>
             </div>
@@ -97,12 +97,12 @@ export default function IncidentForm({ profiles }: IncidentFormProps) {
             {success ? (
               <div className="p-8 text-center">
                 <IconCircleCheck size={48} className="text-primary mx-auto mb-3" />
-                <p className="font-bold text-on-surface">등록되었습니다!</p>
+                <p className="font-bold text-[var(--color-text)]">등록되었습니다!</p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="p-6 space-y-4 overflow-visible">
                 {error && (
-                  <div className="p-3 rounded-lg bg-error-container/20 border border-error/30 text-error text-xs font-medium">{error}</div>
+                  <div className="p-3 rounded-[14px] bg-error-container/20 border border-error/30 text-error text-xs font-medium">{error}</div>
                 )}
 
                 <div>
@@ -154,12 +154,12 @@ export default function IncidentForm({ profiles }: IncidentFormProps) {
                         type="button"
                         onClick={() => setReporter(p.name)}
                         className={cn(
-                          "flex items-center gap-2 p-2 rounded-lg border-2 transition-all text-left",
-                          reporter === p.name ? "border-primary bg-primary/5" : "border-outline-variant/10 hover:border-outline-variant/30",
+                          "flex items-center gap-2 p-2 rounded-[14px] border-2 transition-all text-left",
+                          reporter === p.name ? "border-primary bg-primary/5" : "border-black/[0.04]/10 hover:border-black/[0.04]/30",
                         )}
                       >
                         <UserAvatar name={p.name} size="sm" className="!w-5 !h-5" />
-                        <span className="text-xs font-medium text-on-surface truncate">{p.name}</span>
+                        <span className="text-xs font-medium text-[var(--color-text)] truncate">{p.name}</span>
                       </button>
                     ))}
                   </div>
@@ -174,18 +174,18 @@ export default function IncidentForm({ profiles }: IncidentFormProps) {
                         type="button"
                         onClick={() => setAssignee(p.name)}
                         className={cn(
-                          "flex items-center gap-2 p-2 rounded-lg border-2 transition-all text-left",
-                          assignee === p.name ? "border-primary bg-primary/5" : "border-outline-variant/10 hover:border-outline-variant/30",
+                          "flex items-center gap-2 p-2 rounded-[14px] border-2 transition-all text-left",
+                          assignee === p.name ? "border-primary bg-primary/5" : "border-black/[0.04]/10 hover:border-black/[0.04]/30",
                         )}
                       >
                         <UserAvatar name={p.name} size="sm" className="!w-5 !h-5" />
-                        <span className="text-xs font-medium text-on-surface truncate">{p.name}</span>
+                        <span className="text-xs font-medium text-[var(--color-text)] truncate">{p.name}</span>
                       </button>
                     ))}
                   </div>
                 </div>
 
-                <hr className="border-outline-variant/10" />
+                <hr className="border-black/[0.04]/10" />
 
                 <div>
                   <label className={labelClass}>경위 (사고 내용)</label>
@@ -208,8 +208,8 @@ export default function IncidentForm({ profiles }: IncidentFormProps) {
                 </div>
 
                 <div className="flex gap-3 pt-2">
-                  <button type="button" onClick={() => setOpen(false)} className="flex-1 py-3 bg-surface-container-high text-on-surface-variant font-bold rounded-lg active:scale-95 transition-transform text-sm">취소</button>
-                  <button type="submit" disabled={isPending} className={cn("flex-1 py-3 bg-error text-white font-bold rounded-lg active:scale-95 transition-transform text-sm", isPending && "opacity-60")}>
+                  <button type="button" onClick={() => setOpen(false)} className="flex-1 py-3 bg-[var(--color-surface)] text-[var(--color-text-muted)] font-bold rounded-[14px] active:scale-95 transition-transform text-sm">취소</button>
+                  <button type="submit" disabled={isPending} className={cn("flex-1 py-3 bg-error text-white font-bold rounded-[14px] active:scale-95 transition-transform text-sm", isPending && "opacity-60")}>
                     {isPending ? "등록 중..." : "사고 등록"}
                   </button>
                 </div>

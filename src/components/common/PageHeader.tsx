@@ -18,7 +18,7 @@ export default function PageHeader({
     <header className="flex flex-col gap-2">
       {breadcrumb && breadcrumb.length > 0 && (
         <nav aria-label="Breadcrumb">
-          <ol className="flex items-center gap-1.5 text-xs text-on-surface-variant">
+          <ol className="flex items-center gap-1.5 text-xs text-[var(--color-text-muted)]">
             {breadcrumb.map((item, index) => (
               <li key={index} className="flex items-center gap-1.5">
                 {index > 0 && (
@@ -26,7 +26,7 @@ export default function PageHeader({
                 )}
                 <span
                   className={cn(
-                    index === breadcrumb.length - 1 && "text-on-surface font-medium",
+                    index === breadcrumb.length - 1 && "text-[var(--color-text)] font-medium",
                   )}
                 >
                   {item}
@@ -39,11 +39,11 @@ export default function PageHeader({
 
       <div className="flex items-center justify-between gap-4">
         <div className="flex flex-col gap-1">
-          <h1 className="text-3xl font-black tracking-tight text-on-surface">
+          <h1 className="text-3xl font-black tracking-tight text-[var(--color-text)]">
             {title}
           </h1>
           {description && (
-            <p className="text-sm text-on-surface-variant">{description}</p>
+            <p className="text-sm text-[var(--color-text-muted)]">{description}</p>
           )}
         </div>
 

@@ -11,9 +11,9 @@ export default function TableSection({
 }: TableSectionProps) {
   return (
     <div className="space-y-2">
-      <div className="text-xs text-on-surface-variant tabular-nums">
+      <div className="text-xs text-[var(--color-text-muted)] tabular-nums">
         총{" "}
-        <span className="font-bold text-on-surface">
+        <span className="font-bold text-[var(--color-text)]">
           {totalCount.toLocaleString()}
         </span>
         건

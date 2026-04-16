@@ -144,8 +144,8 @@ export default async function OnboardingPage() {
         <div className="flex items-center gap-4">
           <IconBook size={28} className="text-primary" />
           <div>
-            <h3 className="text-base font-bold text-on-surface">신입사원 온보딩 가이드</h3>
-            <p className="text-sm text-on-surface-variant mt-0.5">2주 교육과정 기반 단계별 가이드입니다. 진행 관리는 운영자 관리 탭에서 할 수 있습니다.</p>
+            <h3 className="text-base font-bold text-[var(--color-text)]">신입사원 온보딩 가이드</h3>
+            <p className="text-sm text-[var(--color-text-muted)] mt-0.5">2주 교육과정 기반 단계별 가이드입니다. 진행 관리는 운영자 관리 탭에서 할 수 있습니다.</p>
           </div>
         </div>
       </Card>
@@ -155,23 +155,23 @@ export default async function OnboardingPage() {
         {STEPS.map((step) => (
           <Card key={step.step} className="p-5">
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
+              <div className="w-9 h-9 rounded-[14px] bg-primary/10 flex items-center justify-center">
                 <step.icon size={20} className="text-primary" />
               </div>
               <div>
-                <h3 className="text-base font-bold text-on-surface">{step.title}</h3>
-                <p className="text-xs text-on-surface-variant mt-0.5">{step.description}</p>
+                <h3 className="text-base font-bold text-[var(--color-text)]">{step.title}</h3>
+                <p className="text-xs text-[var(--color-text-muted)] mt-0.5">{step.description}</p>
               </div>
             </div>
             <div className="ml-12 space-y-2">
               {step.items.map((item) => (
                 <div key={item.key} className="flex items-start gap-2.5">
-                  <span className="w-5 h-5 mt-0.5 rounded-md border border-outline-variant flex items-center justify-center shrink-0 text-[10px] font-bold text-on-surface-variant">
+                  <span className="w-5 h-5 mt-0.5 rounded-md border border-black/[0.04] flex items-center justify-center shrink-0 text-[10px] font-bold text-[var(--color-text-muted)]">
                     {step.items.indexOf(item) + 1}
                   </span>
                   <div>
-                    <p className="text-sm text-on-surface">{item.label}</p>
-                    {item.hint && <p className="text-[11px] text-on-surface-variant mt-0.5">{item.hint}</p>}
+                    <p className="text-sm text-[var(--color-text)]">{item.label}</p>
+                    {item.hint && <p className="text-[11px] text-[var(--color-text-muted)] mt-0.5">{item.hint}</p>}
                   </div>
                 </div>
               ))}
@@ -188,7 +188,7 @@ export default async function OnboardingPage() {
     <div className="space-y-6">
       <Card className="p-5">
         <div className="mb-4">
-          <h3 className="text-sm font-bold text-on-surface">온보딩 체크리스트</h3>
+          <h3 className="text-sm font-bold text-[var(--color-text)]">온보딩 체크리스트</h3>
         </div>
         <OperatorManage targets={targets} steps={manageSteps} totalItemCount={TOTAL_ITEMS} operatorProgressMap={operatorProgressMap} operatorLogsMap={operatorLogsMap} availableProfiles={availableProfiles} />
       </Card>
@@ -199,7 +199,7 @@ export default async function OnboardingPage() {
   const historyContent = (
     <div className="space-y-6">
       <Card className="p-5">
-        <h3 className="text-sm font-bold text-on-surface mb-4">전체 온보딩 기록</h3>
+        <h3 className="text-sm font-bold text-[var(--color-text)] mb-4">전체 온보딩 기록</h3>
         {allLogs.length > 0 ? (
           <div className="space-y-3 max-h-[600px] overflow-y-auto">
             {allLogs.map((log) => {
@@ -208,20 +208,20 @@ export default async function OnboardingPage() {
               const userName = nameMap.get(log.user_email) ?? log.user_email;
               return (
                 <div key={log.id} className="flex items-start gap-3">
-                  <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${log.action === "complete" ? "bg-primary/10" : log.action === "memo" ? "bg-tertiary/10" : "bg-surface-container-high"}`}>
-                    {log.action === "complete" ? <IconCircleCheck size={14} className="text-primary" /> : log.action === "memo" ? <IconNote size={14} className="text-tertiary" /> : <IconArrowBackUp size={14} className="text-on-surface-variant" />}
+                  <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${log.action === "complete" ? "bg-primary/10" : log.action === "memo" ? "bg-tertiary/10" : "bg-[var(--color-surface)]"}`}>
+                    {log.action === "complete" ? <IconCircleCheck size={14} className="text-primary" /> : log.action === "memo" ? <IconNote size={14} className="text-tertiary" /> : <IconArrowBackUp size={14} className="text-[var(--color-text-muted)]" />}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-bold text-on-surface">{userName}</span>
-                      <span className="text-[10px] text-on-surface-variant tabular-nums">{timeStr}</span>
+                      <span className="text-xs font-bold text-[var(--color-text)]">{userName}</span>
+                      <span className="text-[10px] text-[var(--color-text-muted)] tabular-nums">{timeStr}</span>
                     </div>
                     {log.action === "memo" ? (
-                      <p className="text-sm text-on-surface mt-0.5">{log.memo}</p>
+                      <p className="text-sm text-[var(--color-text)] mt-0.5">{log.memo}</p>
                     ) : (
-                      <p className="text-sm text-on-surface-variant mt-0.5">
-                        <span className="text-on-surface font-medium">{log.item_label}</span> {log.action === "complete" ? "완료" : "취소"}
-                        {log.memo && <span className="text-[10px] text-on-surface-variant ml-2">({log.memo})</span>}
+                      <p className="text-sm text-[var(--color-text-muted)] mt-0.5">
+                        <span className="text-[var(--color-text)] font-medium">{log.item_label}</span> {log.action === "complete" ? "완료" : "취소"}
+                        {log.memo && <span className="text-[10px] text-[var(--color-text-muted)] ml-2">({log.memo})</span>}
                       </p>
                     )}
                   </div>
@@ -230,7 +230,7 @@ export default async function OnboardingPage() {
             })}
           </div>
         ) : (
-          <p className="text-xs text-on-surface-variant text-center py-8">아직 기록이 없습니다.</p>
+          <p className="text-xs text-[var(--color-text-muted)] text-center py-8">아직 기록이 없습니다.</p>
         )}
       </Card>
     </div>
@@ -241,8 +241,8 @@ export default async function OnboardingPage() {
     if (type === "doc" || type === "docx" || type === "hwp") return <IconFileText size={16} className="text-primary" />;
     if (type === "xls" || type === "xlsx") return <IconFileSpreadsheet size={16} className="text-tertiary" />;
     if (type === "ppt" || type === "pptx") return <IconPresentation size={16} className="text-error" />;
-    if (type === "pdf") return <IconFile size={16} className="text-on-surface-variant" />;
-    return <IconFile size={16} className="text-on-surface-variant" />;
+    if (type === "pdf") return <IconFile size={16} className="text-[var(--color-text-muted)]" />;
+    return <IconFile size={16} className="text-[var(--color-text-muted)]" />;
   };
 
   const formatSize = (bytes: number) => {
@@ -265,16 +265,16 @@ export default async function OnboardingPage() {
         <div className="flex items-center gap-4">
           <IconBook size={28} className="text-primary" />
           <div>
-            <h3 className="text-base font-bold text-on-surface">교육자료</h3>
-            <p className="text-sm text-on-surface-variant mt-0.5">SharePoint 매뉴얼 폴더의 교육 자료입니다. 클릭하면 SharePoint에서 열립니다.</p>
+            <h3 className="text-base font-bold text-[var(--color-text)]">교육자료</h3>
+            <p className="text-sm text-[var(--color-text-muted)] mt-0.5">SharePoint 매뉴얼 폴더의 교육 자료입니다. 클릭하면 SharePoint에서 열립니다.</p>
           </div>
-          <span className="ml-auto text-xs font-bold text-on-surface-variant">{materials.length}개 파일</span>
+          <span className="ml-auto text-xs font-bold text-[var(--color-text-muted)]">{materials.length}개 파일</span>
         </div>
       </Card>
 
       {[...folderGroups.entries()].map(([folder, files]) => (
         <Card key={folder} className="p-5">
-          <h3 className="text-sm font-bold text-on-surface mb-3">{folder}</h3>
+          <h3 className="text-sm font-bold text-[var(--color-text)] mb-3">{folder}</h3>
           <div className="space-y-1.5">
             {files.map((file, idx) => (
               <a
@@ -282,13 +282,13 @@ export default async function OnboardingPage() {
                 href={file.webUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-surface-container-high/50 transition-colors group"
+                className="flex items-center gap-3 px-3 py-2.5 rounded-[14px] hover:bg-[var(--color-surface)]/50 transition-colors group"
               >
                 {fileIcon(file.type)}
-                <span className="flex-1 text-sm text-on-surface group-hover:text-primary transition-colors truncate">{file.name}</span>
-                <span className="text-[10px] text-on-surface-variant uppercase font-bold">{file.type}</span>
-                <span className="text-[10px] text-on-surface-variant tabular-nums">{formatSize(file.size)}</span>
-                <IconExternalLink size={12} className="text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity" />
+                <span className="flex-1 text-sm text-[var(--color-text)] group-hover:text-primary transition-colors truncate">{file.name}</span>
+                <span className="text-[10px] text-[var(--color-text-muted)] uppercase font-bold">{file.type}</span>
+                <span className="text-[10px] text-[var(--color-text-muted)] tabular-nums">{formatSize(file.size)}</span>
+                <IconExternalLink size={12} className="text-[var(--color-text-muted)] opacity-0 group-hover:opacity-100 transition-opacity" />
               </a>
             ))}
           </div>
@@ -297,7 +297,7 @@ export default async function OnboardingPage() {
 
       {materials.length === 0 && (
         <Card className="p-12 text-center">
-          <p className="text-sm text-on-surface-variant">교육자료를 불러올 수 없습니다.</p>
+          <p className="text-sm text-[var(--color-text-muted)]">교육자료를 불러올 수 없습니다.</p>
         </Card>
       )}
     </div>

@@ -110,29 +110,29 @@ export default async function ContractsPage({ searchParams }: PageProps) {
   const tableData = pageItems.map((c) => {
     const sv = getStatusVariant(c.contractStatus);
     return {
-      numbering: <span className="font-mono text-xs text-on-surface-variant">{c.numbering}</span>,
+      numbering: <span className="font-mono text-xs text-[var(--color-text-muted)]">{c.numbering}</span>,
       category: (
-        <span className={`text-xs font-bold ${c.category === "4년제" ? "text-primary" : c.category === "전문대" ? "text-tertiary" : "text-on-surface-variant"}`}>
+        <span className={`text-xs font-bold ${c.category === "4년제" ? "text-primary" : c.category === "전문대" ? "text-tertiary" : "text-[var(--color-text-muted)]"}`}>
           {c.category}
         </span>
       ),
-      region: <span className="text-xs text-on-surface-variant">{c.region ?? "-"}</span>,
-      university: <span className="text-sm font-medium text-on-surface">{c.universityName}</span>,
-      operator: <span className="text-xs text-on-surface-variant">{c.operator ?? "-"}</span>,
-      salesperson: <span className="text-xs text-on-surface-variant">{c.salesperson ?? "-"}</span>,
-      contractStatus: c.contractStatus ? <StatusBadge variant={sv.variant}>{sv.label}</StatusBadge> : <span className="text-xs text-on-surface-variant">-</span>,
-      chargeMethod: <span className="text-xs text-on-surface-variant">{c.chargeMethod ?? "-"}</span>,
-      fee: <span className="text-xs font-semibold text-on-surface tabular-nums">{c.fee > 0 ? c.fee.toLocaleString() : "-"}</span>,
-      period: <span className="text-xs text-on-surface-variant">{c.contractPeriod ?? "-"}</span>,
+      region: <span className="text-xs text-[var(--color-text-muted)]">{c.region ?? "-"}</span>,
+      university: <span className="text-sm font-medium text-[var(--color-text)]">{c.universityName}</span>,
+      operator: <span className="text-xs text-[var(--color-text-muted)]">{c.operator ?? "-"}</span>,
+      salesperson: <span className="text-xs text-[var(--color-text-muted)]">{c.salesperson ?? "-"}</span>,
+      contractStatus: c.contractStatus ? <StatusBadge variant={sv.variant}>{sv.label}</StatusBadge> : <span className="text-xs text-[var(--color-text-muted)]">-</span>,
+      chargeMethod: <span className="text-xs text-[var(--color-text-muted)]">{c.chargeMethod ?? "-"}</span>,
+      fee: <span className="text-xs font-semibold text-[var(--color-text)] tabular-nums">{c.fee > 0 ? c.fee.toLocaleString() : "-"}</span>,
+      period: <span className="text-xs text-[var(--color-text-muted)]">{c.contractPeriod ?? "-"}</span>,
       scan: c.hasScan ? (
         <span className="text-xs font-bold text-primary">○</span>
       ) : (
-        <span className="text-xs text-on-surface-variant">-</span>
+        <span className="text-xs text-[var(--color-text-muted)]">-</span>
       ),
       remark: c.remark ? (
-        <span className="text-xs text-on-surface-variant truncate max-w-[120px] block cursor-help" title={c.remark}>{c.remark}</span>
+        <span className="text-xs text-[var(--color-text-muted)] truncate max-w-[120px] block cursor-help" title={c.remark}>{c.remark}</span>
       ) : (
-        <span className="text-xs text-on-surface-variant">-</span>
+        <span className="text-xs text-[var(--color-text-muted)]">-</span>
       ),
       action: <ContractActionMenu numbering={c.numbering} universityName={c.universityName} hasScan={c.hasScan} />,
     };
@@ -148,7 +148,7 @@ export default async function ContractsPage({ searchParams }: PageProps) {
 
       <KpiGrid>
         <KpiCard
-          icon={<IconFileDescription size={18} className="text-on-surface-variant" />}
+          icon={<IconFileDescription size={18} className="text-[var(--color-text-muted)]" />}
           label="전체 계약"
           value={totalCount.toString()}
           suffix="건"
@@ -156,13 +156,13 @@ export default async function ContractsPage({ searchParams }: PageProps) {
           change={
             <div className="flex flex-wrap gap-x-3 gap-y-1">
               {catStats.map((s) => (
-                <span key={s.cat} className="text-[10px] text-on-surface-variant">{s.cat} <strong className="text-on-surface">{s.total}</strong></span>
+                <span key={s.cat} className="text-[10px] text-[var(--color-text-muted)]">{s.cat} <strong className="text-[var(--color-text)]">{s.total}</strong></span>
               ))}
             </div>
           }
         />
         <KpiCard
-          icon={<IconCircleCheck size={18} className="text-on-surface-variant" />}
+          icon={<IconCircleCheck size={18} className="text-[var(--color-text-muted)]" />}
           label="계약완료"
           value={completedCount.toString()}
           suffix="건"
@@ -170,13 +170,13 @@ export default async function ContractsPage({ searchParams }: PageProps) {
           change={
             <div className="flex flex-wrap gap-x-3 gap-y-1">
               {catStats.map((s) => (
-                <span key={s.cat} className="text-[10px] text-on-surface-variant">{s.cat} <strong className="text-on-surface">{s.done}</strong></span>
+                <span key={s.cat} className="text-[10px] text-[var(--color-text-muted)]">{s.cat} <strong className="text-[var(--color-text)]">{s.done}</strong></span>
               ))}
             </div>
           }
         />
         <KpiCard
-          icon={<IconClock size={18} className="text-on-surface-variant" />}
+          icon={<IconClock size={18} className="text-[var(--color-text-muted)]" />}
           label="계약미완료"
           value={incompleteCount.toString()}
           suffix="건"
@@ -185,13 +185,13 @@ export default async function ContractsPage({ searchParams }: PageProps) {
           change={
             <div className="flex flex-wrap gap-x-3 gap-y-1">
               {catStats.map((s) => (
-                <span key={s.cat} className="text-[10px] text-on-surface-variant">{s.cat} <strong className="text-on-surface">{s.incomplete}</strong></span>
+                <span key={s.cat} className="text-[10px] text-[var(--color-text-muted)]">{s.cat} <strong className="text-[var(--color-text)]">{s.incomplete}</strong></span>
               ))}
             </div>
           }
         />
         <KpiCard
-          icon={<IconCreditCard size={18} className="text-on-surface-variant" />}
+          icon={<IconCreditCard size={18} className="text-[var(--color-text-muted)]" />}
           label="평균 수수료"
           value={avgFee.toLocaleString()}
           suffix="원"
@@ -199,7 +199,7 @@ export default async function ContractsPage({ searchParams }: PageProps) {
           change={
             <div className="flex flex-wrap gap-x-3 gap-y-1">
               {catStats.filter((s) => s.avgFee > 0).map((s) => (
-                <span key={s.cat} className="text-[10px] text-on-surface-variant">{s.cat} <strong className="text-on-surface tabular-nums">{s.avgFee.toLocaleString()}</strong></span>
+                <span key={s.cat} className="text-[10px] text-[var(--color-text-muted)]">{s.cat} <strong className="text-[var(--color-text)] tabular-nums">{s.avgFee.toLocaleString()}</strong></span>
               ))}
             </div>
           }
@@ -221,13 +221,13 @@ export default async function ContractsPage({ searchParams }: PageProps) {
           return (
             <Card key={s.cat} className="p-4 space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-on-surface">{s.cat}</span>
-                <span className="text-[10px] font-bold text-on-surface-variant tabular-nums">{s.done}/{s.total} ({pct}%)</span>
+                <span className="text-xs font-bold text-[var(--color-text)]">{s.cat}</span>
+                <span className="text-[10px] font-bold text-[var(--color-text-muted)] tabular-nums">{s.done}/{s.total} ({pct}%)</span>
               </div>
               <ProgressBar value={s.done} max={s.total || 1} size="sm" color={pct === 100 ? "primary" : pct >= 50 ? "warning" : "error"} />
-              <div className="flex items-center gap-3 text-[10px] text-on-surface-variant">
-                <span>스캔 <strong className="text-on-surface">{allContracts.filter((c) => c.category === s.cat && c.hasScan).length}</strong>/{s.total}</span>
-                <span>미완료 <strong className="text-on-surface">{s.incomplete}</strong></span>
+              <div className="flex items-center gap-3 text-[10px] text-[var(--color-text-muted)]">
+                <span>스캔 <strong className="text-[var(--color-text)]">{allContracts.filter((c) => c.category === s.cat && c.hasScan).length}</strong>/{s.total}</span>
+                <span>미완료 <strong className="text-[var(--color-text)]">{s.incomplete}</strong></span>
               </div>
             </Card>
           );
@@ -241,15 +241,15 @@ export default async function ContractsPage({ searchParams }: PageProps) {
           footer={
             totalPages > 1 ? (
               <div className="flex items-center justify-between">
-                <p className="text-xs text-on-surface-variant">
-                  총 <span className="font-bold text-on-surface">{filtered.length}</span>건 중{" "}
+                <p className="text-xs text-[var(--color-text-muted)]">
+                  총 <span className="font-bold text-[var(--color-text)]">{filtered.length}</span>건 중{" "}
                   {(currentPage - 1) * PAGE_SIZE + 1}~{Math.min(currentPage * PAGE_SIZE, filtered.length)}건
                 </p>
                 <div className="flex items-center gap-1">
                   {currentPage > 1 && (
                     <a
                       href={`?${new URLSearchParams({ ...params, page: String(currentPage - 1) }).toString()}`}
-                      className="px-3 py-1.5 rounded-lg text-xs text-on-surface-variant hover:bg-surface-container-high transition-colors"
+                      className="px-3 py-1.5 rounded-[14px] text-xs text-[var(--color-text-muted)] hover:bg-[var(--color-surface)] transition-colors"
                     >
                       이전
                     </a>
@@ -260,8 +260,8 @@ export default async function ContractsPage({ searchParams }: PageProps) {
                       <a
                         key={p}
                         href={`?${new URLSearchParams({ ...params, page: String(p) }).toString()}`}
-                        className={`px-3 py-1.5 rounded-lg text-xs font-bold ${
-                          p === currentPage ? "bg-primary/10 text-primary" : "text-on-surface-variant hover:bg-surface-container-high"
+                        className={`px-3 py-1.5 rounded-[14px] text-xs font-bold ${
+                          p === currentPage ? "bg-primary/10 text-primary" : "text-[var(--color-text-muted)] hover:bg-[var(--color-surface)]"
                         } transition-colors`}
                       >
                         {p}
@@ -271,7 +271,7 @@ export default async function ContractsPage({ searchParams }: PageProps) {
                   {currentPage < totalPages && (
                     <a
                       href={`?${new URLSearchParams({ ...params, page: String(currentPage + 1) }).toString()}`}
-                      className="px-3 py-1.5 rounded-lg text-xs text-on-surface-variant hover:bg-surface-container-high transition-colors"
+                      className="px-3 py-1.5 rounded-[14px] text-xs text-[var(--color-text-muted)] hover:bg-[var(--color-surface)] transition-colors"
                     >
                       다음
                     </a>
@@ -282,7 +282,7 @@ export default async function ContractsPage({ searchParams }: PageProps) {
           }
         />
         {allContracts.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-16 text-on-surface-variant">
+          <div className="flex flex-col items-center justify-center py-16 text-[var(--color-text-muted)]">
             <IconFileDescription size={40} className="opacity-30 mb-2" />
             <p className="text-sm font-medium">계약서 데이터를 불러올 수 없습니다.</p>
             <p className="text-xs mt-1">SharePoint 연동을 확인해주세요.</p>

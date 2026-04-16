@@ -63,7 +63,7 @@ export default function SessionTimer() {
       <span
         className={cn(
           "flex items-center h-9 text-sm font-bold tabular-nums transition-colors",
-          isWarning ? "text-error" : "text-on-surface-variant",
+          isWarning ? "text-error" : "text-[var(--color-text-muted)]",
         )}
         title="세션 남은 시간 (활동 시 자동 갱신)"
       >
@@ -72,28 +72,28 @@ export default function SessionTimer() {
 
       {showExtendModal && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center">
-          <div className="absolute inset-0 bg-surface-container-lowest/80 backdrop-blur-sm" />
-          <div className="relative w-full max-w-sm bg-surface-container rounded-2xl border border-outline-variant/15 shadow-2xl animate-slide-up p-6 text-center">
+          <div className="absolute inset-0 bg-[var(--color-surface)]est/80 backdrop-blur-sm" />
+          <div className="relative w-full max-w-sm bg-[var(--color-surface)] rounded-[20px] border border-black/[0.04]/15 shadow-neu-strong animate-slide-up p-6 text-center">
             <div className="w-12 h-12 rounded-full bg-error/10 flex items-center justify-center mx-auto mb-4">
               <span className="text-2xl">⏱</span>
             </div>
-            <h2 className="text-lg font-bold text-on-surface mb-2">세션 만료 예정</h2>
-            <p className="text-sm text-on-surface-variant mb-1">
+            <h2 className="text-lg font-bold text-[var(--color-text)] mb-2">세션 만료 예정</h2>
+            <p className="text-sm text-[var(--color-text-muted)] mb-1">
               <span className="font-bold text-error tabular-nums">{remaining}초</span> 후 자동 로그아웃됩니다.
             </p>
-            <p className="text-xs text-on-surface-variant mb-6">세션을 연장하시겠습니까?</p>
+            <p className="text-xs text-[var(--color-text-muted)] mb-6">세션을 연장하시겠습니까?</p>
             <div className="flex gap-3">
               <button
                 type="button"
                 onClick={() => { window.location.href = "/login"; }}
-                className="flex-1 py-3 bg-surface-container-high text-on-surface-variant font-bold rounded-lg text-sm hover:bg-surface-container-highest transition-colors"
+                className="flex-1 py-3 bg-[var(--color-surface)] text-[var(--color-text-muted)] font-bold rounded-[14px] text-sm hover:bg-[var(--color-surface)] transition-colors"
               >
                 로그아웃
               </button>
               <button
                 type="button"
                 onClick={resetTimer}
-                className="flex-1 py-3 bg-primary text-on-primary font-bold rounded-lg text-sm hover:bg-primary/90 transition-colors"
+                className="flex-1 py-3 bg-primary text-on-primary font-bold rounded-[14px] text-sm hover:bg-primary/90 transition-colors"
               >
                 세션 연장
               </button>

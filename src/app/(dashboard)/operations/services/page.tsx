@@ -180,9 +180,9 @@ export default async function ServicesPage({
     return qs ? `?${qs}` : "?";
   }
 
-  const btnBase = "flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold";
-  const btnActive = `${btnBase} bg-surface-container-high text-on-surface-variant hover:bg-surface-bright transition-colors`;
-  const btnDisabled = `${btnBase} bg-surface-container-high text-on-surface-variant/40 cursor-not-allowed`;
+  const btnBase = "flex items-center gap-1 px-3 py-1.5 rounded-[14px] text-xs font-semibold";
+  const btnActive = `${btnBase} bg-[var(--color-surface)] text-[var(--color-text-muted)] hover:bg-surface-bright transition-colors`;
+  const btnDisabled = `${btnBase} bg-[var(--color-surface)] text-[var(--color-text-muted)]/40 cursor-not-allowed`;
 
   return (
     <div className="space-y-8">
@@ -194,13 +194,13 @@ export default async function ServicesPage({
 
       <KpiGrid>
         <KpiCard
-          icon={<IconNetwork size={18} className="text-on-surface-variant" />}
+          icon={<IconNetwork size={18} className="text-[var(--color-text-muted)]" />}
           label="전체 서비스"
           value={totalCount.toString()}
           suffix="건"
         />
         <KpiCard
-          icon={<IconPlayerPlay size={18} className="text-on-surface-variant" />}
+          icon={<IconPlayerPlay size={18} className="text-[var(--color-text-muted)]" />}
           label="등록중"
           value={activeCount.toString()}
           suffix="건"
@@ -208,13 +208,13 @@ export default async function ServicesPage({
           trend="up"
         />
         <KpiCard
-          icon={<IconCircleCheck size={18} className="text-on-surface-variant" />}
+          icon={<IconCircleCheck size={18} className="text-[var(--color-text-muted)]" />}
           label="등록완료"
           value={completedCount.toString()}
           suffix="건"
         />
         <KpiCard
-          icon={<IconClock size={18} className="text-on-surface-variant" />}
+          icon={<IconClock size={18} className="text-[var(--color-text-muted)]" />}
           label="등록예정"
           value={upcomingCount.toString()}
           suffix="건"
@@ -230,7 +230,7 @@ export default async function ServicesPage({
       <TableSection totalCount={totalFiltered}>
         <DataTable columns={columns} data={tableData} />
         {totalFiltered === 0 && (
-          <div className="flex flex-col items-center justify-center py-16 text-on-surface-variant">
+          <div className="flex flex-col items-center justify-center py-16 text-[var(--color-text-muted)]">
             <IconSearchOff size={40} className="mb-2 opacity-30" />
             <p className="text-sm font-medium">
               조건에 맞는 서비스가 없습니다.
@@ -252,8 +252,8 @@ export default async function ServicesPage({
                 <IconChevronLeft size={16} />이전
               </span>
             )}
-            <span className="text-xs text-on-surface-variant tabular-nums">
-              <span className="font-bold text-on-surface">{currentPage}</span> / {totalPages}
+            <span className="text-xs text-[var(--color-text-muted)] tabular-nums">
+              <span className="font-bold text-[var(--color-text)]">{currentPage}</span> / {totalPages}
             </span>
             {currentPage < totalPages ? (
               <a href={buildPageUrl(currentPage + 1)} className={btnActive}>

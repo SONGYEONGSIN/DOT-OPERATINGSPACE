@@ -63,17 +63,17 @@ export default function ProjectPage({ project, tasks, logs, profiles, currentYea
         actions={
           <div className="flex items-center gap-3">
             {/* 연도 선택 */}
-            <div className="flex items-center gap-1 bg-surface-container-high rounded-xl p-1">
+            <div className="flex items-center gap-1 bg-[var(--color-surface)] rounded-[20px] p-1">
               {YEARS.map((y) => (
                 <button
                   key={y}
                   type="button"
                   onClick={() => setYear(y)}
                   className={cn(
-                    "px-3 py-1.5 rounded-lg text-xs font-bold transition-all",
+                    "px-3 py-1.5 rounded-[14px] text-xs font-bold transition-all",
                     year === y
                       ? "bg-primary text-on-primary"
-                      : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container",
+                      : "text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-surface)]",
                   )}
                 >
                   {y}
@@ -82,7 +82,7 @@ export default function ProjectPage({ project, tasks, logs, profiles, currentYea
             </div>
             <button
               onClick={() => setShowAddModal(true)}
-              className="flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-on-primary font-bold text-sm hover:bg-primary-dim transition-colors"
+              className="flex items-center gap-2 rounded-[20px] bg-primary px-4 py-2.5 text-on-primary font-bold text-sm hover:bg-primary-dim transition-colors"
             >
               <IconPlus size={16} />
               작업 추가
@@ -94,26 +94,26 @@ export default function ProjectPage({ project, tasks, logs, profiles, currentYea
       {/* KPI */}
       <KpiGrid>
         <KpiCard
-          icon={<IconListCheck size={18} className="text-on-surface-variant" />}
+          icon={<IconListCheck size={18} className="text-[var(--color-text-muted)]" />}
           label="전체 작업"
           value={total.toString()}
           suffix="건"
           change={requestCount > 0 ? `신규 요청 ${requestCount}건` : undefined}
         />
         <KpiCard
-          icon={<IconProgress size={18} className="text-on-surface-variant" />}
+          icon={<IconProgress size={18} className="text-[var(--color-text-muted)]" />}
           label="진행 중"
           value={activeCount.toString()}
           suffix="건"
         />
         <KpiCard
-          icon={<IconCircleCheck size={18} className="text-on-surface-variant" />}
+          icon={<IconCircleCheck size={18} className="text-[var(--color-text-muted)]" />}
           label="완료"
           value={doneCount.toString()}
           suffix="건"
         />
         <KpiCard
-          icon={<IconClock size={18} className="text-on-surface-variant" />}
+          icon={<IconClock size={18} className="text-[var(--color-text-muted)]" />}
           label="달성률"
           value={`${progressPct}`}
           suffix="%"
@@ -127,16 +127,16 @@ export default function ProjectPage({ project, tasks, logs, profiles, currentYea
       {/* 진행률 */}
       <Card className="px-5 py-3">
         <div className="flex items-center gap-4">
-          <span className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest whitespace-nowrap">진행률</span>
+          <span className="text-[10px] font-bold text-[var(--color-text-muted)] uppercase tracking-widest whitespace-nowrap">진행률</span>
           <div className="flex-1">
             <ProgressBar value={progressPct} size="sm" color={getProgressColor(progressPct)} />
           </div>
-          <span className="text-xs font-black text-on-surface tabular-nums whitespace-nowrap">{progressPct}%</span>
+          <span className="text-xs font-black text-[var(--color-text)] tabular-nums whitespace-nowrap">{progressPct}%</span>
         </div>
       </Card>
 
       {/* 탭 */}
-      <div className="flex items-center gap-1 bg-surface-container-high rounded-xl p-1 w-fit">
+      <div className="flex items-center gap-1 bg-[var(--color-surface)] rounded-[20px] p-1 w-fit">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           return (
@@ -145,10 +145,10 @@ export default function ProjectPage({ project, tasks, logs, profiles, currentYea
               type="button"
               onClick={() => setActiveTab(tab.key)}
               className={cn(
-                "flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold tracking-wide transition-all",
+                "flex items-center gap-1.5 px-4 py-2 rounded-[14px] text-xs font-bold tracking-wide transition-all",
                 activeTab === tab.key
                   ? "bg-primary text-on-primary"
-                  : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container",
+                  : "text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-surface)]",
               )}
             >
               <Icon size={14} />
@@ -159,7 +159,7 @@ export default function ProjectPage({ project, tasks, logs, profiles, currentYea
                 </span>
               )}
               {tab.key === "log" && logs.length > 0 && (
-                <span className="text-[9px] text-on-surface-variant/60">{logs.length}</span>
+                <span className="text-[9px] text-[var(--color-text-muted)]/60">{logs.length}</span>
               )}
             </button>
           );

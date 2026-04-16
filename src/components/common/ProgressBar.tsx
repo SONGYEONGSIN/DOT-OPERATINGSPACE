@@ -29,7 +29,7 @@ export default function ProgressBar({
   return (
     <div
       className={cn(
-        "w-full bg-surface-container-highest rounded-full overflow-hidden",
+        "w-full bg-[var(--color-surface)] rounded-full overflow-hidden",
         sizeStyles[size],
       )}
       role="progressbar"

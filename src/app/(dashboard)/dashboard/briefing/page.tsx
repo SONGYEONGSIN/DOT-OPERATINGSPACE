@@ -210,7 +210,7 @@ export default async function BriefingPage() {
   ];
 
   const activityData = activityItems.slice(0, 8).map((item) => ({
-    time: <span className="font-mono text-xs text-on-surface-variant">{item.time}</span>,
+    time: <span className="font-mono text-xs text-[var(--color-text-muted)]">{item.time}</span>,
     person: <span className="font-medium text-sm">{item.person}</span>,
     action: <span className="text-sm">{item.action}</span>,
     status: <StatusBadge variant={item.variant}>{item.statusLabel}</StatusBadge>,
@@ -228,7 +228,7 @@ export default async function BriefingPage() {
       {/* ── 오늘의 핵심 지표 ── */}
       <KpiGrid>
         <KpiCard
-          icon={<IconAlertTriangle size={18} className="text-on-surface-variant" />}
+          icon={<IconAlertTriangle size={18} className="text-[var(--color-text-muted)]" />}
           label="긴급 이슈"
           value={urgentCount.toString()}
           suffix="건"
@@ -237,7 +237,7 @@ export default async function BriefingPage() {
           alert={urgentCount > 0}
         />
         <KpiCard
-          icon={<IconCircleCheck size={18} className="text-on-surface-variant" />}
+          icon={<IconCircleCheck size={18} className="text-[var(--color-text-muted)]" />}
           label="오늘 완료"
           value={taskDoneToday.toString()}
           suffix="건"
@@ -245,7 +245,7 @@ export default async function BriefingPage() {
           trend="up"
         />
         <KpiCard
-          icon={<IconClock size={18} className="text-on-surface-variant" />}
+          icon={<IconClock size={18} className="text-[var(--color-text-muted)]" />}
           label="진행 중"
           value={taskInProgress.toString()}
           suffix="건"
@@ -253,7 +253,7 @@ export default async function BriefingPage() {
           trend="neutral"
         />
         <KpiCard
-          icon={<IconCloudUpload size={18} className="text-on-surface-variant" />}
+          icon={<IconCloudUpload size={18} className="text-[var(--color-text-muted)]" />}
           label="현재 부재"
           value={absentPeople.length.toString()}
           suffix="명"
@@ -266,7 +266,7 @@ export default async function BriefingPage() {
       {urgentIssues.length > 0 && (
         <Card className="border-l-2 border-error p-6">
           <div className="mb-4 flex items-center justify-between">
-            <h3 className="flex items-center gap-2 text-sm font-bold text-on-surface">
+            <h3 className="flex items-center gap-2 text-sm font-bold text-[var(--color-text)]">
               <IconAlertTriangle size={18} className="text-error" />
               긴급 알림
             </h3>
@@ -278,15 +278,15 @@ export default async function BriefingPage() {
             {urgentIssues.slice(0, 5).map((item, idx) => (
               <div
                 key={idx}
-                className="flex items-center justify-between rounded-lg border border-outline-variant/10 bg-surface-container-high p-4 transition-colors hover:bg-surface-bright"
+                className="flex items-center justify-between rounded-[14px] border border-black/[0.04]/10 bg-[var(--color-surface)] p-4 transition-colors hover:bg-surface-bright"
               >
                 <div className="flex items-center gap-3">
-                  <div className={`flex h-9 w-9 items-center justify-center rounded-lg ${item.severity === "error" ? "bg-error/10 text-error" : "bg-tertiary/10 text-tertiary"}`}>
+                  <div className={`flex h-9 w-9 items-center justify-center rounded-[14px] ${item.severity === "error" ? "bg-error/10 text-error" : "bg-tertiary/10 text-tertiary"}`}>
                     {item.icon}
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-on-surface">{item.title}</p>
-                    <p className="text-[10px] text-on-surface-variant">{item.detail}</p>
+                    <p className="text-sm font-bold text-[var(--color-text)]">{item.title}</p>
+                    <p className="text-[10px] text-[var(--color-text-muted)]">{item.detail}</p>
                   </div>
                 </div>
                 <StatusBadge variant={item.severity}>{item.severity === "error" ? "긴급" : "주의"}</StatusBadge>
@@ -302,15 +302,15 @@ export default async function BriefingPage() {
         <Card className="p-6">
           <h3 className="mb-5 text-sm font-bold text-primary tracking-[0.2em] uppercase">운영자별 등록 현황</h3>
           {operatorProgress.length === 0 ? (
-            <p className="text-xs text-on-surface-variant py-4 text-center">운영자 데이터가 없습니다.</p>
+            <p className="text-xs text-[var(--color-text-muted)] py-4 text-center">운영자 데이터가 없습니다.</p>
           ) : (
             <div className="space-y-4">
               {operatorProgress.map((op) => (
                 <div key={op.name} className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-medium text-on-surface">{op.name}</span>
-                    <span className="text-xs text-on-surface-variant">
-                      <strong className="text-on-surface">{op.done}</strong>/{op.total} 완료 ({op.pct}%)
+                    <span className="text-xs font-medium text-[var(--color-text)]">{op.name}</span>
+                    <span className="text-xs text-[var(--color-text-muted)]">
+                      <strong className="text-[var(--color-text)]">{op.done}</strong>/{op.total} 완료 ({op.pct}%)
                     </span>
                   </div>
                   <ProgressBar value={op.pct} size="md" color={op.pct >= 80 ? "primary" : op.pct >= 50 ? "warning" : "error"} />
@@ -327,18 +327,18 @@ export default async function BriefingPage() {
             다가오는 마감
           </h3>
           {upcomingSchedule.length === 0 ? (
-            <p className="text-xs text-on-surface-variant py-4 text-center">7일 이내 마감 일정이 없습니다.</p>
+            <p className="text-xs text-[var(--color-text-muted)] py-4 text-center">7일 이내 마감 일정이 없습니다.</p>
           ) : (
             <div className="relative space-y-4 before:absolute before:left-[5px] before:top-2 before:bottom-2 before:w-px before:bg-outline-variant/30">
               {upcomingSchedule.map((item, idx) => (
                 <div key={idx} className="relative flex items-start gap-4 pl-6">
                   <div className={`absolute left-0 top-1.5 h-3 w-3 rounded-full ${item.daysLeft <= 1 ? "bg-error" : item.daysLeft <= 3 ? "bg-tertiary" : "bg-primary"}`} />
-                  <span className="w-16 shrink-0 text-xs font-bold text-on-surface-variant">{item.time}</span>
+                  <span className="w-16 shrink-0 text-xs font-bold text-[var(--color-text-muted)]">{item.time}</span>
                   <div className="flex-1 min-w-0">
-                    <span className="text-sm font-medium text-on-surface truncate block">{item.title}</span>
+                    <span className="text-sm font-medium text-[var(--color-text)] truncate block">{item.title}</span>
                     <div className="flex items-center gap-2 mt-0.5">
                       <StatusBadge variant={item.type === "작성마감" ? "warning" : "info"}>{item.type}</StatusBadge>
-                      <span className={`text-[10px] font-bold ${item.daysLeft <= 1 ? "text-error" : "text-on-surface-variant"}`}>
+                      <span className={`text-[10px] font-bold ${item.daysLeft <= 1 ? "text-error" : "text-[var(--color-text-muted)]"}`}>
                         D-{item.daysLeft === 0 ? "Day" : item.daysLeft}
                       </span>
                     </div>
