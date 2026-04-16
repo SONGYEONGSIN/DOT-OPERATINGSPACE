@@ -22,7 +22,7 @@ export default function UserAvatar({
   return (
     <div
       className={cn(
-        "rounded-full overflow-hidden flex-shrink-0",
+        "rounded-full overflow-hidden flex-shrink-0 bg-[var(--color-primary)] shadow-neu-soft",
         sizeStyles[size],
         className,
       )}

@@ -8,10 +8,11 @@ interface CardProps {
 }
 
 const variantStyles = {
-  default: "bg-surface-container rounded-xl border border-outline-variant/15",
+  default:
+    "bg-[var(--color-surface)] rounded-[20px] shadow-neu-soft border border-black/[0.03]",
   elevated:
-    "bg-surface-container rounded-xl border border-outline-variant/15 shadow-elevated",
-  sunken: "bg-surface-container-lowest rounded-xl",
+    "bg-[var(--color-surface)] rounded-[20px] shadow-neu-strong border border-black/[0.03]",
+  sunken: "bg-[var(--color-surface)] rounded-[20px] shadow-neu-inset-soft",
 } as const;
 
 export default function Card({
@@ -24,7 +25,8 @@ export default function Card({
     <div
       className={cn(
         variantStyles[variant],
-        hover && "hover:border-primary/30 transition-all",
+        hover &&
+          "hover:shadow-neu-strong transition-all duration-[var(--duration-hover)] ease-[var(--ease-neu)]",
         className,
       )}
     >

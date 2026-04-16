@@ -7,11 +7,19 @@ interface StatusBadgeProps {
 }
 
 const variantStyles = {
-  success: "bg-primary/10 text-primary",
-  warning: "bg-tertiary/10 text-tertiary",
-  error: "bg-error/10 text-error",
-  info: "bg-secondary/10 text-secondary",
-  neutral: "bg-surface-container-high text-on-surface-variant",
+  success: "bg-[var(--color-success)]/10 text-[var(--color-success)]",
+  warning: "bg-[var(--color-warning)]/10 text-[var(--color-warning)]",
+  error: "bg-[var(--color-danger)]/10 text-[var(--color-danger)]",
+  info: "bg-[var(--color-primary)]/10 text-[var(--color-primary)]",
+  neutral: "bg-[var(--color-surface)]/60 text-[var(--color-text-muted)]",
+} as const;
+
+const dotColors = {
+  success: "bg-[var(--color-success)]",
+  warning: "bg-[var(--color-warning)]",
+  error: "bg-[var(--color-danger)]",
+  info: "bg-[var(--color-primary)]",
+  neutral: "bg-[var(--color-text-faint)]",
 } as const;
 
 export default function StatusBadge({
@@ -31,21 +39,13 @@ export default function StatusBadge({
           <span
             className={cn(
               "animate-ping absolute inline-flex h-full w-full rounded-full opacity-75",
-              variant === "success" && "bg-primary",
-              variant === "warning" && "bg-tertiary",
-              variant === "error" && "bg-error",
-              variant === "info" && "bg-secondary",
-              variant === "neutral" && "bg-on-surface-variant",
+              dotColors[variant],
             )}
           />
           <span
             className={cn(
               "relative inline-flex h-1.5 w-1.5 rounded-full",
-              variant === "success" && "bg-primary",
-              variant === "warning" && "bg-tertiary",
-              variant === "error" && "bg-error",
-              variant === "info" && "bg-secondary",
-              variant === "neutral" && "bg-on-surface-variant",
+              dotColors[variant],
             )}
           />
         </span>
