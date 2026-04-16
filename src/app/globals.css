@@ -5,28 +5,28 @@
 
 /* ── Design Tokens: Tailwind CSS 4 @theme ── */
 @theme {
-  /* Surface hierarchy — Neumorphism light (SPEC §2) */
-  --color-surface: #e7e5e4;
-  --color-surface-dim: #d6d4d3;
-  --color-surface-bright: #f5f3f2;
-  --color-surface-container-lowest: #dddbd9;
-  --color-surface-container-low: #e2e0de;
-  --color-surface-container: #e7e5e4;
-  --color-surface-container-high: #edebea;
-  --color-surface-container-highest: #f3f1f0;
-  --color-surface-tint: #006666;
-  --color-surface-variant: #e0dedc;
+  /* Surface hierarchy — Neumorphism light (synced from neumorphism-one.vercel.app) */
+  --color-surface: #f0f2f5;
+  --color-surface-dim: #e4e6e9;
+  --color-surface-bright: #f8f9fb;
+  --color-surface-container-lowest: #e8eaed;
+  --color-surface-container-low: #eceff2;
+  --color-surface-container: #f0f2f5;
+  --color-surface-container-high: #f4f6f8;
+  --color-surface-container-highest: #f8f9fb;
+  --color-surface-tint: #008080;
+  --color-surface-variant: #eceef1;
 
-  /* Primary — Teal (SPEC §2) */
-  --color-primary: #006666;
-  --color-primary-dim: #005555;
+  /* Primary — Teal (synced: #008080 from reference) */
+  --color-primary: #008080;
+  --color-primary-dim: #006d6d;
   --color-primary-container: #b2dfdb;
   --color-primary-fixed: #b2dfdb;
   --color-primary-fixed-dim: #80cbc4;
   --color-on-primary: #ffffff;
-  --color-on-primary-container: #004d4d;
-  --color-on-primary-fixed: #004d4d;
-  --color-on-primary-fixed-variant: #005555;
+  --color-on-primary-container: #005555;
+  --color-on-primary-fixed: #005555;
+  --color-on-primary-fixed-variant: #006d6d;
   --color-inverse-primary: #80cbc4;
 
   /* Secondary — Neutral (SPEC §2: F1F2F5 보조 표면) */
@@ -62,7 +62,7 @@
   --color-on-surface: #1e2938;
   --color-on-surface-variant: #4a5565;
   --color-on-background: #1e2938;
-  --color-background: #e7e5e4;
+  --color-background: #f0f2f5;
 
   /* Outline — Neumorphism (SPEC §2 대비 보정) */
   --color-outline: #8b9098;
@@ -78,16 +78,14 @@
     sans-serif;
   --font-mono: "JetBrains Mono", "Fira Code", monospace;
 
-  /* Shadows — Neumorphism (SPEC §4) */
+  /* Shadows — Neumorphism (synced from reference: 6/12 soft, 10/20 strong) */
   --shadow-card:
-    -3px -3px 6px rgba(255, 255, 255, 0.85),
-    3px 3px 6px rgba(166, 164, 163, 0.45);
+    -6px -6px 12px rgb(255, 255, 255), 6px 6px 12px rgb(209, 217, 230);
   --shadow-elevated:
-    -6px -6px 14px rgba(255, 255, 255, 0.85),
-    6px 6px 14px rgba(166, 164, 163, 0.45);
-  --shadow-glow: 0 0 20px -5px rgba(0, 102, 102, 0.2);
-  --shadow-glow-strong: 0 0 40px rgba(0, 102, 102, 0.06);
-  --shadow-ambient: 0 0 40px rgba(0, 0, 0, 0.06);
+    -10px -10px 20px rgb(255, 255, 255), 10px 10px 20px rgb(209, 217, 230);
+  --shadow-glow: 0 4px 10px rgba(0, 128, 128, 0.4);
+  --shadow-glow-strong: 0 8px 16px rgba(0, 128, 128, 0.3);
+  --shadow-ambient: 0 0 40px rgba(0, 0, 0, 0.04);
 
   /* Animations */
   --animate-scan: scan 4s linear infinite;
@@ -112,33 +110,31 @@
   --color-text-muted: #4a5565;
   --color-text-faint: #6b7280;
 
-  /* Shadow source colors */
-  --color-neu-shadow-light: rgba(255, 255, 255, 0.85);
-  --color-neu-shadow-dark: rgba(166, 164, 163, 0.45);
-  --color-neu-shadow-inset-light: rgba(255, 255, 255, 0.7);
-  --color-neu-shadow-inset-dark: rgba(166, 164, 163, 0.35);
+  /* Shadow source colors (synced from reference) */
+  --color-neu-shadow-light: rgb(255, 255, 255);
+  --color-neu-shadow-dark: rgb(209, 217, 230);
+  --color-neu-shadow-inset-light: rgb(255, 255, 255);
+  --color-neu-shadow-inset-dark: rgb(209, 217, 230);
 
-  /* Composite shadow tokens (Tailwind shadow-* utility 자동 노출) */
+  /* Composite shadow tokens (synced: 6/12 soft, 10/20 strong) */
   --shadow-neu-soft:
-    -3px -3px 6px rgba(255, 255, 255, 0.85),
-    3px 3px 6px rgba(166, 164, 163, 0.45);
+    -6px -6px 12px rgb(255, 255, 255), 6px 6px 12px rgb(209, 217, 230);
   --shadow-neu-strong:
-    -6px -6px 14px rgba(255, 255, 255, 0.85),
-    6px 6px 14px rgba(166, 164, 163, 0.45);
+    -10px -10px 20px rgb(255, 255, 255), 10px 10px 20px rgb(209, 217, 230);
   --shadow-neu-inset-soft:
-    inset -3px -3px 6px rgba(255, 255, 255, 0.7),
-    inset 3px 3px 6px rgba(166, 164, 163, 0.35);
+    inset -6px -6px 12px rgb(255, 255, 255),
+    inset 6px 6px 12px rgb(209, 217, 230);
   --shadow-neu-inset-strong:
-    inset -6px -6px 14px rgba(255, 255, 255, 0.7),
-    inset 6px 6px 14px rgba(166, 164, 163, 0.35);
+    inset -10px -10px 20px rgb(255, 255, 255),
+    inset 10px 10px 20px rgb(209, 217, 230);
 
   /* Border radius scale (Tailwind rounded-* utility 자동 노출) */
   --radius-neu-sm: 8px;
-  --radius-neu-md: 14px;
-  --radius-neu-lg: 20px;
+  --radius-neu-md: 12px;
+  --radius-neu-lg: 16px;
 
   /* ── Chart Palette (NEUMORPHISM-SPEC §12 해소) ── */
-  --color-chart-primary: #006666;
+  --color-chart-primary: #008080;
   --color-chart-warning: #fe9900;
   --color-chart-danger: #ff2157;
   --color-chart-blue: #4a90d9;

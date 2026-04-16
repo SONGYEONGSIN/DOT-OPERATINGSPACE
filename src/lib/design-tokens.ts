@@ -105,17 +105,17 @@ export const shadows = {
  */
 export const neumorphism = {
   shadow: {
-    light: "rgba(255, 255, 255, 0.85)",
-    dark: "rgba(166, 164, 163, 0.45)",
-    insetLight: "rgba(255, 255, 255, 0.7)",
-    insetDark: "rgba(166, 164, 163, 0.35)",
-    soft: "-3px -3px 6px rgba(255, 255, 255, 0.85), 3px 3px 6px rgba(166, 164, 163, 0.45)",
+    light: "rgb(255, 255, 255)",
+    dark: "rgb(209, 217, 230)",
+    insetLight: "rgb(255, 255, 255)",
+    insetDark: "rgb(209, 217, 230)",
+    soft: "-6px -6px 12px rgb(255, 255, 255), 6px 6px 12px rgb(209, 217, 230)",
     strong:
-      "-6px -6px 14px rgba(255, 255, 255, 0.85), 6px 6px 14px rgba(166, 164, 163, 0.45)",
+      "-10px -10px 20px rgb(255, 255, 255), 10px 10px 20px rgb(209, 217, 230)",
     insetSoft:
-      "inset -3px -3px 6px rgba(255, 255, 255, 0.7), inset 3px 3px 6px rgba(166, 164, 163, 0.35)",
+      "inset -6px -6px 12px rgb(255, 255, 255), inset 6px 6px 12px rgb(209, 217, 230)",
     insetStrong:
-      "inset -6px -6px 14px rgba(255, 255, 255, 0.7), inset 6px 6px 14px rgba(166, 164, 163, 0.35)",
+      "inset -10px -10px 20px rgb(255, 255, 255), inset 10px 10px 20px rgb(209, 217, 230)",
   },
   text: {
     muted: "#4a5565",
@@ -123,8 +123,8 @@ export const neumorphism = {
   },
   radius: {
     sm: "8px",
-    md: "14px",
-    lg: "20px",
+    md: "12px",
+    lg: "16px",
   },
   motion: {
     durationPress: "100ms",
